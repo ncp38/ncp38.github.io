@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link type="text/css" rel="stylesheet"/>
     <style type="text/css">
 
 svg {
@@ -78,8 +78,8 @@ var m = [40, 80, 40, 80],
 var x = d3.scalePoint().domain(traits).range([0, w]),
     y = {};
 
-var line = d3.svg.line(),
-    axis = d3.svg.axis().orient("left"),
+var line = d3.line(),
+    axis = d3.axis().orient("left"),
     foreground;
 
 var svg = d3.select("body").append("svg:svg")
@@ -96,7 +96,7 @@ d3.csv("csvhurricanedata.csv", function(hurricanes) {
         .domain(d3.extent(hurricanes, function(p) { return +p[d]; }))
         .range([h, 0]);
 
-    y[d].brush = d3.svg.brush()
+    y[d].brush = d3.brush()
         .y(y[d])
         .on("brush", brush);
  });

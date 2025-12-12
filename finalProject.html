@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--Nate Phillips, Visualization Project 1: Parallel Coordinates Graph of Hurricane Data-->
+<!--Based on code from http://mbostock.github.com/d3/talk/20111116/iris-parallel.html .-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+
+svg {
+  font-size: 14px;
+}
+
+.foreground path {
+  fill: none;
+  stroke: #990;
+  stroke-opacity: .7;
+  stroke-width: 1.5px;
+}
+
+.foreground path.fade {
+  stroke: #000;
+  stroke-opacity: .05;
+}
+
+.brush .extent {
+  fill-opacity: .3;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.axis line, .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
+}
+
+h2 {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+    </style>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+</head>
+<body>
+    <h2 id="graphTitle">
+      Nate Phillips - Visualization of Hurricane Data
+    </h2>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+var traits = ["Year","NS","NSD","H","HD","IH","IHD","ACE","HDP","PDI","NTC","TS","CAT1","CAT2","CAT3","CAT4","CAT5"]
+
+//This is based on code from http://www.javascripter.net/faq/browserw.htm
+var viewheight = 480;
+if(window.innerHeight)
+{ 
+  viewheight = window.innerHeight;
+}
+
+var viewwidth = 640
+if(window.innerWidth)
+{ 
+  viewwidth = window.innerWidth;
+}
+
+var m = [40, 80, 40, 80],
+    w = Math.ceil(viewwidth * 9.5 / 10) - m[1] - m[3],
+    h = Math.ceil(viewheight * 9.5 / 10) - m[0] - m[2] - 65;
+
+var x = d3.scale.ordinal().domain(traits).rangePoints([0, w]),
+    y = {};
+
+var line = d3.svg.line(),
+    axis = d3.svg.axis().orient("left"),
+    foreground;
+
+var svg = d3.select("body").append("svg:svg")
+    .attr("width", w + m[1] + m[3])
+    .attr("height", h + m[0] + m[2])
+  .append("svg:g")
+    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+d3.csv("csvhurricanedata.csv", function(hurricanes) {
+
+  //Create a scale and brush for each trait.
+  traits.forEach(function(d) {
+    y[d] = d3.scale.linear()
+        .domain(d3.extent(hurricanes, function(p) { return +p[d]; }))
+        .range([h, 0]);
+
+    y[d].brush = d3.svg.brush()
+        .y(y[d])
+        .on("brush", brush);
+ });
+
+  //Add foreground lines.
+  foreground = svg.append("svg:g")
+      .attr("class", "foreground")
+    .selectAll("path")
+      .data(hurricanes)
+    .enter().append("svg:path")
+      .attr("d", path)
+
+  //Add a group element for each trait.
+  var g = svg.selectAll(".trait")
+      .data(traits)
+    .enter().append("svg:g")
+      .attr("class", "trait")
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .call(d3.behavior.drag()
+      .origin(function(d) { return {x: x(d)}; })
+      .on("dragstart", dragstart)
+      .on("drag", drag)
+      .on("dragend", dragend));
+
+  //Add an axis and title.
+  g.append("svg:g")
+      .attr("class", "axis")
+      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+    .append("svg:text")
+      .attr("text-anchor", "middle")
+      .attr("y", -9)
+      .text(String);
+
+  //Add a brush for each axis.
+  g.append("svg:g")
+      .attr("class", "brush")
+      .each(function(d) { d3.select(this).call(y[d].brush); })
+    .selectAll("rect")
+      .attr("x", -8)
+      .attr("width", 16);
+
+  function dragstart(d) {
+    i = traits.indexOf(d);
+  }
+
+  function drag(d) {
+    x.range()[i] = d3.event.x;
+    traits.sort(function(a, b) { return x(a) - x(b); });
+    g.attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+    foreground.attr("d", path);
+  }
+
+  function dragend(d) {
+    x.domain(traits).rangePoints([0, w]);
+    var t = d3.transition().duration(500);
+    t.selectAll(".trait").attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+    t.selectAll(".foreground path").attr("d", path);
+  }
+
+});
+
+//Returns the path for a given data point.
+function path(d) {
+  return line(traits.map(function(p) { return [x(p), y[p](d[p])]; }));
+}
+
+//Handles a brush event, toggling the display of foreground lines.
+function brush() {
+  var actives = traits.filter(function(p) { return !y[p].brush.empty(); }),
+      extents = actives.map(function(p) { return y[p].brush.extent(); });
+  foreground.classed("fade", function(d) {
+    return !actives.every(function(p, i) {
+      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    });
+  });
+}
+    
+    </script>
+</body>
+</html>	

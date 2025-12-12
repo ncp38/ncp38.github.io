@@ -79,7 +79,7 @@ var x = d3.scalePoint().domain(traits).range([0, w]),
     y = {};
 
 var line = d3.line(),
-    axis = d3.axis().orient("left"),
+    axis = d3.axisLeft(),
     foreground;
 
 var svg = d3.select("body").append("svg:svg")
@@ -96,7 +96,7 @@ d3.csv("csvhurricanedata.csv", function(hurricanes) {
         .domain(d3.extent(hurricanes, function(p) { return +p[d]; }))
         .range([h, 0]);
 
-    y[d].brush = d3.brush()
+    y[d].brush = d3.svg.brush()
         .y(y[d])
         .on("brush", brush);
  });

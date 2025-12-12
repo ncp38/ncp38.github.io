@@ -1,171 +1,179 @@
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!DOCTYPE html>
+<!--Nate Phillips, Visualization Project 1: Parallel Coordinates Graph of Hurricane Data-->
+<!--Based on code from http://mbostock.github.com/d3/talk/20111116/iris-parallel.html .-->
+<html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
 
-	<title>CSE 6990 Project 1</title>
+svg {
+  font-size: 14px;
+}
 
-	  <!-- This CSS is based off of http://www.winstonprakash.com/articles/netbeans/FixedPageLayout.html -->
-	  <style>
-  		h1 { color:black; font-weight:bold; }
-		p { color:black; font-size:60px; }
-		table { text-align:center; }
-		@media all and (min-width:601px)
-		{  
-			#container {
-  			margin:auto;
-  			width: 96%; 
-  			background: #ffffff;
-			}
-			
-			a {font-size:25px;}
-		}
-		@media all and (max-width:600px)
-		{  
-			#container {
-  			margin:auto;
-  			width: 612px; 
-  			background: #ffffff;
-			}
-		}
+.foreground path {
+  fill: none;
+  stroke: #990;
+  stroke-opacity: .7;
+  stroke-width: 1.5px;
+}
 
-		#container {
-  		margin:auto;
-  		background: #ffffff;
-		}
+.foreground path.fade {
+  stroke: #000;
+  stroke-opacity: .05;
+}
 
-		#header {
-  		background: #DDDDDD;
-		width:100%;
-		position: fixed;
-		left: 0px;
-		top: 0px;
-		}
+.brush .extent {
+  fill-opacity: .3;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
 
-		#footer { 
-  		background: #DDDDDD;
-		width:100%;
-		position: fixed;
-		left: 0px;
-		bottom: 0px;
-		} 
+.axis line, .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
 
-  	  </style>
+.axis text {
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
+}
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-	
-	<!-- This CSS is based off of http://www.winstonprakash.com/articles/netbeans/FixedPageLayout.html -->
+h2 {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
-	<script type="text/javascript/jquery-1.7.1.min" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-
-    	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
-    	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
- 
-
+    </style>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
 </head>
+<body>
+    <h2 id="graphTitle">
+      Nate Phillips - Visualization of Hurricane Data
+    </h2>
+    <div id="viz"></div>
+    <script type="text/javascript">
 
-<script type="text/javascript">
+var traits = ["Year","NS","NSD","H","HD","IH","IHD","ACE","HDP","PDI","NTC","TS","CAT1","CAT2","CAT3","CAT4","CAT5"]
 
-window.onload=toBottom;
-
-window.orientationchange=toBottom;
-
-function toBottom()
-{
-	window.scrollTo(0, document.body.scrollHeight);
+//This is based on code from http://www.javascripter.net/faq/browserw.htm
+var viewheight = 480;
+if(window.innerHeight)
+{ 
+  viewheight = window.innerHeight;
 }
 
-//Orientation Change
-// When orientation changes event is triggered, scroll to the bottom of the screen.
-// (This keeps the predicted temperatures frombeing blocked out by the footer in iPhone landscape mode.)
-
-$(window).bind('orientationchange',function(event)
-{
-	changeOrientation(event.orientation)
-})
- 
-// Change the style dependengt on orientation
-function changeOrientation(ori)
-{
-        window.scrollTo(0, document.body.scrollHeight);
+var viewwidth = 640
+if(window.innerWidth)
+{ 
+  viewwidth = window.innerWidth;
 }
 
-</script>
+var m = [40, 80, 40, 80],
+    w = Math.ceil(viewwidth * 9.5 / 10) - m[1] - m[3],
+    h = Math.ceil(viewheight * 9.5 / 10) - m[0] - m[2] - 65;
 
-<?php
+var x = d3.scale.ordinal().domain(traits).rangePoints([0, w]),
+    y = {};
 
-//This code is based off of http://www.geoplugin.com/examples,
-//which is, in turn, based off of the ParseXml php class from http://www.phpkode.com/source/s/xml-parser/xml-parser/ParseXml.class.php .
+var line = d3.svg.line(),
+    axis = d3.svg.axis().orient("left"),
+    foreground;
 
+var svg = d3.select("body").append("svg:svg")
+    .attr("width", w + m[1] + m[3])
+    .attr("height", h + m[0] + m[2])
+  .append("svg:g")
+    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-$geoplugin = unserialize( file_get_contents('http://www.geoplugin.net/php.gp?ip=' . $_SERVER['REMOTE_ADDR']) );
- 
-if ( is_numeric($geoplugin['geoplugin_latitude']) && is_numeric($geoplugin['geoplugin_longitude']) ) {
- 
-	$lat = $geoplugin['geoplugin_latitude'];
-	$long = $geoplugin['geoplugin_longitude'];
-	//set farenheight for US
-	if ($geoplugin['geoplugin_countryCode'] == 'US') {
-		$tempScale = 'fahrenheit';
-		$tempUnit = '&deg;F ';
-	} else {
-		$tempScale = 'celsius';
-		$tempUnit = '&deg;C ';
-	}
-	require_once('ParseXml.class.php');
+d3.csv("csvhurricanedata.csv", function(hurricanes) {
 
-	$xml = new ParseXml(); 
-	$xml->LoadRemote("http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query={$lat},{$long}", 3);
-	$dataArray = $xml->ToArray();
- 
-	$html = "<div data-scroll='false' id='header'>";
-	$html .= "<center><h2>Weather forecast for " . $geoplugin['geoplugin_city'] . "</div></h2>";
-	$html .= "<div data-scroll='x' id='container' style='position:absolute; left:0px; top:109px;'>";
-	$html .= "<table align=center cellpadding=5 cellspacing=10><tr>";
- 
-	foreach ($dataArray['simpleforecast']['forecastday'] as $arr) {
- 
-		$html .= "<td align='center'>" . $arr['date']['weekday'] . "<br />";
-		$html .= "<img src='http://icons-pe.wxug.com/i/c/a/" . $arr['icon'] . ".gif' border=0 /><br />";
-		$html .= "<font color='blue'>" . $arr['low'][$tempScale] . $tempUnit . "</font>";
-		$html .= "<font color='red'>" . $arr['high'][$tempScale] . $tempUnit . " </font>";
-		$html .= "</td>";
- 
- 
-	}
-	$html .= "</tr></table>";
-	$html .= "<p></p>";
-	$html .= "</div>";
+  //Create a scale and brush for each trait.
+  traits.forEach(function(d) {
+    y[d] = d3.scale.linear()
+        .domain(d3.extent(hurricanes, function(p) { return +p[d]; }))
+        .range([h, 0]);
 
-	$severe = file_get_contents("http://api.wunderground.com/api/70fbada642aa6df5/alerts/q/{$lat},{$long}.json");
-	//$versionThing = $severe->response;
-	//$severeArray = $severe.response.alerts;
+    y[d].brush = d3.svg.brush()
+        .y(y[d])
+        .on("brush", brush);
+ });
 
-	$thing = json_decode($severe);
+  //Add foreground lines.
+  foreground = svg.append("svg:g")
+      .attr("class", "foreground")
+    .selectAll("path")
+      .data(hurricanes)
+    .enter().append("svg:path")
+      .attr("d", path)
 
-	$things = $thing->{'response'};
+  //Add a group element for each trait.
+  var g = svg.selectAll(".trait")
+      .data(traits)
+    .enter().append("svg:g")
+      .attr("class", "trait")
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .call(d3.behavior.drag()
+      .origin(function(d) { return {x: x(d)}; })
+      .on("dragstart", dragstart)
+      .on("drag", drag)
+      .on("dragend", dragend));
 
-	$severeArray = $things->{'alerts'};
-	
+  //Add an axis and title.
+  g.append("svg:g")
+      .attr("class", "axis")
+      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+    .append("svg:text")
+      .attr("text-anchor", "middle")
+      .attr("y", -9)
+      .text(String);
 
-	if(empty($severeArray))
-	{
+  //Add a brush for each axis.
+  g.append("svg:g")
+      .attr("class", "brush")
+      .each(function(d) { d3.select(this).call(y[d].brush); })
+    .selectAll("rect")
+      .attr("x", -8)
+      .attr("width", 16);
 
-	}
-	else
-	{
-		$html .= "<div align=center id='footer'><font color='red'>";
-		$html .= "<a href='http://www.wunderground.com/severe.asp?MR=1'>Severe weather alerts in your area!</a>";
-		$html .= "</div>";
-	}
+  function dragstart(d) {
+    i = traits.indexOf(d);
+  }
 
-	echo $html;
+  function drag(d) {
+    x.range()[i] = d3.event.x;
+    traits.sort(function(a, b) { return x(a) - x(b); });
+    g.attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+    foreground.attr("d", path);
+  }
+
+  function dragend(d) {
+    x.domain(traits).rangePoints([0, w]);
+    var t = d3.transition().duration(500);
+    t.selectAll(".trait").attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+    t.selectAll(".foreground path").attr("d", path);
+  }
+
+});
+
+//Returns the path for a given data point.
+function path(d) {
+  return line(traits.map(function(p) { return [x(p), y[p](d[p])]; }));
 }
- 
-?>
 
-</html>
+//Handles a brush event, toggling the display of foreground lines.
+function brush() {
+  var actives = traits.filter(function(p) { return !y[p].brush.empty(); }),
+      extents = actives.map(function(p) { return y[p].brush.extent(); });
+  foreground.classed("fade", function(d) {
+    return !actives.every(function(p, i) {
+      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    });
+  });
+}
+    
+    </script>
+</body>
+</html>	

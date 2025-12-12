@@ -1,0 +1,171 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>CSE 6990 Project 1</title>
+
+	  <!-- This CSS is based off of http://www.winstonprakash.com/articles/netbeans/FixedPageLayout.html -->
+	  <style>
+  		h1 { color:black; font-weight:bold; }
+		p { color:black; font-size:60px; }
+		table { text-align:center; }
+		@media all and (min-width:601px)
+		{  
+			#container {
+  			margin:auto;
+  			width: 96%; 
+  			background: #ffffff;
+			}
+			
+			a {font-size:25px;}
+		}
+		@media all and (max-width:600px)
+		{  
+			#container {
+  			margin:auto;
+  			width: 612px; 
+  			background: #ffffff;
+			}
+		}
+
+		#container {
+  		margin:auto;
+  		background: #ffffff;
+		}
+
+		#header {
+  		background: #DDDDDD;
+		width:100%;
+		position: fixed;
+		left: 0px;
+		top: 0px;
+		}
+
+		#footer { 
+  		background: #DDDDDD;
+		width:100%;
+		position: fixed;
+		left: 0px;
+		bottom: 0px;
+		} 
+
+  	  </style>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	
+	<!-- This CSS is based off of http://www.winstonprakash.com/articles/netbeans/FixedPageLayout.html -->
+
+	<script type="text/javascript/jquery-1.7.1.min" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+
+    	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+    	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+ 
+
+</head>
+
+<script type="text/javascript">
+
+window.onload=toBottom;
+
+window.orientationchange=toBottom;
+
+function toBottom()
+{
+	window.scrollTo(0, document.body.scrollHeight);
+}
+
+//Orientation Change
+// When orientation changes event is triggered, scroll to the bottom of the screen.
+// (This keeps the predicted temperatures frombeing blocked out by the footer in iPhone landscape mode.)
+
+$(window).bind('orientationchange',function(event)
+{
+	changeOrientation(event.orientation)
+})
+ 
+// Change the style dependengt on orientation
+function changeOrientation(ori)
+{
+        window.scrollTo(0, document.body.scrollHeight);
+}
+
+</script>
+
+<?php
+
+//This code is based off of http://www.geoplugin.com/examples,
+//which is, in turn, based off of the ParseXml php class from http://www.phpkode.com/source/s/xml-parser/xml-parser/ParseXml.class.php .
+
+
+$geoplugin = unserialize( file_get_contents('http://www.geoplugin.net/php.gp?ip=' . $_SERVER['REMOTE_ADDR']) );
+ 
+if ( is_numeric($geoplugin['geoplugin_latitude']) && is_numeric($geoplugin['geoplugin_longitude']) ) {
+ 
+	$lat = $geoplugin['geoplugin_latitude'];
+	$long = $geoplugin['geoplugin_longitude'];
+	//set farenheight for US
+	if ($geoplugin['geoplugin_countryCode'] == 'US') {
+		$tempScale = 'fahrenheit';
+		$tempUnit = '&deg;F ';
+	} else {
+		$tempScale = 'celsius';
+		$tempUnit = '&deg;C ';
+	}
+	require_once('ParseXml.class.php');
+
+	$xml = new ParseXml(); 
+	$xml->LoadRemote("http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query={$lat},{$long}", 3);
+	$dataArray = $xml->ToArray();
+ 
+	$html = "<div data-scroll='false' id='header'>";
+	$html .= "<center><h2>Weather forecast for " . $geoplugin['geoplugin_city'] . "</div></h2>";
+	$html .= "<div data-scroll='x' id='container' style='position:absolute; left:0px; top:109px;'>";
+	$html .= "<table align=center cellpadding=5 cellspacing=10><tr>";
+ 
+	foreach ($dataArray['simpleforecast']['forecastday'] as $arr) {
+ 
+		$html .= "<td align='center'>" . $arr['date']['weekday'] . "<br />";
+		$html .= "<img src='http://icons-pe.wxug.com/i/c/a/" . $arr['icon'] . ".gif' border=0 /><br />";
+		$html .= "<font color='blue'>" . $arr['low'][$tempScale] . $tempUnit . "</font>";
+		$html .= "<font color='red'>" . $arr['high'][$tempScale] . $tempUnit . " </font>";
+		$html .= "</td>";
+ 
+ 
+	}
+	$html .= "</tr></table>";
+	$html .= "<p></p>";
+	$html .= "</div>";
+
+	$severe = file_get_contents("http://api.wunderground.com/api/70fbada642aa6df5/alerts/q/{$lat},{$long}.json");
+	//$versionThing = $severe->response;
+	//$severeArray = $severe.response.alerts;
+
+	$thing = json_decode($severe);
+
+	$things = $thing->{'response'};
+
+	$severeArray = $things->{'alerts'};
+	
+
+	if(empty($severeArray))
+	{
+
+	}
+	else
+	{
+		$html .= "<div align=center id='footer'><font color='red'>";
+		$html .= "<a href='http://www.wunderground.com/severe.asp?MR=1'>Severe weather alerts in your area!</a>";
+		$html .= "</div>";
+	}
+
+	echo $html;
+}
+ 
+?>
+
+</html>

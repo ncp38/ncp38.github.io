@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link type="text/css" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
     <style type="text/css">
 
 svg {
@@ -75,7 +75,7 @@ var m = [40, 80, 40, 80],
     w = Math.ceil(viewwidth * 9.5 / 10) - m[1] - m[3],
     h = Math.ceil(viewheight * 9.5 / 10) - m[0] - m[2] - 65;
 
-var x = d3.scale.ordinal().domain(traits).rangePoints([0, w]),
+var x = d3.scalePoint().domain(traits).range([0, w]),
     y = {};
 
 var line = d3.svg.line(),

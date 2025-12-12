@@ -47,7 +47,7 @@ h2 {
 }
 
     </style>
-    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
 </head>
 <body>
     <h2 id="graphTitle">
@@ -75,11 +75,11 @@ var m = [40, 80, 40, 80],
     w = Math.ceil(viewwidth * 9.5 / 10) - m[1] - m[3],
     h = Math.ceil(viewheight * 9.5 / 10) - m[0] - m[2] - 65;
 
-var x = d3.scalePoint().domain(traits).range([0, w]),
+var x = d3.scale.ordinal().domain(traits).rangePoints([0, w]),
     y = {};
 
-var line = d3.line(),
-    axis = d3.axisLeft(),
+var line = d3.svg.line(),
+    axis = d3.svg.axis().orient("left"),
     foreground;
 
 var svg = d3.select("body").append("svg:svg")
@@ -92,12 +92,12 @@ d3.csv("csvhurricanedata.csv", function(hurricanes) {
 
   //Create a scale and brush for each trait.
   traits.forEach(function(d) {
-    y[d] = d3.scaleLinear()
+    y[d] = d3.scale.linear()
         .domain(d3.extent(hurricanes, function(p) { return +p[d]; }))
         .range([h, 0]);
 
-    y[d].brush = d3.brushY()
-        .extent([0,0],[16, h])
+    y[d].brush = d3.svg.brush()
+        .y(y[d])
         .on("brush", brush);
  });
 

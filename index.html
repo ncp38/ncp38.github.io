@@ -97,7 +97,7 @@ d3.csv("csvhurricanedata.csv", function(hurricanes) {
         .range([h, 0]);
 
     y[d].brush = d3.brushY()
-        .extent([0,0],[y[d], h])
+        .extent([0,0],[16, h])
         .on("brush", brush);
  });
 

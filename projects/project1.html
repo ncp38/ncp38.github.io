@@ -20,5 +20,30 @@
 
 <a href="#">GitHub</a> | <a href="#">Paper</a>
 
+<script>
+  // Get the 'ref' query param
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+
+  if (ref) {
+    // Create a back link to the filtered view
+    const backLink = document.createElement("a");
+    backLink.href = decodeURIComponent(ref);
+    backLink.textContent = "← Back to filtered results";
+    backLink.style.display = "inline-block";
+    backLink.style.marginBottom = "20px";
+
+    document.body.insertBefore(backLink, document.body.firstChild);
+  } else {
+    // Fallback: normal back to index
+    const backLink = document.createElement("a");
+    backLink.href = "../index.html";
+    backLink.textContent = "← Back to all projects";
+    backLink.style.display = "inline-block";
+    backLink.style.marginBottom = "20px";
+
+    document.body.insertBefore(backLink, document.body.firstChild);
+  }
+</script>
 </body>
 </html>

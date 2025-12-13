@@ -146,7 +146,7 @@ input[type="text"]:focus {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  transform: translateY(2px);
+  transform: translateY(7px);
 
   transition:
     transform 300ms ease,
@@ -156,23 +156,23 @@ input[type="text"]:focus {
 /* Light mode: show moon */
 :root .moon {
   opacity: 1;
-  transform: translateY(2px) rotate(0deg) scale(1);
+  transform: translateY(7px) rotate(0deg) scale(1);
 }
 
 :root .sun {
   opacity: 0;
-  transform: translateY(2px) rotate(-90deg) scale(0.5);
+  transform: translateY(7px) rotate(-90deg) scale(0.5);
 }
 
 /* Dark mode: show sun */
 [data-theme="dark"] .moon {
   opacity: 0;
-  transform: translateY(2px) rotate(90deg) scale(0.5);
+  transform: translateY(7px) rotate(90deg) scale(0.5);
 }
 
 [data-theme="dark"] .sun {
   opacity: 1;
-  transform: translateY(2px) rotate(0deg) scale(1);
+  transform: translateY(7px) rotate(0deg) scale(1);
 }
 
 .theme-toggle:focus-visible {

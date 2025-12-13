@@ -8,7 +8,7 @@ const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
 const savedTheme = localStorage.getItem("theme") || "light";
-setTheme(savedTheme);
+setTheme(savedTheme); 
 
 const darkModeToggle = document.getElementById("darkModeToggle");
 darkModeToggle.setAttribute("aria-pressed", savedTheme === "dark");

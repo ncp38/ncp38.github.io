@@ -47,7 +47,7 @@ function renderTags() {
         activeTags.add(tag);
       }
       render();
-    };
+    }; 
 	
 	function toggle() {
 	  chip.classList.toggle("active");

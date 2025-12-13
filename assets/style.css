@@ -120,3 +120,12 @@ input[type="text"]:focus {
 .controls label:hover {
   opacity: 0.8;
 }
+
+:focus-visible {
+  outline: 2px solid var(--tag-active);
+  outline-offset: 2px;
+}
+
+.tag:focus-visible {
+  box-shadow: 0 0 0 2px var(--tag-active);
+}

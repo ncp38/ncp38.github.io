@@ -29,23 +29,8 @@
   <button id="darkModeToggle">🌙</button>
 </section>
 
-<section id="tagContainer"></section>
-<section id="results"></section>
-
-
-<section class="controls">
-  <input id="searchBox" type="text" placeholder="Search by keyword…">
-
-  <label>
-    <input type="checkbox" id="toggleProjects" checked>
-    Projects
-  </label>
-
-  <label>
-    <input type="checkbox" id="togglePublications" checked>
-    Publications
-  </label>
-</section>
+<section id="tagContainer" role="group" aria-label="Filter by keyword"></section>
+<section id="results" role="region" aria-live="polite" aria-label="Search results"></section>
 
 <section id="results"></section>
 

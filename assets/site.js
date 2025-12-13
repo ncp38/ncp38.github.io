@@ -8,11 +8,13 @@ const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
 const darkModeToggle = document.getElementById("darkModeToggle");
+darkModeToggle.setAttribute("aria-pressed", savedTheme === "dark");
 
 function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem("theme", theme);
   darkModeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+  darkModeToggle.setAttribute("aria-pressed", theme === "dark");
 }
 
 darkModeToggle.onclick = () => {
@@ -28,6 +30,34 @@ function getAllTags() {
   projects.forEach(p => p.keywords.forEach(k => tags.add(k)));
   publications.forEach(p => p.keywords.forEach(k => tags.add(k)));
   return Array.from(tags).sort();
+}
+
+chip.tabIndex = 0;
+chip.setAttribute("role", "button");
+chip.setAttribute("aria-pressed", "false");
+
+chip.onclick = toggle;
+chip.onkeydown = (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    toggle();
+  }
+};
+
+function toggle() {
+  chip.classList.toggle("active");
+
+  chip.setAttribute(
+    "aria-pressed",
+    chip.classList.contains("active")
+  );
+
+  if (activeTags.has(tag)) {
+    activeTags.delete(tag);
+  } else {
+    activeTags.add(tag);
+  }
+  render();
 }
 
 function renderTags() {
@@ -52,6 +82,19 @@ function renderTags() {
   });
 }
 
+function createCard(html) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html.trim();
+  const card = wrapper.firstChild;
+
+  card.classList.add("enter");
+  requestAnimationFrame(() => {
+    card.classList.remove("enter");
+  });
+
+  return card;
+}
+
 function matchesFilters(item) {
   const query = searchBox.value.toLowerCase();
 
@@ -67,37 +110,92 @@ function matchesFilters(item) {
 }
 
 function render() {
-  results.innerHTML = "";
+  const oldCards = Array.from(results.children);
 
-  if (toggleProjects.checked) {
-    projects.filter(matchesFilters).forEach(p => {
-      results.innerHTML += `
-        <div class="card">
-          <h3><a href="${p.link}">${p.title}</a></h3>
-          <p>${p.description}</p>
-          <div class="chip-row">
-            ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-          </div>
-        </div>
-      `;
-    });
-  }
+  // Animate out existing cards
+  oldCards.forEach(card => card.classList.add("exit"));
 
-  if (togglePublications.checked) {
-    publications.filter(matchesFilters).forEach(p => {
-      results.innerHTML += `
-        <div class="card">
-          <h3>${p.title}</h3>
-          <p>${p.authors}</p>
-          <p><em>${p.venue}</em>, ${p.year}</p>
-          <div class="chip-row">
-            ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
+  setTimeout(() => {
+    results.innerHTML = "";
+
+    if (toggleProjects.checked) {
+      projects.filter(matchesFilters).forEach(p => {
+        const card = createCard(`
+          <div class="card" tabindex="0">
+            <h3><a href="${p.link}">${p.title}</a></h3>
+            <p>${p.description}</p>
+            <div class="chip-row">
+              ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
+            </div>
           </div>
-        </div>
-      `;
-    });
-  }
+        `);
+        results.appendChild(card);
+      });
+    }
+
+    if (togglePublications.checked) {
+      publications.filter(matchesFilters).forEach(p => {
+        const card = createCard(`
+          <div class="card" tabindex="0">
+            <h3>${p.title}</h3>
+            <p>${p.authors}</p>
+            <p><em>${p.venue}</em>, ${p.year}</p>
+            <div class="chip-row">
+              ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
+            </div>
+          </div>
+        `);
+        results.appendChild(card);
+      });
+    }
+
+  }, 180); // matches CSS transition duration
 }
+
+tagContainer.addEventListener("keydown", (e) => {
+  const tags = Array.from(tagContainer.querySelectorAll(".tag"));
+  const currentIndex = tags.indexOf(document.activeElement);
+
+  if (currentIndex === -1) return;
+
+  let nextIndex = currentIndex;
+
+  if (e.key === "ArrowRight") nextIndex++;
+  if (e.key === "ArrowLeft") nextIndex--;
+  if (e.key === "ArrowDown") nextIndex += 4; // grid-friendly
+  if (e.key === "ArrowUp") nextIndex -= 4;
+
+  if (tags[nextIndex]) {
+    tags[nextIndex].focus();
+    e.preventDefault();
+  }
+});
+
+
+document.addEventListener("keydown", (e) => {
+  // Esc clears filters
+  if (e.key === "Escape") {
+    searchBox.value = "";
+    activeTags.clear();
+
+    document
+      .querySelectorAll(".tag.active")
+      .forEach(t => {
+        t.classList.remove("active");
+        t.setAttribute("aria-pressed", "false");
+      });
+
+    render();
+  }
+
+  // "/" focuses search (like GitHub)
+  if (e.key === "/" && document.activeElement !== searchBox) {
+    e.preventDefault();
+    searchBox.focus();
+  }
+});
+
+
 
 
 searchBox.addEventListener("input", render);

@@ -31,6 +31,45 @@ function getAllTags() {
   return Array.from(tags).sort();
 }
 
+function applyURLState() {
+  const params = new URLSearchParams(window.location.search);
+
+  // Search
+  if (params.has("search")) {
+    searchBox.value = params.get("search");
+  }
+
+  // Toggles
+  toggleProjects.checked = params.get("projects") !== "0";
+  togglePublications.checked = params.get("papers") !== "0";
+
+  // Tags
+  if (params.has("tags")) {
+    const tagsFromURL = params.get("tags").split(",");
+    activeTags = new Set(tagsFromURL);
+  }
+}
+
+
+function updateURL() {
+  const params = new URLSearchParams();
+
+  if (searchBox.value) {
+    params.set("search", searchBox.value);
+  }
+
+  if (activeTags.size > 0) {
+    params.set("tags", Array.from(activeTags).join(","));
+  }
+
+  params.set("projects", toggleProjects.checked ? "1" : "0");
+  params.set("papers", togglePublications.checked ? "1" : "0");
+
+  const newURL = `${window.location.pathname}?${params.toString()}`;
+  history.replaceState(null, "", newURL);
+}
+
+
 function renderTags() {
   tagContainer.innerHTML = "";
   getAllTags().forEach(tag => {
@@ -62,12 +101,17 @@ function renderTags() {
 	  } else {
 		activeTags.add(tag);
 	  }
+	  updateURL();
 	  render();
 	}
 	
 	chip.tabIndex = 0;
 	chip.setAttribute("role", "button");
-	chip.setAttribute("aria-pressed", "false");
+	const isActive = activeTags.has(tag);
+	chip.classList.toggle("active", isActive);
+	chip.setAttribute("aria-pressed", isActive);
+
+	if (index === 0) currentTagIndex = 0;
 
 	chip.onclick = toggle;
 	chip.onkeydown = (e) => {
@@ -176,15 +220,13 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     searchBox.value = "";
     activeTags.clear();
+	toggleProjects.checked = true;
+	togglePublications.checked = true;
 
-    document
-      .querySelectorAll(".tag.active")
-      .forEach(t => {
-        t.classList.remove("active");
-        t.setAttribute("aria-pressed", "false");
-      });
+	history.replaceState(null, "", window.location.pathname);
 
-    render();
+	renderTags();
+	render();
   }
 
   // "/" focuses search (like GitHub)
@@ -197,9 +239,27 @@ document.addEventListener("keydown", (e) => {
 
 
 
-searchBox.addEventListener("input", render);
-toggleProjects.addEventListener("change", render);
-togglePublications.addEventListener("change", render);
+searchBox.addEventListener("input", () => {
+  updateURL();
+  render();
+});
 
+toggleProjects.addEventListener("change", () => {
+  updateURL();
+  render();
+});
+
+togglePublications.addEventListener("change", () => {
+  updateURL();
+  render();
+});
+
+window.addEventListener("popstate", () => {
+  applyURLState();
+  renderTags();
+  render();
+});
+
+applyURLState();
 renderTags();
 render();

@@ -111,7 +111,7 @@ function renderTags() {
 	chip.classList.toggle("active", isActive);
 	chip.setAttribute("aria-pressed", isActive);
 
-	#if (index === 0) currentTagIndex = 0;
+	//if (index === 0) currentTagIndex = 0;
 
 	chip.onclick = toggle;
 	chip.onkeydown = (e) => {

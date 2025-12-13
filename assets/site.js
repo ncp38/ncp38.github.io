@@ -4,6 +4,16 @@ const results = document.getElementById("results");
 const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
 
+const facetCards = [
+  {
+    id: "languages",
+    title: "Programming Languages",
+    description: "Filter projects and publications by language",
+    tags: ["c", "c++", "c#", "java", "python"]
+  }
+];
+
+
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
@@ -151,6 +161,33 @@ function matchesFilters(item) {
   return matchesText && matchesTags;
 }
 
+function renderFacetCards() {
+  facetCards.forEach(card => {
+    const el = document.createElement("div");
+    el.className = "card facet-card";
+    el.setAttribute("role", "group");
+    el.setAttribute("aria-label", card.title);
+
+    el.innerHTML = `
+      <h3>${card.title}</h3>
+      <p class="facet-desc">${card.description}</p>
+      <div class="facet-options">
+        ${card.tags.map(tag => `
+          <button
+            class="facet-option ${activeTags.has(tag) ? "active" : ""}"
+            aria-pressed="${activeTags.has(tag)}"
+            data-tag="${tag}">
+            ${tag.toUpperCase()}
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    results.appendChild(el);
+  });
+}
+
+
 function render() {
   const oldCards = Array.from(results.children);
 
@@ -159,6 +196,7 @@ function render() {
 
   setTimeout(() => {
     results.innerHTML = "";
+	renderFacetCards();
 
 	  if (toggleProjects.checked) {
 	  projects.filter(matchesFilters).forEach(p => {
@@ -236,6 +274,37 @@ document.addEventListener("keydown", (e) => {
     searchBox.focus();
   }
 });
+
+results.addEventListener("click", (e) => {
+  const btn = e.target.closest(".facet-option");
+  if (!btn) return;
+
+  const tag = btn.dataset.tag;
+  const isActive = activeTags.has(tag);
+
+  btn.classList.toggle("active", !isActive);
+  btn.setAttribute("aria-pressed", String(!isActive));
+
+  if (isActive) {
+    activeTags.delete(tag);
+  } else {
+    activeTags.add(tag);
+  }
+
+  updateURL();
+  render();
+});
+
+results.addEventListener("keydown", (e) => {
+  const btn = e.target.closest(".facet-option");
+  if (!btn) return;
+
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    btn.click();
+  }
+});
+
 
 
 

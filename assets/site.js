@@ -111,7 +111,7 @@ function renderTags() {
 	chip.classList.toggle("active", isActive);
 	chip.setAttribute("aria-pressed", isActive);
 
-	if (index === 0) currentTagIndex = 0;
+	#if (index === 0) currentTagIndex = 0;
 
 	chip.onclick = toggle;
 	chip.onkeydown = (e) => {
@@ -161,36 +161,19 @@ function render() {
   setTimeout(() => {
     results.innerHTML = "";
 
-    if (toggleProjects.checked) {
-      projects.filter(matchesFilters).forEach(p => {
-        const card = createCard(`
-          <div class="card" tabindex="0">
-            <h3><a href="${p.link}">${p.title}</a></h3>
-            <p>${p.description}</p>
-            <div class="chip-row">
-              ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-            </div>
-          </div>
-        `);
-        results.appendChild(card);
-      });
-    }
-
-    if (togglePublications.checked) {
-      publications.filter(matchesFilters).forEach(p => {
-        const card = createCard(`
-          <div class="card" tabindex="0">
-            <h3>${p.title}</h3>
-            <p>${p.authors}</p>
-            <p><em>${p.venue}</em>, ${p.year}</p>
-            <div class="chip-row">
-              ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-            </div>
-          </div>
-        `);
-        results.appendChild(card);
-      });
-    }
+	  projects.filter(matchesFilters).forEach(p => {
+		const currentFilters = encodeURIComponent(window.location.search || "");
+		const card = createCard(`
+		  <div class="card">
+			<h3><a href="${p.link}?ref=${currentFilters}">${p.title}</a></h3>
+			<p>${p.description}</p>
+			<div class="chip-row">
+			  ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
+			</div>
+		  </div>
+		`);
+		results.appendChild(card);
+	  });
 
   }, 180); // matches CSS transition duration
 }

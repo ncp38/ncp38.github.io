@@ -180,42 +180,68 @@ input[type="text"]:focus {
   outline-offset: 3px;
 }
 
-.facet-card {
-  background: linear-gradient(
-    135deg,
-    var(--card),
-    rgba(100, 100, 255, 0.05)
-  );
-  border: 2px dashed var(--border);
-}
-
-.facet-desc {
-  font-size: 0.9em;
-  color: var(--meta);
-}
-
-.facet-options {
+#compoundFilters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.facet-option {
+.compound-filter {
+  position: relative;
+}
+
+.compound-btn {
+  padding: 8px 12px;
   border-radius: 20px;
-  padding: 6px 12px;
   border: 1px solid var(--border);
-  background: var(--tag-bg);
+  background: var(--card);
   cursor: pointer;
-  transition: transform 120ms ease, background-color 120ms ease;
 }
 
-.facet-option.active {
+.compound-btn.active {
   background: var(--tag-active);
   color: white;
 }
 
-.facet-option:hover {
-  transform: translateY(-1px);
+.compound-panel {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 10;
+}
+
+.compound-option {
+  padding: 6px 10px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--tag-bg);
+  cursor: pointer;
+}
+
+.compound-option.active {
+  background: var(--tag-active);
+  color: white;
+}
+
+.compound-panel {
+  animation: fadeSlide 150ms ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 

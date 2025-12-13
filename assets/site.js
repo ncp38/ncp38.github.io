@@ -4,15 +4,16 @@ const results = document.getElementById("results");
 const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
 
-const facetCards = [
+const compoundFilters = [
   {
     id: "languages",
-    title: "Programming Languages",
-    description: "Filter projects and publications by language",
+    label: "Programming Languages",
     tags: ["c", "c++", "c#", "java", "python"]
   }
 ];
 
+const compoundContainer =
+  document.getElementById("compoundFilters");
 
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
@@ -161,42 +162,50 @@ function matchesFilters(item) {
   return matchesText && matchesTags;
 }
 
-function renderFacetCards() {
-  facetCards.forEach(card => {
-    const el = document.createElement("div");
-    el.className = "card facet-card";
-    el.setAttribute("role", "group");
-    el.setAttribute("aria-label", card.title);
+function renderCompoundFilters() {
+  compoundContainer.innerHTML = "";
 
-    el.innerHTML = `
-      <h3>${card.title}</h3>
-      <p class="facet-desc">${card.description}</p>
-      <div class="facet-options">
-        ${card.tags.map(tag => `
+  compoundFilters.forEach(filter => {
+    const isActive = filter.tags.some(t => activeTags.has(t));
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "compound-filter";
+
+    wrapper.innerHTML = `
+      <button
+        class="compound-btn ${isActive ? "active" : ""}"
+        aria-expanded="false"
+        aria-haspopup="true"
+        aria-label="${filter.label}">
+        ${filter.label}
+      </button>
+
+      <div class="compound-panel" hidden>
+        ${filter.tags.map(tag => `
           <button
-            class="facet-option ${activeTags.has(tag) ? "active" : ""}"
-            aria-pressed="${activeTags.has(tag)}"
-            data-tag="${tag}">
+            class="compound-option ${activeTags.has(tag) ? "active" : ""}"
+            data-tag="${tag}"
+            aria-pressed="${activeTags.has(tag)}">
             ${tag.toUpperCase()}
           </button>
         `).join("")}
       </div>
     `;
 
-    results.appendChild(el);
+    compoundContainer.appendChild(wrapper);
   });
 }
-
 
 function render() {
   const oldCards = Array.from(results.children);
 
   // Animate out existing cards
   oldCards.forEach(card => card.classList.add("exit"));
+  
+  renderCompoundFilters();
 
   setTimeout(() => {
     results.innerHTML = "";
-	renderFacetCards();
 
 	  if (toggleProjects.checked) {
 	  projects.filter(matchesFilters).forEach(p => {
@@ -233,6 +242,7 @@ function render() {
 
   }, 180); // matches CSS transition duration
 }
+
 
 tagContainer.addEventListener("keydown", (e) => {
   const tags = Array.from(tagContainer.querySelectorAll(".tag"));
@@ -275,33 +285,38 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-results.addEventListener("click", (e) => {
-  const btn = e.target.closest(".facet-option");
-  if (!btn) return;
+compoundContainer.addEventListener("click", (e) => {
+  const btn = e.target.closest(".compound-btn");
+  const option = e.target.closest(".compound-option");
 
-  const tag = btn.dataset.tag;
-  const isActive = activeTags.has(tag);
+  if (btn) {
+    const panel = btn.nextElementSibling;
+    const expanded = btn.getAttribute("aria-expanded") === "true";
 
-  btn.classList.toggle("active", !isActive);
-  btn.setAttribute("aria-pressed", String(!isActive));
-
-  if (isActive) {
-    activeTags.delete(tag);
-  } else {
-    activeTags.add(tag);
+    btn.setAttribute("aria-expanded", !expanded);
+    panel.hidden = expanded;
+    return;
   }
 
-  updateURL();
-  render();
+  if (option) {
+    const tag = option.dataset.tag;
+    const active = activeTags.has(tag);
+
+    option.classList.toggle("active", !active);
+    option.setAttribute("aria-pressed", String(!active));
+
+    active ? activeTags.delete(tag) : activeTags.add(tag);
+
+    updateURL();
+    render();
+  }
 });
 
-results.addEventListener("keydown", (e) => {
-  const btn = e.target.closest(".facet-option");
-  if (!btn) return;
-
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    btn.click();
+compoundContainer.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    document
+      .querySelectorAll(".compound-panel:not([hidden])")
+      .forEach(panel => panel.hidden = true);
   }
 });
 

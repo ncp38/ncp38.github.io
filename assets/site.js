@@ -31,34 +31,6 @@ function getAllTags() {
   return Array.from(tags).sort();
 }
 
-chip.tabIndex = 0;
-chip.setAttribute("role", "button");
-chip.setAttribute("aria-pressed", "false");
-
-chip.onclick = toggle;
-chip.onkeydown = (e) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    toggle();
-  }
-};
-
-function toggle() {
-  chip.classList.toggle("active");
-
-  chip.setAttribute(
-    "aria-pressed",
-    chip.classList.contains("active")
-  );
-
-  if (activeTags.has(tag)) {
-    activeTags.delete(tag);
-  } else {
-    activeTags.add(tag);
-  }
-  render();
-}
-
 function renderTags() {
   tagContainer.innerHTML = "";
   getAllTags().forEach(tag => {
@@ -76,6 +48,34 @@ function renderTags() {
       }
       render();
     };
+	
+	function toggle() {
+	  chip.classList.toggle("active");
+
+	  chip.setAttribute(
+		"aria-pressed",
+		chip.classList.contains("active")
+	  );
+
+	  if (activeTags.has(tag)) {
+		activeTags.delete(tag);
+	  } else {
+		activeTags.add(tag);
+	  }
+	  render();
+	}
+	
+	chip.tabIndex = 0;
+	chip.setAttribute("role", "button");
+	chip.setAttribute("aria-pressed", "false");
+
+	chip.onclick = toggle;
+	chip.onkeydown = (e) => {
+	  if (e.key === "Enter" || e.key === " ") {
+		e.preventDefault();
+		toggle();
+	  }
+	};
 
     tagContainer.appendChild(chip);
   });

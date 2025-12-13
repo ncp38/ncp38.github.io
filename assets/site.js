@@ -8,7 +8,7 @@ const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
 const darkModeToggle = document.getElementById("darkModeToggle");
-darkModeToggle.setAttribute("aria-pressed", savedTheme === "dark");
+darkModeToggle.setAttribute("aria-pressed", savedTheme !== null && savedTheme === "dark");
 
 function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);

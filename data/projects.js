@@ -5,7 +5,7 @@ const projects = [
     description: "Short description of the project.",
     keywords: ["machine learning", "vision", "python"],
     year: 2024,
-    link: "projects/project1.html"
+    link: "projects/project1.html" 
   },
   {
     id: "project-2",

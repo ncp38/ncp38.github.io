@@ -178,6 +178,7 @@ function render() {
 
     if (togglePublications.checked) {
       publications.filter(matchesFilters).forEach(p => {
+		const currentFilters = encodeURIComponent(window.location.search || "");
         const card = createCard(`
           <div class="card" tabindex="0">
             <h3><a href="${p.link}?ref=${currentFilters}">${p.title}</a>${p.title}</h3>

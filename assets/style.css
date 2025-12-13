@@ -1,0 +1,122 @@
+:root {
+  --bg: #ffffff;
+  --text: #222;
+  --card: #f9f9f9;
+  --border: #ddd;
+  --tag-bg: #e6e6e6;
+  --tag-active: #4a6cf7;
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --text: #eaeaea;
+  --card: #1e1e1e;
+  --border: #333;
+  --tag-bg: #2a2a2a;
+  --tag-active: #8aa4ff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 20px;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  padding: 6px 10px;
+  margin: 4px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.tag.active {
+  background: var(--tag-active);
+  color: white;
+}
+
+.tag.small {
+  font-size: 0.8em;
+  cursor: default;
+}
+
+.chip-row {
+  margin-top: 8px;
+}
+
+.card {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.card.enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.card.exit {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.tag {
+  transition:
+    background-color 150ms ease,
+    transform 120ms ease;
+}
+
+.tag:hover {
+  transform: translateY(-1px);
+}
+
+.tag:active {
+  transform: scale(0.95);
+}
+
+body {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+input[type="text"] {
+  transition: box-shadow 150ms ease;
+}
+
+input[type="text"]:focus {
+  box-shadow: 0 0 0 2px var(--tag-active);
+  outline: none;
+}
+
+.controls label {
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+.controls label:hover {
+  opacity: 0.8;
+}

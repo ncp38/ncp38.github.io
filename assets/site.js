@@ -342,7 +342,7 @@ compoundContainer.addEventListener("click", (e) => {
 
     active ? activeTags.delete(tag) : activeTags.add(tag);
 
-    updateURL();
+    updateURL(); 
     render();
   }
 });

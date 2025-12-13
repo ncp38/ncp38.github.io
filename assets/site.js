@@ -310,7 +310,7 @@ document.addEventListener("click", (e) => {
 });
 
 
-compoundContainer.addEventListener("click", (e) => {
+compoundContainer.addEventListener("click", (e) => { 
   const btn = e.target.closest(".compound-btn");
   const option = e.target.closest(".compound-option");
   const panel = btn.nextElementSibling;

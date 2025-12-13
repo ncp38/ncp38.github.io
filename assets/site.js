@@ -7,8 +7,11 @@ const togglePublications = document.getElementById("togglePublications");
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
+const savedTheme = localStorage.getItem("theme") || "light";
+setTheme(savedTheme);
+
 const darkModeToggle = document.getElementById("darkModeToggle");
-darkModeToggle.setAttribute("aria-pressed", savedTheme !== null && savedTheme === "dark");
+darkModeToggle.setAttribute("aria-pressed", savedTheme === "dark");
 
 function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
@@ -21,9 +24,6 @@ darkModeToggle.onclick = () => {
   const current = document.documentElement.getAttribute("data-theme") || "light";
   setTheme(current === "light" ? "dark" : "light");
 };
-
-const savedTheme = localStorage.getItem("theme") || "light";
-setTheme(savedTheme);
 
 function getAllTags() {
   const tags = new Set();

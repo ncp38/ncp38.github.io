@@ -19,7 +19,6 @@ darkModeToggle.onclick = () => {
 function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem("theme", theme);
-  darkModeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
   darkModeToggle.setAttribute("aria-pressed", theme === "dark");
 }
 setTheme(savedTheme);

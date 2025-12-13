@@ -26,7 +26,16 @@
     Publications
   </label>
 
-  <button id="darkModeToggle">🌙</button>
+  <button
+  id="darkModeToggle"
+  class="theme-toggle"
+  aria-label="Toggle dark mode"
+  aria-pressed="false"
+>
+  <span class="icon sun" aria-hidden="true">☀️</span>
+  <span class="icon moon" aria-hidden="true">🌙</span>
+</button>
+
 </section>
 
 <section id="tagContainer" role="group" aria-label="Filter by keyword"></section>

@@ -142,15 +142,16 @@ input[type="text"]:focus {
 .theme-toggle .icon {
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  transform: translateY(2px);
 
-  transition:
-    transform 300ms ease,
-    opacity 200ms ease;
+  font-size: 1.2rem;
+  line-height: 1;
+
+  /* Font-metric baseline correction */
+  transform-origin: center;
 }
 
 /* Light mode: show moon */
@@ -178,4 +179,26 @@ input[type="text"]:focus {
 .theme-toggle:focus-visible {
   outline: 2px solid var(--tag-active);
   outline-offset: 3px;
+}
+
+/* Baseline correction: ~0.08em works well for emoji fonts */
+
+:root .moon {
+  opacity: 1;
+  transform: translateY(0.08em) rotate(0deg) scale(1);
+}
+
+:root .sun {
+  opacity: 0;
+  transform: translateY(0.08em) rotate(-90deg) scale(0.5);
+}
+
+[data-theme="dark"] .moon {
+  opacity: 0;
+  transform: translateY(0.08em) rotate(90deg) scale(0.5);
+}
+
+[data-theme="dark"] .sun {
+  opacity: 1;
+  transform: translateY(0.08em) rotate(0deg) scale(1);
 }

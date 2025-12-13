@@ -314,7 +314,7 @@ compoundContainer.addEventListener("click", (e) => {
   const btn = e.target.closest(".compound-btn");
   const option = e.target.closest(".compound-option");
   const panel = btn.nextElementSibling;
-  const expanded = btn.getAttribute("aria-expanded") === "true";
+  const expanded = btn.getAttribute("aria-expanded") === "true"; 
 
   if (btn) {
 	e.stopPropagation();

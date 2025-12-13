@@ -169,7 +169,7 @@ function render() {
 			<p>${p.description}</p>
 			<div class="chip-row">
 			  ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-			</div>
+			</div> 
 		  </div>
 		`);
 		results.appendChild(card);

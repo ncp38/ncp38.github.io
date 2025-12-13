@@ -109,7 +109,7 @@ function renderTags() {
 	chip.setAttribute("role", "button");
 	const isActive = activeTags.has(tag);
 	chip.classList.toggle("active", isActive);
-	chip.setAttribute("aria-pressed", isActive);
+	chip.setAttribute("aria-pressed", isActive); 
 
 	//if (index === 0) currentTagIndex = 0;
 

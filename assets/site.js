@@ -162,6 +162,14 @@ function matchesFilters(item) {
   return matchesText && matchesTags;
 }
 
+function closeAllCompoundPanels() {
+  document.querySelectorAll(".compound-panel").forEach(panel => {
+    panel.hidden = true;
+    panel.previousElementSibling
+      ?.setAttribute("aria-expanded", "false");
+  });
+}
+
 function renderCompoundFilters() {
   compoundContainer.innerHTML = "";
 
@@ -285,11 +293,33 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+document.addEventListener("click", (e) => {
+  const openPanels = document.querySelectorAll(
+    ".compound-panel:not([hidden])"
+  );
+
+  openPanels.forEach(panel => {
+    const wrapper = panel.closest(".compound-filter");
+    if (!wrapper.contains(e.target)) {
+      panel.hidden = true;
+
+      const btn = wrapper.querySelector(".compound-btn");
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+});
+
+
 compoundContainer.addEventListener("click", (e) => {
   const btn = e.target.closest(".compound-btn");
   const option = e.target.closest(".compound-option");
 
   if (btn) {
+	e.stopPropagation();
+	closeAllCompoundPanels();
+	panel.hidden = expanded;
+	btn.setAttribute("aria-expanded", String(!expanded));
+	  
     const panel = btn.nextElementSibling;
     const expanded = btn.getAttribute("aria-expanded") === "true";
 
@@ -299,6 +329,11 @@ compoundContainer.addEventListener("click", (e) => {
   }
 
   if (option) {
+	e.stopPropagation();
+	closeAllCompoundPanels();
+	panel.hidden = expanded;
+	btn.setAttribute("aria-expanded", String(!expanded));
+	
     const tag = option.dataset.tag;
     const active = activeTags.has(tag);
 
@@ -317,6 +352,9 @@ compoundContainer.addEventListener("keydown", (e) => {
     document
       .querySelectorAll(".compound-panel:not([hidden])")
       .forEach(panel => panel.hidden = true);
+	  panel
+          .previousElementSibling
+          .setAttribute("aria-expanded", "false");
   }
 });
 

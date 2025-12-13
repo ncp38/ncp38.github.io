@@ -245,3 +245,14 @@ input[type="text"]:focus {
   }
 }
 
+.groupedResults {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+#compoundFilters {
+  display: flex;
+}
+

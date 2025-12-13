@@ -313,6 +313,7 @@ document.addEventListener("click", (e) => {
 compoundContainer.addEventListener("click", (e) => {
   const btn = e.target.closest(".compound-btn");
   const option = e.target.closest(".compound-option");
+  const panel = btn.nextElementSibling;
 
   if (btn) {
 	e.stopPropagation();
@@ -320,7 +321,6 @@ compoundContainer.addEventListener("click", (e) => {
 	panel.hidden = expanded;
 	btn.setAttribute("aria-expanded", String(!expanded));
 	  
-    const panel = btn.nextElementSibling;
     const expanded = btn.getAttribute("aria-expanded") === "true";
 
     btn.setAttribute("aria-expanded", !expanded);
@@ -342,7 +342,7 @@ compoundContainer.addEventListener("click", (e) => {
 
     active ? activeTags.delete(tag) : activeTags.add(tag);
 
-    updateURL(); 
+    updateURL();
     render();
   }
 });

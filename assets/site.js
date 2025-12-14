@@ -313,10 +313,10 @@ document.addEventListener("click", (e) => {
 compoundContainer.addEventListener("click", (e) => { 
   const btn = e.target.closest(".compound-btn");
   const option = e.target.closest(".compound-option");
-  const expanded = btn.getAttribute("aria-expanded") === "true";
 
   if (btn) {
 	const panel = btn.nextElementSibling;
+	const expanded = btn.getAttribute("aria-expanded") === "true";
 	e.stopPropagation();
 	closeAllCompoundPanels();
 	panel.hidden = expanded;

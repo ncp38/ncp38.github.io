@@ -222,12 +222,25 @@ function render() {
 		const card = createCard(`
 		  <div class="card">
 			<h3><a href="${p.link}?ref=${currentFilters}">${p.title}</a></h3>
+			
+			<div class="card-links">
+			  <a href="#">PDF</a>
+			  <a href="#">Code</a>
+			  <a href="#">Demo</a>
+			</div>
+
+			
 			<p>${p.description}</p>
 			<div class="chip-row">
 			  ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
 			</div> 
 		  </div>
 		`);
+		card.addEventListener("click", (e) => {
+		  if (e.target.tagName !== "A") {
+			window.location = p.link;
+		  }
+		});
 		results.appendChild(card);
 	  });
 	  }

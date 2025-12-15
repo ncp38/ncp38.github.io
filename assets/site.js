@@ -3,12 +3,13 @@ const results = document.getElementById("results");
 
 const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
+const listOfProgrammingLanguages = ["c", "c++", "c#", "java", "python"];
 
 const compoundFilters = [
   {
     id: "languages",
     label: "Programming Languages",
-    tags: ["c", "c++", "c#", "java", "python"]
+    tags: listOfProgrammingLanguages
   }
 ];
 
@@ -210,7 +211,7 @@ function render() {
   // Animate out existing cards
   oldCards.forEach(card => card.classList.add("exit"));
   
-  renderCompoundFilters();
+  //renderCompoundFilters();
 
   setTimeout(() => {
     results.innerHTML = "";
@@ -293,7 +294,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-document.addEventListener("click", (e) => {
+/*document.addEventListener("click", (e) => {
   const openPanels = document.querySelectorAll(
     ".compound-panel:not([hidden])"
   );
@@ -351,7 +352,7 @@ compoundContainer.addEventListener("keydown", (e) => {
           .previousElementSibling
           .setAttribute("aria-expanded", "false");
   }
-});
+});*/
 
 
 

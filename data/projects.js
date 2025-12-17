@@ -1,4 +1,6 @@
-import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from '../projects/constants.js';
+//import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from '../projects/constants.js';
+
+const module = await import('../projects/constants.js');
 
 const projects = [
   {
@@ -11,10 +13,10 @@ const projects = [
   },
   {
     id: "project1",
-    title: PROJ1TITLE,
-    description: PROJ1DESCRIPTION,
-    keywords: PROJ1KEYWORDS,
-    year: PROJ1YEAR,
+    title: module.PROJ1TITLE,
+    description: module.PROJ1DESCRIPTION,
+    keywords: module.PROJ1KEYWORDS,
+    year: module.PROJ1YEAR,
     link: "projects/project1.html"
   }
 ];

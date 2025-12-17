@@ -21,6 +21,9 @@
 <a href="#">GitHub</a> | <a href="#">Paper</a>
 
 <script>
+  // Imports project info stored in constants.js
+  import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from './constants.js';
+
   // Get the 'ref' query param
   const params = new URLSearchParams(window.location.search);
   const ref = params.get("ref");

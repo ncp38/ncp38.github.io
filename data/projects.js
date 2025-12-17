@@ -1,4 +1,4 @@
-import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from './constants.js';
+import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from '../projects/constants.js';
 
 const projects = [
   {
@@ -11,10 +11,10 @@ const projects = [
   },
   {
     id: "project1",
-    title: "Visualization of Hurricane Data",
-    description: "Another project description.",
-    keywords: ["web", "javascript", "c", "c++", "java"],
-    year: 2011,
+    title: PROJ1TITLE,
+    description: PROJ1DESCRIPTION,
+    keywords: PROJ1KEYWORDS,
+    year: PROJ1YEAR,
     link: "projects/project1.html"
   }
 ];

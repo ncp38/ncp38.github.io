@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Project Title One</title>
+  <title id="page-title">Project Title One</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
@@ -22,7 +22,9 @@
 
 <script>
   // Imports project info stored in constants.js
-  import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from './constants.js';
+  import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from './constants.js'; 
+  
+  document.getElementById('page-title').textContent = PROJ1TITLE;
 
   // Get the 'ref' query param
   const params = new URLSearchParams(window.location.search);

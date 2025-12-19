@@ -10,21 +10,21 @@
 
 <a href="../index.html">← Back</a>
 
-<h1>Project Title One</h1>
-<p><strong>Year:</strong> 2024</p>
+<h1 id="project-title">Project Title One</h1>
+<p id="project-year"><strong>Year:</strong> 2024</p>
 
-<p>
+<p id="project-description">
   Full description of the project, motivation, methods,
   results, figures, links to code or papers.
 </p>
 
-<a href="#">GitHub</a> | <a href="#">Paper</a>
+<!--<a href="#">GitHub</a> | <a href="#">Paper</a>-->
 
-<script>
-  // Imports project info stored in constants.js
-  import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from './constants.js'; 
-  
+<script>  
   document.getElementById('page-title').textContent = PROJ1TITLE;
+  document.getElementById('project-year').textContent = PROJ1YEAR;
+  document.getElementById('project-title').textContent = PROJ1TITLE;
+  document.getElementById('project-description').textContent = PROJ1DESCRIPTION;
 
   // Get the 'ref' query param
   const params = new URLSearchParams(window.location.search);

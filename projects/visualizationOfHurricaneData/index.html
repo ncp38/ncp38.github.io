@@ -59,9 +59,24 @@ h2 {
 
     <h2 id="graphTitle">
       Visualization of Hurricane Data
-    </h2>
+    </h2><button id="infoToggle">&#9432</button>
+<p id="infoDisplay"></p>
     <div id="viz"></div>
     <script type="text/javascript">
+	
+const button = document.getElementById('infoToggle');
+const displayArea = document.getElementById('infoDisplay');
+
+// 2. Add event listener for the click
+button.addEventListener('click', function() {
+    if(displayArea.innerText.length <= 1)
+	{
+    displayArea.innerText = "Variables include: year, named storms, named storm days, hurricanes, hurricane days, intense hurricanes, intense hurricane days, accumulated cyclone energy, hurricane destruction potential, power dissipation index, net tropical cyclone activity, tropical storms, and hurricane category. This graph, and these variables, forecast cyclones in the Atlantic basin and originate from research by Dr. William Gray at Colorado State University.";
+	}
+	else
+	{
+	displayArea.innerText = "";
+});
 	
 var backButton = document.getElementById('backButton');
 backButton.href = document.referrer;

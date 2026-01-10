@@ -21,7 +21,7 @@ const projects = [
     description: PROJ2DESCRIPTION,
     keywords: PROJ2KEYWORDS,
     year: PROJ2YEAR,
-    link: "projects/project2.html" 
+    link: "projects/project2" 
   },
   {
     id: "project1",
@@ -29,6 +29,6 @@ const projects = [
     description: PROJ1DESCRIPTION,
     keywords: PROJ1KEYWORDS,
     year: PROJ1YEAR,
-    link: "projects/visualizationOfHurricaneData/index.html"
+    link: "projects/visualizationOfHurricaneData/index"
   }
 ];

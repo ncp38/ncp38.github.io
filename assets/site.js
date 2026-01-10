@@ -221,12 +221,12 @@ function render() {
 		const currentFilters = encodeURIComponent(window.location.search || "");
 		const card = createCard(`
 		  <div class="card">
-			<h3><a href="${p.link}?ref=${currentFilters}">${p.title}</a></h3>
+			<h3><a href="${p.link}.html?ref=${currentFilters}">${p.title}</a></h3>
 			
 			<div class="card-links">
-			  <a href="#">PDF</a>
-			  <a href="#">Code</a>
-			  <a href="#">Demo</a>
+			  <!--<a href="#">PDF</a>-->
+			  <a href="${p.link}.txt?ref=${currentFilters}">Code</a>
+			  <!--<a href="#">Demo</a>-->
 			</div>
 
 			

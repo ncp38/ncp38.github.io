@@ -225,7 +225,7 @@ function render() {
 			
 			<div class="card-links">
 			  <!--<a href="#">PDF</a>-->
-			  <a href="${p.link}.txt?ref=${currentFilters}">Code</a>
+			  <a href="${p.link}.txt">Code</a>
 			  <!--<a href="#">Demo</a>-->
 			</div>
 

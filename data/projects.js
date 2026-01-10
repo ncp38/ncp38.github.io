@@ -5,9 +5,9 @@
 // Constants for use in the project subfolder.
 
 const PROJ1TITLE = "Visualization of Hurricane Data";
-const PROJ1KEYWORDS = ["web", "javascript", "c", "c++", "java"];
+const PROJ1KEYWORDS = ["Web", "Javascript", "D3.js", "SVG", "Visualization", "Parallel Coordinates", "Weather Data"];
 const PROJ1YEAR = 2011;
-const PROJ1DESCRIPTION = "Description";
+const PROJ1DESCRIPTION = "This project uses parallel coordinates to graph yearly hurricane data.  It contains interactive features including selectable ranges, re-orderable rows, low-opacity lines, and multivariate functionality.<br>Variables include: year, named storms, named storm days, hurricanes, hurricane days, intense hurricanes, intense hurricane days, accumulated cyclone energy, hurricane destruction potential, power dissipation index, net tropical cyclone activity, tropical storms, and hurricane category";
 
 const PROJ2TITLE = "Working Title 2";
 const PROJ2KEYWORDS = ["c#"];

@@ -55,13 +55,16 @@ h2 {
 </head>
 <body>
 
-<a href="../index.html">← Back</a>
+<a href="https://ncp38.github.io/index.html" id="backButton">← Back</a>
 
     <h2 id="graphTitle">
       Visualization of Hurricane Data
     </h2>
     <div id="viz"></div>
     <script type="text/javascript">
+	
+var backButton = document.getElementById('backButton');
+backButton.href = document.referrer;
 
 var traits = ["Year","NS","NSD","H","HD","IH","IHD","ACE","HDP","PDI","NTC","TS","CAT1","CAT2","CAT3","CAT4","CAT5"]
 

@@ -29,6 +29,6 @@ const projects = [
     description: PROJ1DESCRIPTION,
     keywords: PROJ1KEYWORDS,
     year: PROJ1YEAR,
-    link: "projects/project1.html"
+    link: "projects/visualizationOfHurricaneData/index.html"
   }
 ];

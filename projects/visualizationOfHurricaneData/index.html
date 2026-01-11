@@ -58,8 +58,8 @@ h2 {
 <!--<a href="https://ncp38.github.io/index.html" id="backButton">← Back</a>-->
 
     <h2 id="graphTitle">
-      Visualization of Hurricane Data
-    </h2><button id="infoToggle">&#9432</button>
+      Visualization of Hurricane Data<button id="infoToggle">&#9432</button>
+    </h2>
 <p id="infoDisplay"></p>
     <div id="viz"></div>
     <script type="text/javascript">
@@ -79,8 +79,8 @@ button.addEventListener('click', function() {
 	}
 });
 	
-var backButton = document.getElementById('backButton');
-backButton.href = document.referrer;
+//var backButton = document.getElementById('backButton');
+//backButton.href = document.referrer;
 
 var traits = ["Year","NS","NSD","H","HD","IH","IHD","ACE","HDP","PDI","NTC","TS","CAT1","CAT2","CAT3","CAT4","CAT5"]
 

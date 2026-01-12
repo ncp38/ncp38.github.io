@@ -55,7 +55,7 @@ button {
   border: none;                /* Removes border */
   outline: none;               /* Removes outline on click/focus */
   cursor: pointer;             /* Ensures it looks clickable */
-  padding: .5;                  /* Optional: removes padding */
+  padding: 0;                  /* Optional: removes padding */
 }
 
     </style>
@@ -66,7 +66,7 @@ button {
 <!--<a href="https://ncp38.github.io/index.html" id="backButton">← Back</a>-->
 
     <h2 id="graphTitle">
-      Visualization of Hurricane Data <button id="infoToggle">&#9432</button>
+      Visualization of Hurricane Data&nbsp;<button id="infoToggle">&#9432</button>
     </h2>
     <div id="viz"></div>
 	<p id="infoDisplay"></p>
@@ -116,7 +116,7 @@ var line = d3.svg.line(),
     axis = d3.svg.axis().orient("left"),
     foreground;
 
-var svg = d3.select("body").append("svg:svg")
+var svg = d3.select("body").insert("svg:svg", "p")
     .attr("width", w + m[1] + m[3])
     .attr("height", h + m[0] + m[2])
   .append("svg:g")

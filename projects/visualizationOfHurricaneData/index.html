@@ -153,13 +153,7 @@ d3.csv("csvhurricanedata.csv", function(hurricanes) {
       .origin(function(d) { return {x: x(d)}; })
       .on("dragstart", dragstart)
       .on("drag", drag)
-      .on("dragend", dragend))
-	  .tickFormat(function(d) {
-        if (trait === 'Year') 
-		{
-            return d3.format(d); // Format as int
-        } 
-    });
+      .on("dragend", dragend));
 
   //Add an axis and title.
   g.append("svg:g")

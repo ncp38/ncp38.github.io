@@ -16,6 +16,10 @@
   --tag-active: #8aa4ff;
 }
 
+.icon-links a {
+  text-decoration: none;
+}
+
 body {
   background: var(--bg);
   color: var(--text);

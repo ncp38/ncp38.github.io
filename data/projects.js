@@ -22,7 +22,7 @@ const PROJ2DESCRIPTION = "My team designed a visualization for Snort network int
 const PROJ3TITLE = "Airship Web Game";
 const PROJ3KEYWORDS = ["Web Design", "Game Design"];
 const PROJ3YEAR = 2013;
-const PROJ3DESCRIPTION = "Design and implementation of a web game ("Gyrocopter Cage Match") that is based on surviving as long as possible. In it, players pilot a simple 2-D airship and dodge projectiles while also avoiding the spikes at the edges of the map. This game showcases some simple animations, the ability to change the texture of the airship by clicking on it, a pause and options menu, and a high score system.";
+const PROJ3DESCRIPTION = "Design and implementation of a web game (Gyrocopter Cage Match) that is based on surviving as long as possible. In it, players pilot a simple 2-D airship and dodge projectiles while also avoiding the spikes at the edges of the map. This game showcases some simple animations, the ability to change the texture of the airship by clicking on it, a pause and options menu, and a high score system.";
 
 const PROJ4TITLE = "Radial Data Visualization";
 const PROJ4KEYWORDS = ["Web Design", "Visualization"];

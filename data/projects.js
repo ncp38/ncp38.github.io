@@ -4,10 +4,10 @@
 
 // Constants for use in the project subfolder.
 
-const PROJ0TITLE = "Visualization of Hurricane Data";
+const PROJ0TITLE = "IEEE SoutheastCon 2011 Hardware Competition";
 const PROJ0KEYWORDS = ["Robotics", "C", "Arduino", "Electrical Engineering", "Emergency Response"];
 const PROJ0YEAR = 2012;
-const PROJ0DESCRIPTION = "Design and implementation of an autonomous emergency response robot for IEEE SoutheastCon Hardware Competition. This robot traveled between four rooms in a pre-defined course layout. The robot had to avoid obstacles, find a hazard (represented by an electromagnetic field), find up to three victims (represented by PVC pipe cutouts) per room, and report the location and status of each victim.";
+const PROJ0DESCRIPTION = "Design and implementation of an autonomous emergency response robot for IEEE SoutheastCon Hardware Competition as part of the Christian Brothers University team. This robot traveled between four rooms in a pre-defined course layout. The robot had to avoid obstacles, find a hazard (represented by an electromagnetic field), find up to three victims (represented by PVC pipe cutouts) per room, and report the location and status of each victim.  Presented at MAESC 2011.";
 
 const PROJ1TITLE = "Visualization of Hurricane Data";
 const PROJ1KEYWORDS = ["Web Design", "Javascript", "D3.js", "SVG", "Visualization", "Parallel Coordinates", "Weather Data", "Multivariate Data"];
@@ -94,6 +94,6 @@ const projects = [
     description: PROJ0DESCRIPTION,
     keywords: PROJ0KEYWORDS,
     year: PROJ0YEAR,
-    link: "projects/project0"
+    link: "projects/ieeesoutheastcon2011"
   }
 ];

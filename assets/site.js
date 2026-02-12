@@ -208,6 +208,11 @@ function renderCompoundFilters() {
 function render() {
   const oldCards = Array.from(results.children);
 
+  var standardLinkBlock = '<h3><a href="${p.link}.pdf?ref=${currentFilters}">${p.title}&nbsp(${p.year}) </a></h3>';
+  var southeastconLinkBlock = '<h3><a href="${p.link}ieeesoutheastcon2011presentation.pdf?ref=${currentFilters}">${p.title}&nbsp(${p.year}) </a></h3>';
+
+  var standardCodeLink = '<a href="${p.link}.txt">Code</a>';
+  var southeastconCodeLink = '<a href="${p.link}/ieeesoutheastcon2011report.pdf">Report</a>';
   // Animate out existing cards
   oldCards.forEach(card => card.classList.add("exit"));
   
@@ -219,13 +224,23 @@ function render() {
 	  if (toggleProjects.checked) {
 	  projects.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
+		
+		//Standard Card clickable link and code-specific link
+		const linkBlock = standardLinkBlock;
+		const linkToCodeBlock = standardCodeLink;
+		
+		//Specific modified links for certain projects.
+		if(p.title == "IEEE SoutheastCon 2011 Hardware Competition")
+		{
+			linkBlock = southeastconLinkBlock;
+			linkToCodeBlock = southeastconCodeLink;
+		}
 		const card = createCard(`
 		  <div class="card">
-			<h3><a href="${p.link}.html?ref=${currentFilters}">${p.title}&nbsp(${p.year}) </a></h3>
-			
+			${linkBlock}
 			<div class="card-links">
 			  <!--<a href="#">PDF</a>-->
-			  <a href="${p.link}.txt">Code</a>
+			  ${linkToCodeBlock}
 			  <!--<a href="#">Demo</a>-->
 			</div>
 

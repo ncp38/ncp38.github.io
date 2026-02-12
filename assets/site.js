@@ -226,8 +226,8 @@ function render() {
 		const currentFilters = encodeURIComponent(window.location.search || "");
 		
 		//Standard Card clickable link and code-specific link
-		const linkBlock = standardLinkBlock;
-		const linkToCodeBlock = standardCodeLink;
+		let linkBlock = standardLinkBlock;
+		let linkToCodeBlock = standardCodeLink;
 		
 		//Specific modified links for certain projects.
 		if(p.title == "IEEE SoutheastCon 2011 Hardware Competition")

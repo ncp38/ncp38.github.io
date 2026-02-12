@@ -208,11 +208,11 @@ function renderCompoundFilters() {
 function render() {
   const oldCards = Array.from(results.children);
 
-  var standardLinkBlock = '<h3><a href="${p.link}.pdf?ref=${currentFilters}">${p.title}&nbsp(${p.year}) </a></h3>';
-  var southeastconLinkBlock = '<h3><a href="${p.link}ieeesoutheastcon2011presentation.pdf?ref=${currentFilters}">${p.title}&nbsp(${p.year}) </a></h3>';
+  var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+  var southeastconLinkBlock = '<h3><a href="' + p.link + 'ieeesoutheastcon2011presentation.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year ') </a></h3>';
 
-  var standardCodeLink = '<a href="${p.link}.txt">Code</a>';
-  var southeastconCodeLink = '<a href="${p.link}/ieeesoutheastcon2011report.pdf">Report</a>';
+  var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
+  var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
   // Animate out existing cards
   oldCards.forEach(card => card.classList.add("exit"));
   

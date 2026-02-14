@@ -221,7 +221,8 @@ function render() {
 	  projects.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
 		
-		var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		//var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var standardLinkBlock = '<h3><a href="' + p.link + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var southeastconLinkBlock = '<h3><a href="' + p.link + '/ieeesoutheastcon2011presentation.pdf">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
@@ -255,7 +256,7 @@ function render() {
 		`);
 		card.addEventListener("click", (e) => {
 		  if (e.target.tagName !== "A") {
-			window.location = p.link;
+			window.location = linkBlock;
 		  }
 		});
 		results.appendChild(card);

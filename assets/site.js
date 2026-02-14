@@ -222,8 +222,11 @@ function render() {
 		const currentFilters = encodeURIComponent(window.location.search || "");
 		
 		//var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var standardLinkBlock = '<h3><a href="' + p.link + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var southeastconLinkBlock = '<h3><a href="' + p.link + '/ieeesoutheastcon2011presentation.pdf">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var standardLink = p.link;
+		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
+		
+		var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var southeastconLinkBlock = '<h3><a href="' + southeastconLink '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
@@ -231,10 +234,12 @@ function render() {
 		//Standard Card clickable link and code-specific link
 		let linkBlock = standardLinkBlock;
 		let linkToCodeBlock = standardCodeLink;
+		let directLink = standardLink;
 		
 		//Specific modified links for certain projects.
 		if(p.title == "IEEE SoutheastCon 2011 Hardware Competition")
 		{
+			directLink = southeastconLink;
 			linkBlock = southeastconLinkBlock;
 			linkToCodeBlock = southeastconCodeLink;
 		}
@@ -256,7 +261,7 @@ function render() {
 		`);
 		card.addEventListener("click", (e) => {
 		  if (e.target.tagName !== "A") {
-			window.location = linkBlock;
+			window.location = directLink;
 		  }
 		});
 		results.appendChild(card);

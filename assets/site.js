@@ -226,7 +226,7 @@ function render() {
 		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
 		
 		var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var southeastconLinkBlock = '<h3><a href="' + southeastconLink '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var southeastconLinkBlock = '<h3><a href="' + southeastconLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';

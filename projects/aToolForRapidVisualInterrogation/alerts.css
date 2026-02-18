@@ -1,0 +1,84 @@
+body{
+	font-family: "Helvetica-Neue",Helvetica,Arial,sans-serif;
+
+}
+h1 {
+	text-align: left;
+}
+
+p {
+	text-align: left;
+}
+
+svg {
+	display: block;
+	margin: auto;
+}
+
+rect {
+	stroke: black;
+}
+
+.details {
+	font: 16px sans-serif;
+}
+
+.background {
+	fill: #dfe3ec;
+	stroke: white;
+}
+
+.ageleft {
+	fill: white;
+}
+
+.slider {
+	fill: #505050;
+	stroke: none;
+}
+
+.sidebar {
+         position: fixed;
+         height: 25px;
+         left: 3px;
+         top: 185px;
+         width: 24px;
+}
+
+#container {
+	width: 1100px;
+	margin: 0 0 0 20px;
+	padding: 0;
+}
+#container #leftFloater {
+	float:left;
+	width: 200px;
+}
+
+#alerts{
+	width: 900px;
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+#alerts #alertsList{
+	width: 400px;
+	float: left;
+}
+#alerts #alertDetails{
+	width: 300px;
+	float: right;
+}
+
+#alertsDetails p{
+	margin-bottom: 5px;
+}
+
+#toggleview {
+	margin-top:8px;
+}
+#footer {
+	position:absolute;
+	bottom: 5px;
+	right: 275px;
+}

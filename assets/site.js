@@ -224,12 +224,15 @@ function render() {
 		//var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var standardLink = p.link;
 		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
+		var visualInterrogationLink = p.link + 'alerts.php';
 		
 		var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var southeastconLinkBlock = '<h3><a href="' + southeastconLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var visualInterrogationLinkBlock = '<h3><a href="' + visualInterrogationLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
+		//var visualInterrogationCodeLink = '<a href="' + p.link + '/.txt">Code</a>';
 		
 		//Standard Card clickable link and code-specific link
 		let linkBlock = standardLinkBlock;
@@ -242,6 +245,12 @@ function render() {
 			directLink = southeastconLink;
 			linkBlock = southeastconLinkBlock;
 			linkToCodeBlock = southeastconCodeLink;
+		}
+		else if(p.title == "A Tool for Rapid Visual Interrogation & Triage of Alerts")
+		{
+			directLink = visualInterrogationLink;
+			linkBlock = visualInterrogationLinkBlock;
+			//linkToCodeBlock = ;
 		}
 		const card = createCard(`
 		  <div class="card">

@@ -78,7 +78,7 @@ const projects = [
     description: PROJ2DESCRIPTION,
     keywords: PROJ2KEYWORDS,
     year: PROJ2YEAR,
-    link: "projects/project2" 
+    link: "projects/aToolForRapidVisualInterrogation" 
   },
   {
     id: "project1",

@@ -224,7 +224,7 @@ function render() {
 		//var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var standardLink = p.link;
 		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
-		var visualInterrogationLink = 'https://www.projects.daybreakeducation.com/alerts.php';
+		var visualInterrogationLink = 'https://www.projects.daybreakeducation.com/atoolforrapidvisualinterrogation/alerts.php';
 		
 		var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var southeastconLinkBlock = '<h3><a href="' + southeastconLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';

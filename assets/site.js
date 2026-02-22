@@ -232,7 +232,7 @@ function render() {
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
-		//var visualInterrogationCodeLink = '<a href="' + p.link + '/.txt">Code</a>';
+		var visualInterrogationCodeLink = 'Code: <a href="' + p.link + '/alerts.txt">alerts.php</a>&nbsp<a href="' + p.link + '/query_alerts.txt">query_alerts.php</a>&nbsp<a href="' + p.link + '/alertlist.txt">alertlist.js';
 		
 		//Standard Card clickable link and code-specific link
 		let linkBlock = standardLinkBlock;
@@ -250,7 +250,7 @@ function render() {
 		{
 			directLink = visualInterrogationLink;
 			linkBlock = visualInterrogationLinkBlock;
-			//linkToCodeBlock = ;
+			linkToCodeBlock = visualInterrogationCodeLink;
 		}
 		const card = createCard(`
 		  <div class="card">

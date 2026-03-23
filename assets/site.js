@@ -285,6 +285,7 @@ function render() {
             <h3><a href="${p.link}.html?ref=${currentFilters}">${p.title}</a></h3>
             <p>${p.authors}</p>
             <p><em>${p.venue}</em>, ${p.year}</p>
+			<p>${p.description}</p>
             <div class="chip-row">
               ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
             </div>

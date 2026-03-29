@@ -53,7 +53,7 @@ const publications = [
     title: PUB6TITLE,
 	authors: PUB6AUTHORS,
     description: PUB6DESCRIPTION,
-	venue: PUB6VENUE
+	venue: PUB6VENUE,
     keywords: PUB6KEYWORDS,
     year: PUB6YEAR,
     pdf: "https://ieeexplore.ieee.org/iel7/9973799/9974160/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg" 

@@ -57,54 +57,6 @@ const publications = [
     keywords: PUB6KEYWORDS,
     year: PUB6YEAR,
     link: "https://ieeexplore.ieee.org/iel7/9973799/9974160/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg" 
-  },
-  {
-    id: "paper5",
-    title: PUB5TITLE,
-    description: PUB5DESCRIPTION,
-    keywords: PUB5KEYWORDS,
-    year: PUB5YEAR,
-    link: "papers/paper5" 
-  },
-  {
-    id: "paper4",
-    title: PUB4TITLE,
-    description: PUB4DESCRIPTION,
-    keywords: PUB4KEYWORDS,
-    year: PUB4YEAR,
-    link: "papers/paper4" 
-  },
-  {
-    id: "paper3",
-    title: PUB3TITLE,
-    description: PUB3DESCRIPTION,
-    keywords: PUB3KEYWORDS,
-    year: PUB3YEAR,
-    link: "papers/paper3" 
-  },
-  {
-    id: "paper2",
-    title: PUB2TITLE,
-    description: PUB2DESCRIPTION,
-    keywords: PUB2KEYWORDS,
-    year: PUB2YEAR,
-    link: "papers/aToolForRapidVisualInterrogation" 
-  },
-  {
-    id: "paper1",
-    title: PUB1TITLE,
-    description: PUB1DESCRIPTION,
-    keywords: PUB1KEYWORDS,
-    year: PUB1YEAR,
-    link: "papers/visualizationOfHurricaneData/index"
-  },
-  {
-    id: "paper0",
-    title: PUB0TITLE,
-    description: PUB0DESCRIPTION,
-    keywords: PUB0KEYWORDS,
-    year: PUB0YEAR,
-    link: "papers/ieeesoutheastcon2011"
   }
 ];
 

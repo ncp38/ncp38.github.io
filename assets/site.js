@@ -282,7 +282,7 @@ function render() {
 		const currentFilters = encodeURIComponent(window.location.search || "");
         const card = createCard(`
           <div class="card" tabindex="0">
-            <h3><a href="${p.link}.html?ref=${currentFilters}">${p.title}</a></h3>
+            <h3><a href="${p.link}">${p.title}</a></h3>
             <p>${p.authors}</p>
             <p><em>${p.venue}</em>, ${p.year}</p>
 			<p>${p.description}</p>

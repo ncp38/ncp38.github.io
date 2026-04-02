@@ -117,16 +117,6 @@ const publications = [
     keywords: PUB1KEYWORDS,
     year: PUB1YEAR,
     link: "https://ieeexplore.ieee.org/iel7/9973799/9974160/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg"
-  },
-  {
-    id: "paper0",
-    title: PUB0TITLE,
-	authors: PUB0AUTHORS,
-    description: PUB0DESCRIPTION,
-	venue: PUB0VENUE,
-    keywords: PUB0KEYWORDS,
-    year: PUB0YEAR,
-    link: "https://ieeexplore.ieee.org/iel7/9973799/9974160/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg"
   }
 ];
 

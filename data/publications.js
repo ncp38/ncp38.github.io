@@ -33,6 +33,13 @@ const PUB4AUTHORS = "Nate Phillips, Brady Kruse, Farzana Alam Khan, J. Edward Sw
 const PUB4VENUE = "International Conference on Human-Computer Interaction, 2020";
 const PUB4DESCRIPTION = "In room-clearing tasks, SWAT team members suffer from a lack of initial environmental information: knowledge about what is in a room and what relevance or threat level it represents for mission parameters. Normally this gap in situation awareness is rectified only upon room entry, forcing SWAT team members to rely on quick responses and near-instinctual reactions. This can lead to dangerously escalating situations or important missed information which, in turn, can increase the likelihood of injury and even mortality. Thus, we present an <i>x-ray vision</i> system for the dynamic scanning and display of room content, using a robotic platform to mitigate operator risk. This system maps a room using a robot-equipped stereo depth camera and, using an augmented reality (AR) system, presents the resulting geographic information according to the perspective of each officer. This intervention has the potential to notably lower risk and increase officer situation awareness, all while team members are in the relative safety of cover. With these potential stakes, it is important to test the viability of this system natively and in an operational SWAT team context.";
 
+const PUB4POINT5TITLE = "Measuring the perceived three-dimensional location of virtual objects in optical see-through augmented reality";
+const PUB4POINT5KEYWORDS = ["Augmented Reality", "Perception", "X-Ray Vision", "Robotics", "Emergency Response", "C#", "Unity"];
+const PUB4POINT5YEAR = 2021;
+const PUB4POINT5AUTHORS = "Farzana Alam Khan, Krishna Rao Muvva, Dennis Wu, Mohammed Safayet Arefin, N. Phillips, J.Edward Swan II";
+const PUB4POINT5VENUE = "International Conference on Human-Computer Interaction, 2020";
+const PUB4POINT5DESCRIPTION = "For optical see-through augmented reality (AR), a new method for measuring the perceived three-dimensional location of virtual objects is presented, where participants verbally report a virtual object’s location relative to both a vertical and horizontal grid. The method is tested with a small (1.95 × 1.95 × 1.95 cm) virtual object at distances of 50 to 80 cm, viewed through a Microsoft HoloLens 1st generation AR display. Two experiments examine two different virtual object designs, whether turning in a circle between reported object locations disrupts HoloLens tracking, and whether accuracy errors, including a rightward bias and underestimated depth, might be due to systematic errors that are restricted to a particular display. Turning in a circle did not disrupt HoloLens tracking, and testing with a second display did not suggest systematic errors restricted to a particular display. Instead, the experiments are consistent with the hypothesis that, when looking downwards at a horizontal plane, HoloLens 1st generation displays exhibit a systematic rightward perceptual bias. Precision analysis suggests that the method could measure the perceived location of a virtual object within an accuracy of less than 1 mm.";
+
 const PUB5TITLE = "The Effect of Context Switching, Focal Switching Distance, Binocular and Monocular Viewing, and Transient Focal Blur on Human Performance in Optical See-Through Augmented Reality";
 const PUB5KEYWORDS = ["Augmented Reality", "Perception", "Context Switching", "C++"];
 const PUB5YEAR = 2022;
@@ -77,6 +84,16 @@ const publications = [
     keywords: PUB5KEYWORDS,
     year: PUB5YEAR,
     link: "https://ieeexplore.ieee.org/iel7/9973799/9974160/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg" 
+  },
+  {
+    id: "paper4point5",
+    title: PUB4POINT5TITLE,
+	authors: PUB4POINT5AUTHORS,
+    description: PUB4POINT5DESCRIPTION,
+	venue: PUB4POINT5VENUE,
+    keywords: PUB4POINT5KEYWORDS,
+    year: PUB4POINT5YEAR,
+    link: "https://ieeexplore.ieee.org/iel7/9973799/9974140/09974279.pdf?casa_token=VCKzau_5XZsAAAAA:aMp5198pZPZ8RIPYBqPovvFTINPMJrqXnqHdFGg70U88HQWDn-rXIwYGd8U20_Uwylo0k8C0Lg"
   },
   {
     id: "paper4",

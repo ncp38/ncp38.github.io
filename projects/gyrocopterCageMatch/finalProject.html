@@ -66,6 +66,10 @@
 
 <script type="text/javascript">
 var detailedRendering = true;
+var height = document.documentElement.clientHeight;
+var width = document.documentElement.clientWidth;
+
+
 
 var highScoreNames = new Array();
 var highScoreValues = new Array();
@@ -130,6 +134,9 @@ function gameFunction()
 
     var headStart = 0;
     var scoreIncrement = 1;
+	
+	p.width = width;
+	p.height = height;
 
     mainMenu();
     
@@ -147,7 +154,7 @@ function gameFunction()
             var metalPattern = new Image();
             metalPattern.src = patternName;
             metalPattern.onload = function()
-            {
+            {	
                 context.clearRect(0, 0, p.width, p.height);
                 var pattern1 = context.createPattern(metalPattern, 'repeat');
                 if(detailedRendering)

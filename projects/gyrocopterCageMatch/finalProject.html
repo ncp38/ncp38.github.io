@@ -214,30 +214,30 @@ function gameFunction()
                 time = current;
                 
                 var spikeDimension = 0;
-                while(spikeDimension <= 1100)
+                while(spikeDimension <= width)
                 {
                     context.drawImage(spikePattern, spikeDimension, 468);
                     spikeDimension = spikeDimension + 32;
                 }
         
                 spikeDimension = 0;
-                while(spikeDimension <= 1100)
+                while(spikeDimension <= width)
                 {
                     context.drawImage(spikePattern2, spikeDimension, 0);
                     spikeDimension = spikeDimension + 32;
                 }
                 
                 spikeDimension = 26;
-                while(spikeDimension < (500 - 36))
+                while(spikeDimension < (height - 36))
                 {
                     context.drawImage(spikePattern3, 0, spikeDimension);
                     spikeDimension = spikeDimension + 32;
                 }
 				
 				spikeDimension = 26;
-				while(spikeDimension < (500 - 36))
+				while(spikeDimension < (height - 36))
 				{
-					context.drawImage(spikePattern4, (1100-32), spikeDimension);
+					context.drawImage(spikePattern4, (width-32), spikeDimension);
 					spikeDimension = spikeDimension + 32;
 					}
                 
@@ -345,13 +345,13 @@ p.onclick = function(e)
 function determineCollisions(userScore)
 { //alert(yOffset);
     
-    if(16 >= (yOffset + 150) || (500 - 16) <= (300 + yOffset))
+    if(16 >= (yOffset + 150) || (height - 16) <= (300 + yOffset))
     {
         paused = true;
         gameOver(userScore);
     }
 
-	if(16 >= (xOffset + 200 - 160) || (1100 - 16) <= (260 + 200 + xOffset))
+	if(16 >= (xOffset + 200 - 160) || (width - 16) <= (260 + 200 + xOffset))
 	{
 		paused = true;
 		gameOver(userScore);
@@ -744,7 +744,7 @@ function spawnBullets()
             }
             else
             {
-				spawnTopPosition = 500;
+				spawnTopPosition = height;
             }
         }
         else
@@ -752,7 +752,7 @@ function spawnBullets()
             spawnTopPosition = Math.floor(Math.random() * 436 + 32); //Returns a value between 32 and 468.
             if(spawnOrientation == 0)
             {
-				spawnLeftPosition = 1100;
+				spawnLeftPosition = width;
             }
             else
             {

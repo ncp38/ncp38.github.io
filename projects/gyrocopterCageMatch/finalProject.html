@@ -226,13 +226,13 @@ function gameFunction()
                     context.drawImage(spikePattern3, 0, spikeDimension);
                     spikeDimension = spikeDimension + 32;
                 }
-                
-                spikeDimension = 26;
-                while(spikeDimension < (500 - 36))
-                {
-                    context.drawImage(spikePattern4, (1100-32), spikeDimension);
-                    spikeDimension = spikeDimension + 32;
-                }
+				
+				spikeDimension = 26;
+				while(spikeDimension < (500 - 36))
+				{
+					context.drawImage(spikePattern4, (1100-32), spikeDimension);
+					spikeDimension = spikeDimension + 32;
+					}
                 
                 xOffset += -goingLeft * delta / 12 * xModifier + goingRight * delta / 12 * xModifier;
                 yOffset += -goingUp * delta / 14 * yModifier + goingDown * delta / 14 * yModifier;
@@ -344,11 +344,11 @@ function determineCollisions(userScore)
         gameOver(userScore);
     }
 
-    if(16 >= (xOffset + 200 - 160) || (1100 - 16) <= (260 + 200 + xOffset))
-    {
-        paused = true;
-        gameOver(userScore);
-    }
+	if(16 >= (xOffset + 200 - 160) || (1100 - 16) <= (260 + 200 + xOffset))
+	{
+		paused = true;
+		gameOver(userScore);
+	}
 
     //bullet hitboxes:
     //orientation == 0 || orientation == 2 : Resulting coordinates: leftPosition to leftPosition+20, topPosition to topPosition+31
@@ -358,8 +358,8 @@ function determineCollisions(userScore)
     //Check for bullet hits.
     if(checkHits())
     {
-        paused = true;
-        gameOver(userScore);        
+		paused = true;
+		gameOver(userScore);        
     }
 
     /*if(e.pageX >= (77.5 + xOffset) && e.pageX <= (443 + xOffset))
@@ -383,7 +383,7 @@ function determineCollisions(userScore)
 //Every time a keyboard button is pressed, this function is called.
 b.onkeydown = function(e)
 {
-    var numberThing = e.keyCode;
+	var numberThing = e.keyCode;
 
     if(numberThing == 27)
     {
@@ -391,45 +391,45 @@ b.onkeydown = function(e)
         pauseMenu();
     }
 
-    if(numberThing == 40)
-    {
-        goingDown = 1;
-    }
-    if(numberThing == 38)
-    {
-        goingUp = 1;
-    }
-    if(numberThing == 37)
-    {
-        goingLeft = 1;
-    }
-    if(numberThing == 39)
-    {
-        goingRight = 1;
-    }
+	if(numberThing == 40)
+	{
+		goingDown = 1;
+	}
+	if(numberThing == 38)
+	{
+		goingUp = 1;
+	}
+	if(numberThing == 37)
+	{
+		goingLeft = 1;
+	}
+	if(numberThing == 39)
+	{
+		goingRight = 1;
+	}
 }
 
 //Every time a keyboard button is released, this function is called.
 b.onkeyup = function(e)
 {
-    var numberThing = e.keyCode;
-    
-    if(numberThing == 40)
-    {
-        goingDown = 0;
-    }
-    if(numberThing == 38)
-    {
-        goingUp = 0;
-    }
-    if(numberThing == 37)
-    {
-        goingLeft = 0;
-    }
-    if(numberThing == 39)
-    {
-        goingRight = 0;
-    }
+	var numberThing = e.keyCode;
+	
+	if(numberThing == 40)
+	{
+		goingDown = 0;
+	}
+	if(numberThing == 38)
+	{
+		goingUp = 0;
+	}
+	if(numberThing == 37)
+	{
+		goingLeft = 0;
+	}
+	if(numberThing == 39)
+	{
+		goingRight = 0;
+	}
 }
 
 //This function creates and controls the pause menu.
@@ -455,8 +455,8 @@ function mainMenu()
     createButton(document.body, function(){paused = false; requestAnimationFrame(draw); time = Date.now(); var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);}}, "Begin Game", xLocation - 11 + "px", yLocation + "px");
     createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showHighScores(1);}, "High Scores", xLocation - 10.5 + "px", yLocation + ySpace + "px");
     createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} optionsMenu(1);}, "Options", xLocation + 1 + "px", yLocation + 2 * ySpace + "px");
-    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showRules(1);}, "Rules", xLocation + 7 + "px", yLocation + 3 * ySpace + "px");
-    //createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();}}, "Quit Game", xLocation - 8 + "px", yLocation + 4 * ySpace + "px");
+	createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showRules(1);}, "Rules", xLocation + 7 + "px", yLocation + 3 * ySpace + "px");
+	//createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();}}, "Quit Game", xLocation - 8 + "px", yLocation + 4 * ySpace + "px");
 }
 
 function optionsMenu(value)
@@ -467,7 +467,7 @@ function optionsMenu(value)
 
     createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} if(value == 1){mainMenu();} else{pauseMenu();}}, "Back", xLocation + 8 + "px", yLocation + 2 * ySpace + "px");
     //Include the options here.
-    createButton(document.body, function(){if(confirm("Do you want to use simplified textures?")){detailedRendering = false;} else{detailedRendering = true;}}, "Simplified Textures", xLocation - 32 + "px", yLocation + 3 * ySpace + "px");
+	createButton(document.body, function(){if(confirm("Do you want to use simplified textures?")){detailedRendering = false;} else{detailedRendering = true;}}, "Simplified Textures", xLocation - 32 + "px", yLocation + 3 * ySpace + "px");
 }
 
 function showHighScores(value)
@@ -551,7 +551,7 @@ function gameOver(userScore)
 
     createButton(document.body, function(){paused = true; requestAnimationFrame(draw); time = Date.now(); var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; gameFunction();}, "Main Menu", xLocation - 8 + "px", 2.5 * yLocation + "px");
     createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; showHighScores(1);}, "High Scores", xLocation - 10.5 + "px", 2.5 * yLocation + ySpace + "px");
-    //createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();} document.getElementById('highScores').innerHTML='';}, "Quit Game", xLocation - 8 + "px", 2.5 * yLocation + 2 * ySpace + "px");
+	//createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();} document.getElementById('highScores').innerHTML='';}, "Quit Game", xLocation - 8 + "px", 2.5 * yLocation + 2 * ySpace + "px");
 }
 //This function updates the high scores, given a user name and score.
 function updateHighScores(userName, userScore)
@@ -596,11 +596,11 @@ function drawBullet(orientation, leftPosition, topPosition)
     if(orientation == 1 || orientation == 2)
     {
         bulletPattern.src = 'images/bullet0.png';
-    }
+	}
     else
     {
         bulletPattern.src = 'images/bullet2.png';
-    }
+	}
     context.save();    
     context.translate(leftPosition, topPosition);
     //This rotates the figure about its top left coordinate.
@@ -733,11 +733,11 @@ function spawnBullets()
             
             if(spawnOrientation == 1)
             {
-                spawnTopPosition = 0;
+				spawnTopPosition = 0;
             }
             else
             {
-                spawnTopPosition = 500;
+				spawnTopPosition = 500;
             }
         }
         else
@@ -745,11 +745,11 @@ function spawnBullets()
             spawnTopPosition = Math.floor(Math.random() * 436 + 32); //Returns a value between 32 and 468.
             if(spawnOrientation == 0)
             {
-                spawnLeftPosition = 1100;
+				spawnLeftPosition = 1100;
             }
             else
             {
-                spawnLeftPosition = 0;
+				spawnLeftPosition = 0;
             }
         }
 
@@ -795,13 +795,12 @@ function checkHits()
 
         if(tempBullet[2] + yGreatest >= (yOffset + 150) && tempBullet[2] + yLeast <= (300 + yOffset))
         {
-            if(tempBullet[1] + xGreatest >= (xOffset + 200) && tempBullet[1] + xLeast <= (300 + xOffset))
+			if(tempBullet[1] + xGreatest >= (xOffset + 200) && tempBullet[1] + xLeast <= (300 + xOffset))
             {
                 result = true;
             }        
         }
-
-        count++;
+		count++;
     }
 
     return result;

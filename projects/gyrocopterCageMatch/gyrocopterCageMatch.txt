@@ -62,7 +62,7 @@
         color:brown;
     }
     </style>
-  </head>
+
 
 <script type="text/javascript">
 var detailedRendering = true;
@@ -809,6 +809,7 @@ function checkHits()
 //context.fillRect(200, 150, 100, 150);
 }
 </script>
+  </head>
   <body id="bodyElement" onload="gameFunction()" onkeydown="keyDownFunction(event)" onkeyup="keyReleaseFunction(event)">
     <p id="currentScore"></p>
     <canvas id="canvasName" width="1100" height="500"></canvas>

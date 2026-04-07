@@ -20,7 +20,7 @@ const PROJ2YEAR = 2012;
 const PROJ2DESCRIPTION = "My team designed a visualization for Snort network intrusion alerts, based on an original system created by Peter Curtis. This approach was designed in order to mitigate the difficulty of parsing and understanding these alerts; they are difficult to tease information from and typically appear in large numbers. In our visualization, alerts are presented graphically, with each alert consisting of a slider showing its relative age, two colored squares showing the trustworthiness of the IP address, and the plain text of the alert. This is all compressed into a thin display, allowing a large number of alerts to be displayed per page.";
 
 const PROJ3TITLE = "Airship Web Game";
-const PROJ3KEYWORDS = ["Web Design", "Game Design"];
+const PROJ3KEYWORDS = ["Web Design", "Game Design", "Javascript", "Canvas"];
 const PROJ3YEAR = 2013;
 const PROJ3DESCRIPTION = "Design and implementation of a web game (Gyrocopter Cage Match) that is based on surviving as long as possible. In it, players pilot a simple 2-D airship and dodge projectiles while also avoiding the spikes at the edges of the map. This game showcases some simple animations, the ability to change the texture of the airship by clicking on it, a pause and options menu, and a high score system.";
 

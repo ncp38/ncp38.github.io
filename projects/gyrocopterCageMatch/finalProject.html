@@ -62,13 +62,8 @@
         color:brown;
     }
     </style>
-  </head>
-  <body id="bodyElement" onload="gameFunction()" onkeydown="keyDownFunction(event)" onkeyup="keyReleaseFunction(event)">
-    <p id="currentScore"></p>
-    <canvas id="canvasName" width="1100" height="500"></canvas>
-    <div id="highScores">
-    </div>
-  </body>
+
+
 <script type="text/javascript">
 var detailedRendering = true;
 
@@ -167,7 +162,7 @@ function gameFunction()
             }
         
             var spikePattern = new Image();
-            spikePattern.src = 'spikes.png';
+            spikePattern.src = 'images/spikes.png';
             spikePattern.onload = function()
             {
                 //context.clearRect(0, 0, p.width, p.height);
@@ -177,21 +172,21 @@ function gameFunction()
             }
         
             var spikePattern2 = new Image();
-            spikePattern2.src = 'invertedSpikes.png';
+            spikePattern2.src = 'images/invertedSpikes.png';
             spikePattern2.onload = function()
             {
                 spikesLoaded2 = true;
             }
 
             var spikePattern3 = new Image();
-            spikePattern3.src = 'spike3.png';
+            spikePattern3.src = 'images/spike3.png';
             spikePattern3.onload = function()
             {
                 spikesLoaded3 = true;
             }
 
             var spikePattern4 = new Image();
-            spikePattern4.src = 'spike4.png';
+            spikePattern4.src = 'images/spike4.png';
             spikePattern4.onload = function()
             {
                 spikesLoaded4 = true;
@@ -328,12 +323,12 @@ p.onclick = function(e)
         {
             if(patternName == 'metalPattern.jpg')
             {
-                patternName = 'cork.png';
+                patternName = 'images/cork.png';
                 currentColor = 'brown'; 
             }
             else
             {
-                patternName = 'metalPattern.jpg';
+                patternName = 'images/metalPattern.jpg';
                 currentColor = 'grey';   
             }
         }
@@ -600,11 +595,11 @@ function drawBullet(orientation, leftPosition, topPosition)
     //Orientation is 0 for 0 degrees, 1 for 90 degrees, etc.
     if(orientation == 1 || orientation == 2)
     {
-        bulletPattern.src = 'bullet0.png';
+        bulletPattern.src = 'images/bullet0.png';
     }
     else
     {
-        bulletPattern.src = 'bullet2.png';
+        bulletPattern.src = 'images/bullet2.png';
     }
     context.save();    
     context.translate(leftPosition, topPosition);
@@ -814,4 +809,11 @@ function checkHits()
 //context.fillRect(200, 150, 100, 150);
 }
 </script>
+  </head>
+  <body id="bodyElement" onload="gameFunction()" onkeydown="keyDownFunction(event)" onkeyup="keyReleaseFunction(event)">
+    <p id="currentScore"></p>
+    <canvas id="canvasName" width="1100" height="500"></canvas>
+    <div id="highScores">
+    </div>
+  </body>
 </html>						

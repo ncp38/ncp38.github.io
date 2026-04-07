@@ -225,14 +225,17 @@ function render() {
 		var standardLink = p.link;
 		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
 		var visualInterrogationLink = 'https://www.projects.daybreakeducation.com/aToolForRapidVisualInterrogation/alerts.php';
+		var gyrocopterCageMatchLink = p.link + 'finalProject.html';
 		
 		var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var southeastconLinkBlock = '<h3><a href="' + southeastconLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		var visualInterrogationLinkBlock = '<h3><a href="' + visualInterrogationLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		var gyrocopterCageMatchLinkBlock = '<h3><a href="' + gyrocopterCageMatchLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
 		var visualInterrogationCodeLink = 'Code: <a href="' + p.link + '/alerts.txt">alerts.php</a>&nbsp<a href="' + p.link + '/query_alerts.txt">query_alerts.php</a>&nbsp<a href="' + p.link + '/alertlist.txt">alertlist.js</a>';
+		var gyrocopterCageMatchCodeLink = 'Code: <a href="' + p.link + '/gyrocopterCageMatch.txt">index.html</a>&nbsp<a href="' + p.link + '/gyrocopterCageMatch.pdf">Presentation</a>'';
 		
 		//Standard Card clickable link and code-specific link
 		let linkBlock = standardLinkBlock;

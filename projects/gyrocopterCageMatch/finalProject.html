@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Final Project: Gyrocopter Cage Match</title>
+    <style>
+    #highScores
+    {
+        position:absolute;
+        left:5px;
+        top:5px;
+        font-family:"Times New Roman", Times, serif;
+        font-size:40px;
+    }
+    #scores
+    {
+        position:absolute;
+        left:800px;
+        top:0px;
+        font-family:"Times New Roman", Times, serif;
+        font-size:40px;
+    }
+    #names
+    {
+        width: 300px;
+        position:absolute;
+        left:0px;
+        top:0px;
+        font-family:"Times New Roman", Times, serif;
+        font-size:40px;
+    }
+    #victory
+    {
+        position:absolute;
+        left:0px;
+        top:50px;
+        font-family:"Times New Roman", Times, serif;
+        text-align:center;
+        font-size:60px;
+    }
+    #defeat
+    {
+        width:700px
+        position:absolute;
+        left:0px;
+        top:50px;
+        font-family:"Times New Roman", Times, serif;
+        text-align:center;
+        font-size:40px;
+    }
+    #currentScore
+    {
+        font-family:"Times New Roman", Times, serif;
+        text-align:left;
+        font-size:20px;
+        color:brown;
+    }
+    #rules
+    {
+        font-family:"Times New Roman", Times, serif;
+        text-align:center;
+        font-size:20px;
+        color:brown;
+    }
+    </style>
+  </head>
+  <body id="bodyElement" onload="gameFunction()" onkeydown="keyDownFunction(event)" onkeyup="keyReleaseFunction(event)">
+    <p id="currentScore"></p>
+    <canvas id="canvasName" width="1100" height="500"></canvas>
+    <div id="highScores">
+    </div>
+  </body>
+<script type="text/javascript">
+var detailedRendering = true;
+
+var highScoreNames = new Array();
+var highScoreValues = new Array();
+
+highScoreValues[0] = 76;
+highScoreNames[0] = "Wolfwood";
+highScoreValues[1] = 62;
+highScoreNames[1] = "Cooper";
+highScoreValues[2] = 41;
+highScoreNames[2] = "Legion";
+highScoreValues[3] = 32;
+highScoreNames[3] = "Yuri";
+highScoreValues[4] = 18;
+highScoreNames[4] = "Milla";
+highScoreValues[5] = 15;
+highScoreNames[5] = "Raine";
+highScoreValues[6] = 11;
+highScoreNames[6] = "Zulf";
+highScoreValues[7] = 5;
+highScoreNames[7] = "Ryfia";
+highScoreValues[8] = 2;
+highScoreNames[8] = "Dominic";
+highScoreValues[9] = 0;
+highScoreNames[9] = "Conrad";
+
+function gameFunction()
+{
+    var time = Date.now();
+    var score = 0;
+    var difficulty = 1;
+    var xOffset = 0;
+    var yOffset = 0;
+    var radialOffset = 0;
+    
+    var floatDirection = 4;
+    var floatLength = 8;
+    var xModifier = 2.2;
+    var yModifier = 2.2;
+   
+    var goingUp = 0;
+    var goingDown = 0;
+    var goingLeft = 0;
+    var goingRight = 0;
+    
+    var p = document.getElementById("canvasName");
+    var context = p.getContext("2d");
+
+    var b = document.getElementById("bodyElement");
+    
+    var imageLoaded = false;
+    var spikesLoaded = false;
+    var spikesLoaded2 = false;
+
+    var bullets = new Array();
+    var bulletSpeed = 1.6;
+    
+    var currentColor = 'grey';
+    
+    var paused = true;
+
+    var oldLevel = 0;
+
+    var headStart = 0;
+    var scoreIncrement = 1;
+
+    mainMenu();
+    
+    var patternName= 'metalPattern.jpg';
+    
+    //This code segment comes from https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame .
+    (function() {
+      var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+      window.requestAnimationFrame = requestAnimationFrame;
+    })();
+    
+    function draw()
+    {
+            var metalPattern = new Image();
+            metalPattern.src = patternName;
+            metalPattern.onload = function()
+            {
+                context.clearRect(0, 0, p.width, p.height);
+                var pattern1 = context.createPattern(metalPattern, 'repeat');
+                if(detailedRendering)
+                {
+                    context.fillStyle = pattern1;
+                }
+                else
+                {
+                    context.fillStyle = currentColor;
+                }
+                imageLoaded = true;
+            }
+        
+            var spikePattern = new Image();
+            spikePattern.src = 'spikes.png';
+            spikePattern.onload = function()
+            {
+                //context.clearRect(0, 0, p.width, p.height);
+                var pattern2 = context.createPattern(spikePattern, 'repeat');
+                //context.fillStyle = pattern1;
+                spikesLoaded = true;
+            }
+        
+            var spikePattern2 = new Image();
+            spikePattern2.src = 'invertedSpikes.png';
+            spikePattern2.onload = function()
+            {
+                spikesLoaded2 = true;
+            }
+
+            var spikePattern3 = new Image();
+            spikePattern3.src = 'spike3.png';
+            spikePattern3.onload = function()
+            {
+                spikesLoaded3 = true;
+            }
+
+            var spikePattern4 = new Image();
+            spikePattern4.src = 'spike4.png';
+            spikePattern4.onload = function()
+            {
+                spikesLoaded4 = true;
+            }
+            if(imageLoaded && spikesLoaded)
+            {
+                if(paused != true)
+                {
+                document.getElementById('currentScore').innerHTML='Score: ' + score;
+                }
+                imageLoaded = false;
+                spikesLoaded = false;
+                spikesLoaded2 = false;
+                current = Date.now();
+                context.save();
+                var delta = current - time;
+            
+                time = current;
+                
+                var spikeDimension = 0;
+                while(spikeDimension <= 1100)
+                {
+                    context.drawImage(spikePattern, spikeDimension, 468);
+                    spikeDimension = spikeDimension + 32;
+                }
+        
+                spikeDimension = 0;
+                while(spikeDimension <= 1100)
+                {
+                    context.drawImage(spikePattern2, spikeDimension, 0);
+                    spikeDimension = spikeDimension + 32;
+                }
+                
+                spikeDimension = 26;
+                while(spikeDimension < (500 - 36))
+                {
+                    context.drawImage(spikePattern3, 0, spikeDimension);
+                    spikeDimension = spikeDimension + 32;
+                }
+                
+                spikeDimension = 26;
+                while(spikeDimension < (500 - 36))
+                {
+                    context.drawImage(spikePattern4, (1100-32), spikeDimension);
+                    spikeDimension = spikeDimension + 32;
+                }
+                
+                xOffset += -goingLeft * delta / 12 * xModifier + goingRight * delta / 12 * xModifier;
+                yOffset += -goingUp * delta / 14 * yModifier + goingDown * delta / 14 * yModifier;
+                radialOffset += delta / 15;
+                
+                difficulty = adjustDifficulty(difficulty, score);
+                calculateBullets(delta);
+                spawnBullets();
+                
+                context.translate(xOffset, yOffset);
+                context.fillRect(200, 150, 100, 150);
+        
+                context.fillStyle="grey";
+                
+                context.beginPath();
+                context.moveTo(200, 220);
+                context.lineTo(100, 220);
+                context.stroke();
+                
+                context.beginPath();
+                context.moveTo(300, 220);
+                context.lineTo(400, 220);
+                context.stroke();
+                
+                context.save();
+                context.translate(400, 220);
+                context.rotate(radialOffset);
+                
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(0, 60);
+                context.moveTo(0, 0);
+                context.lineTo(-42.5, -42.5);
+                context.moveTo(0, 0);
+                context.lineTo(42.5, -42.5);
+                context.stroke();
+                
+                context.restore();
+                
+                context.save();
+                context.translate(100, 220);
+                context.rotate(-radialOffset);
+                
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(0, 60);
+                context.moveTo(0, 0);
+                context.lineTo(-42.5, -42.5);
+                context.moveTo(0, 0);
+                context.lineTo(42.5, -42.5);
+                context.stroke();
+                
+                context.restore();
+            
+                if(floatDirection > 0)
+                {
+                    floatDirection--;
+                    if(floatDirection == 0)
+                    {
+                        floatDirection = - 1 * floatLength;
+                    }
+                }
+                else
+                {
+                    floatDirection++;
+                    if(floatDirection == 0)
+                    {
+                        floatDirection = 1 * floatLength;
+                    }
+                }
+        
+                context.restore();
+            }
+            if(paused == false)
+            {
+            determineCollisions(score);
+            requestAnimationFrame(draw);
+            }
+    }
+    
+    requestAnimationFrame(draw);
+
+p.onclick = function(e)
+{
+    if(e.pageX >= (77.5 + xOffset) && e.pageX <= (443 + xOffset))
+    {
+        if(e.offsetY >= (150 + yOffset) && e.offsetY <= (300 + yOffset))
+        {
+            if(patternName == 'metalPattern.jpg')
+            {
+                patternName = 'cork.png';
+                currentColor = 'brown'; 
+            }
+            else
+            {
+                patternName = 'metalPattern.jpg';
+                currentColor = 'grey';   
+            }
+        }
+    }
+}
+
+function determineCollisions(userScore)
+{ //alert(yOffset);
+    
+    if(16 >= (yOffset + 150) || (500 - 16) <= (300 + yOffset))
+    {
+        paused = true;
+        gameOver(userScore);
+    }
+
+    if(16 >= (xOffset + 200 - 160) || (1100 - 16) <= (260 + 200 + xOffset))
+    {
+        paused = true;
+        gameOver(userScore);
+    }
+
+    //bullet hitboxes:
+    //orientation == 0 || orientation == 2 : Resulting coordinates: leftPosition to leftPosition+20, topPosition to topPosition+31
+    //orientation == 1 || orientation == 3 : Resulting coordinates: leftPosition to leftPosition+31, topPosition to topPosition+20
+    //bullet hitboxes:
+
+    //Check for bullet hits.
+    if(checkHits())
+    {
+        paused = true;
+        gameOver(userScore);        
+    }
+
+    /*if(e.pageX >= (77.5 + xOffset) && e.pageX <= (443 + xOffset))
+    {
+        if(e.offsetY >= (150 + yOffset) && e.offsetY <= (300 + yOffset))
+        {
+            if(patternName == 'metalPattern.jpg')
+            {
+                patternName = 'cork.png';
+                currentColor = 'brown'; 
+            }
+            else
+            {
+                patternName = 'metalPattern.jpg';
+                currentColor = 'grey';   
+            }
+        }
+    }*/
+}
+
+//Every time a keyboard button is pressed, this function is called.
+b.onkeydown = function(e)
+{
+    var numberThing = e.keyCode;
+
+    if(numberThing == 27)
+    {
+        paused = true;
+        pauseMenu();
+    }
+
+    if(numberThing == 40)
+    {
+        goingDown = 1;
+    }
+    if(numberThing == 38)
+    {
+        goingUp = 1;
+    }
+    if(numberThing == 37)
+    {
+        goingLeft = 1;
+    }
+    if(numberThing == 39)
+    {
+        goingRight = 1;
+    }
+}
+
+//Every time a keyboard button is released, this function is called.
+b.onkeyup = function(e)
+{
+    var numberThing = e.keyCode;
+    
+    if(numberThing == 40)
+    {
+        goingDown = 0;
+    }
+    if(numberThing == 38)
+    {
+        goingUp = 0;
+    }
+    if(numberThing == 37)
+    {
+        goingLeft = 0;
+    }
+    if(numberThing == 39)
+    {
+        goingRight = 0;
+    }
+}
+
+//This function creates and controls the pause menu.
+function pauseMenu()
+{
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 5;
+    var ySpace = 30;
+
+    createButton(document.body, function(){paused = false; requestAnimationFrame(draw); time = Date.now(); var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);}}, "Resume", xLocation + "px", yLocation + "px");
+    createButton(document.body, function(){if(confirm("Do you wish to continue?\nAll progress will be lost.")){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('currentScore').innerHTML=''; gameFunction();}}, "Main Menu", xLocation - 8 + "px", yLocation + ySpace + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showHighScores(2);}, "High Scores", xLocation - 11.5 + "px", yLocation + 2 * ySpace + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} optionsMenu(2);}, "Options", xLocation + 1 + "px", yLocation + 3 * ySpace + "px");
+    //createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();}}, "Quit Game", xLocation - 8 + "px", yLocation + 4 * ySpace + "px");
+}
+
+function mainMenu()
+{
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 5;
+    var ySpace = 30;
+
+    createButton(document.body, function(){paused = false; requestAnimationFrame(draw); time = Date.now(); var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);}}, "Begin Game", xLocation - 11 + "px", yLocation + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showHighScores(1);}, "High Scores", xLocation - 10.5 + "px", yLocation + ySpace + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} optionsMenu(1);}, "Options", xLocation + 1 + "px", yLocation + 2 * ySpace + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} showRules(1);}, "Rules", xLocation + 7 + "px", yLocation + 3 * ySpace + "px");
+    //createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();}}, "Quit Game", xLocation - 8 + "px", yLocation + 4 * ySpace + "px");
+}
+
+function optionsMenu(value)
+{
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 4;
+    var ySpace = 30;
+
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} if(value == 1){mainMenu();} else{pauseMenu();}}, "Back", xLocation + 8 + "px", yLocation + 2 * ySpace + "px");
+    //Include the options here.
+    createButton(document.body, function(){if(confirm("Do you want to use simplified textures?")){detailedRendering = false;} else{detailedRendering = true;}}, "Simplified Textures", xLocation - 32 + "px", yLocation + 3 * ySpace + "px");
+}
+
+function showHighScores(value)
+{
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 4;
+    var ySpace = 30;
+
+    //Show the high scores.
+    document.getElementById('highScores').innerHTML='<div id="names"></div><div id="scores"></div>';
+
+    var nameStorage = "<p class='first'> 1.  " + highScoreNames[0] + "</p><p>2.  " + highScoreNames[1] + "</p><p>" + "</p><p>2.  " + highScoreNames[2] + "</p><p>" + "</p><p>3.  " + highScoreNames[3] + "</p><p>" + "</p><p>4.  " + highScoreNames[4] + "</p><p>" + "</p><p>5.  " + highScoreNames[5] + "</p><p>" + "</p><p>6.  " + highScoreNames[6] + "</p><p>" + "</p><p>7.  " + highScoreNames[7] + "</p><p>" + "</p><p>8.  " + highScoreNames[8] + "</p><p>" + "</p><p>9.  " + highScoreNames[9] + "</p>";
+    var scoreStorage = "<p class='first'>" + highScoreValues[0] + "</p><p>" + highScoreValues[1] + "</p><p>" + "</p><p>" + highScoreValues[2] + "</p><p>" + "</p><p>" + highScoreValues[3] + "</p><p>" + "</p><p>" + highScoreValues[4] + "</p><p>" + "</p><p>" + highScoreValues[5] + "</p><p>" + "</p><p>" + highScoreValues[6] + "</p><p>" + "</p><p>" + highScoreValues[7] + "</p><p>" + "</p><p>" + highScoreValues[8] + "</p><p>" + "</p><p>" + highScoreValues[9] + "</p>";
+    
+    document.getElementById('highScores').style.left = "" + (window.innerWidth / 4) + "px";
+
+    document.getElementById('names').innerHTML = "" + nameStorage;
+    document.getElementById('scores').innerHTML = "" + scoreStorage;
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; if(value == 1){gameFunction();} else{pauseMenu();}}, "Back", xLocation + 8 + "px", yLocation + 9 * ySpace + "px");
+}
+
+//This displays the rules.
+function showRules(value)
+{
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 4;
+    var ySpace = 30;
+
+    var storyString = "Welcome to Gyrocopter Run!<p>In this game, you play as the pilot of a gyrocopter who has (perhaps unwisely)</p><p>volunteered for a daring cage deathmatch, against bullets.</p><p></p>Maybe not the best idea, but who are we to judge?<p></p>Avoid the spikes and dodge the bullets to achieve a<p></p>high score that will live forever!<p padding-top:100px></p>Or, if you prefer, die quickly and ever so alone.";
+    var rulesString = "<p>To move, use the arrow keys.  To pause the game, press esc.</p><p>Note that the hitbox in this game extends only to the rectangular area on your vehicle.</p><p>However, if any part of your vehicle runs into the spikes, you lose.</p><p>No hits against the propellers or struts will be fatal.</p></p><p>To help prevent excess lag, there is also a simplified textures setting,<p>within the options menu.</p></p>";
+
+    //Show the high scores.
+    document.getElementById('highScores').innerHTML='<div id="rules"></div>';
+   
+    document.getElementById('highScores').style.left = "" + (window.innerWidth / 4) + "px";
+
+    document.getElementById('rules').innerHTML = storyString + rulesString;
+    
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; if(value == 1){gameFunction();} else{pauseMenu();}}, "Back", xLocation + 8 + "px", yLocation + 11 * ySpace + "px");
+}
+
+//This function creates a button, given a context, an onclick function, the string content of the button, a left position coordinate, and an upper position coordinate.
+//Note that leftPosition and topPosition are strings and include both a number and "px".
+//This code segment is based on: http://stackoverflow.com/questions/8650975/javascript-to-create-a-button-with-onclick .
+function createButton(context, func, stringContent, leftPosition, topPosition)
+{
+    var button = document.createElement("input");
+    button.type = "button";
+    button.value = stringContent;
+    button.onclick = func;
+    button.style.position = "absolute";
+    button.style.right = leftPosition;
+    button.style.top = topPosition;
+    button.className = "generatedButton";
+    context.appendChild(button);
+}
+
+function gameOver(userScore)
+{ 
+    var xLocation = window.innerWidth / 2 - 10;
+    var yLocation = window.innerHeight / 5;
+    var ySpace = 30;
+
+   document.getElementById('currentScore').innerHTML='';
+
+   var userName = prompt("Please enter your name","");
+   if(updateHighScores(userName, userScore))
+   {
+       document.getElementById('highScores').innerHTML='<div id="victory"></div>';
+       document.getElementById('victory').innerHTML='<p>CONGRATULATIONS</p><p>You are victorious!</p>';
+       document.getElementById('highScores').style.left = "" + (window.innerWidth / 2 - 300) + "px";
+   }
+   else
+   { 
+       document.getElementById('highScores').innerHTML='<div id="defeat"></div>';
+       document.getElementById('defeat').innerHTML='<p>Alas,</p><p>You have lost...</p>';
+       document.getElementById('highScores').style.left = "" + (window.innerWidth / 2.2) + "px";
+   }
+
+    //document.getElementById('highScores').style.left = "" + (window.innerWidth / 2.2) + "px";    
+
+    createButton(document.body, function(){paused = true; requestAnimationFrame(draw); time = Date.now(); var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; gameFunction();}, "Main Menu", xLocation - 8 + "px", 2.5 * yLocation + "px");
+    createButton(document.body, function(){var inputElements = document.getElementsByTagName("input"); while(inputElements.length > 0){document.body.removeChild(inputElements[0]);} document.getElementById('highScores').innerHTML=''; showHighScores(1);}, "High Scores", xLocation - 10.5 + "px", 2.5 * yLocation + ySpace + "px");
+    //createButton(document.body, function(){if(confirm("Do you really want to quit?")){window.close();} document.getElementById('highScores').innerHTML='';}, "Quit Game", xLocation - 8 + "px", 2.5 * yLocation + 2 * ySpace + "px");
+}
+//This function updates the high scores, given a user name and score.
+function updateHighScores(userName, userScore)
+{
+    var found = -1;
+    var temp = 0;
+    while(temp <= 9)
+    {
+        if(userScore > highScoreValues[temp])
+        {
+            found = temp;
+            var secondCounter = 9;
+            while(secondCounter > temp)
+            {
+                 highScoreValues[(secondCounter)] = highScoreValues[(secondCounter - 1)];
+                 highScoreNames[(secondCounter)] = highScoreNames[(secondCounter - 1)];
+                 secondCounter--;
+            }
+            temp = 10;
+        }
+        temp++;
+    }
+
+    if(found >= 0)
+    {
+       highScoreValues[found] = userScore;
+       highScoreNames[found] = userName;
+       return true;
+    }
+    else
+    {
+       return false;
+    }
+}
+
+function drawBullet(orientation, leftPosition, topPosition)
+{
+    //The sprite for the bullet comes from https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&docid=ubU69rauQeV1CM&tbnid=_VE4LjjevaBBAM:&ved=&url=http%3A%2F%2Fwww.deviantart.com%2Fmorelikethis%2F275948399%3Fview_mode%3D2&ei=on8CUsiAPNO24AOF2YDgCA&bvm=bv.50310824,d.dmg&psig=AFQjCNF5JUrptnI3OWL3zk7HWRQjRVusTA&ust=1375981859677972 .
+    var bulletPattern = new Image();
+
+    //Orientation is 0 for 0 degrees, 1 for 90 degrees, etc.
+    if(orientation == 1 || orientation == 2)
+    {
+        bulletPattern.src = 'bullet0.png';
+    }
+    else
+    {
+        bulletPattern.src = 'bullet2.png';
+    }
+    context.save();    
+    context.translate(leftPosition, topPosition);
+    //This rotates the figure about its top left coordinate.
+    //Now it has a height of 20 and a width of 31.  Resulting coordinates: leftPosition to leftPosition+31, topPosition to topPosition+20
+    if(orientation == 3 || orientation == 1)
+    { 
+       context.rotate(Math.PI / 2);
+    }
+    context.drawImage(bulletPattern, 0, 0);
+    context.restore();
+}
+
+//This function takes in the difficulty and the score and returns the appropriate new difficulty.
+function adjustDifficulty(currentLevel, currentScore)
+{
+    if(currentScore >= (5 * currentLevel + (currentLevel - 1) * (currentLevel - 1) + 1))
+    {
+         currentLevel++;
+    }
+
+    if(currentScore >= 42 && oldLevel < currentLevel)
+    {
+         bulletSpeed +=.2;
+         scoreIncrement++;
+    }
+    
+    oldLevel = currentLevel;
+
+    return currentLevel;
+}
+
+//This function calculates the new position for each bullet in the bullets array, removes the bullets from the game, if they are past the boundaries, and then draws them.
+function calculateBullets(delta)
+{
+    var count = 0;
+
+    while(count < bullets.length)
+    {
+        var tempBullet = bullets[count];
+        
+        if(tempBullet[0] == 0)
+        {
+            tempBullet[1] = tempBullet[1] - delta * bulletSpeed / 5;
+        }
+        else if(tempBullet[0] == 2)
+        {
+            tempBullet[1] = tempBullet[1] + delta * bulletSpeed / 5;
+        }
+        else if(tempBullet[0] == 3)
+        {
+            tempBullet[2] = tempBullet[2] - delta * bulletSpeed / 8;
+        }
+        else if(tempBullet[0] == 1)
+        {
+            tempBullet[2] = tempBullet[2] + delta * bulletSpeed / 8;
+        }
+        bullets[count] = tempBullet;
+        count++;
+    }
+
+    count = 0;
+    while(count < bullets.length)
+    {
+        var tempBullet = bullets[count];
+        
+        if(tempBullet[0] == 0)
+        {
+            if(tempBullet[1] <= 16)
+            { 
+                bullets.splice(count, 1);
+                score += scoreIncrement;
+            }
+        }
+        else if(tempBullet[0] == 2)
+        {
+            if(tempBullet[1] >= 1068)
+            {
+                bullets.splice(count, 1);
+                score += scoreIncrement;
+            }
+        }
+        else if(tempBullet[0] == 1)
+        {
+            if(tempBullet[2] >= 468)
+            {
+                bullets.splice(count, 1);
+                score += scoreIncrement;
+            }
+        }
+        else //if(tempBullet[0] == 3)
+        {
+            if(tempBullet[2] <= 16)
+            {
+                bullets.splice(count, 1);
+                score += scoreIncrement;
+            }
+        }
+        count++;
+    }
+
+    count = 0;
+    while(count < bullets.length)
+    {
+        var tempBullet = bullets[count];
+        //alert(" " + tempBullet[0] + "   " + tempBullet[1] + "   " + tempBullet[2]);
+        drawBullet(tempBullet[0], tempBullet[1], tempBullet[2]);
+        count++;
+    }
+}
+
+//This function produces any new bullets which are needed.
+function spawnBullets()
+{
+    if(headStart < 300)
+    {
+        headStart++;
+    }
+    else
+    {
+    var spawnOrientation;
+    var spawnLeftPosition;
+    var spawnTopPosition;
+
+    if(bullets.length < difficulty && bullets.length < 5)
+    {
+        spawnOrientation = Math.floor(Math.random() * 4); //Returns a value between 0 and 3
+        if(spawnOrientation == 1 || spawnOrientation == 3)
+        {
+            spawnLeftPosition = Math.floor(Math.random()*972 + 64); //Returns a value between 64 and 1036.
+            
+            if(spawnOrientation == 1)
+            {
+                spawnTopPosition = 0;
+            }
+            else
+            {
+                spawnTopPosition = 500;
+            }
+        }
+        else
+        {
+            spawnTopPosition = Math.floor(Math.random() * 436 + 32); //Returns a value between 32 and 468.
+            if(spawnOrientation == 0)
+            {
+                spawnLeftPosition = 1100;
+            }
+            else
+            {
+                spawnLeftPosition = 0;
+            }
+        }
+
+        var createdBullet = new Array();
+        createdBullet[0] = spawnOrientation;
+        createdBullet[1] = spawnLeftPosition;
+        createdBullet[2] = spawnTopPosition;
+
+        bullets.push(createdBullet);
+    }
+    }
+}
+
+//This function checks to see if a bullet is within the hitbox of the gyrocopter
+function checkHits()
+{
+    var result = false;
+
+    var yLeast = 0;
+    var yGreatest;
+    var xLeast = 0;
+    var xGreatest;
+
+    //bullet hitboxes:
+    //orientation == 0 || orientation == 2 : Resulting coordinates: leftPosition to leftPosition+20, topPosition to topPosition+31
+    //orientation == 1 || orientation == 3 : Resulting coordinates: leftPosition to leftPosition+31, topPosition to topPosition+20
+    
+    var count = 0;
+    while(count < bullets.length)
+    {
+        var tempBullet = bullets[count];
+        
+        if(tempBullet[0] == 0 || tempBullet[0] == 2)
+        {
+            xGreatest = 10;
+            yGreatest = 21;
+        }
+        else
+        {
+            xGreatest = 21;
+            yGreatest = 10;
+        }
+
+        if(tempBullet[2] + yGreatest >= (yOffset + 150) && tempBullet[2] + yLeast <= (300 + yOffset))
+        {
+            if(tempBullet[1] + xGreatest >= (xOffset + 200) && tempBullet[1] + xLeast <= (300 + xOffset))
+            {
+                result = true;
+            }        
+        }
+
+        count++;
+    }
+
+    return result;
+}
+//context.fillRect(200, 150, 100, 150);
+}
+</script>
+</html>						

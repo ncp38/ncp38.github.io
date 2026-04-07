@@ -255,6 +255,12 @@ function render() {
 			linkBlock = visualInterrogationLinkBlock;
 			linkToCodeBlock = visualInterrogationCodeLink;
 		}
+		else if(p.title == "Airship Web Game")
+		{
+			directLink = gyrocopterCageMatchLink;
+			linkBlock = gyrocopterCageMatchLinkBlock;
+			linkToCodeBlock = gyrocopterCageMatchCodeLink;
+		}
 		const card = createCard(`
 		  <div class="card">
 			${linkBlock}

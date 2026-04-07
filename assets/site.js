@@ -235,7 +235,7 @@ function render() {
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
 		var visualInterrogationCodeLink = 'Code: <a href="' + p.link + '/alerts.txt">alerts.php</a>&nbsp<a href="' + p.link + '/query_alerts.txt">query_alerts.php</a>&nbsp<a href="' + p.link + '/alertlist.txt">alertlist.js</a>';
-		var gyrocopterCageMatchCodeLink = 'Code: <a href="' + p.link + '/gyrocopterCageMatch.txt">index.html</a>&nbsp<a href="' + p.link + '/gyrocopterCageMatch.pdf">Presentation</a>'';
+		var gyrocopterCageMatchCodeLink = 'Code: <a href="' + p.link + '/gyrocopterCageMatch.txt">index.html</a>&nbsp<a href="' + p.link + '/gyrocopterCageMatch.pdf">Presentation</a>';
 		
 		//Standard Card clickable link and code-specific link
 		let linkBlock = standardLinkBlock;

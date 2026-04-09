@@ -63,7 +63,7 @@
         opacity: .5;
     }
     </style>
-    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <script type="text/javascript" src="https://mbostock.github.com/d3/d3.js"></script>
   </head>
     <nav>
     <ul>
@@ -100,7 +100,7 @@ var height=2500;
 var circleSize = 3;
 var arrowRatio = 95;
 
-var path = "https:ncp38.github.io/projects/radialDataVisualization/USCPIData.csv";
+var path = "https://ncp38.github.io/projects/radialDataVisualization/USCPIData.csv";
 var lines;
 
 var totalX = [];
@@ -126,7 +126,7 @@ function getTime(xLength, value)
 
 function initializeData()
 { 
-    //This code segment comes from: http://stackoverflow.com/questions/6861180/how-can-you-read-a-file-line-by-line-in-javascript .
+    //This code segment comes from: https://stackoverflow.com/questions/6861180/how-can-you-read-a-file-line-by-line-in-javascript .
     var txtFile = new XMLHttpRequest();
     txtFile.open("GET", path, true);
     txtFile.onreadystatechange = function()
@@ -1303,7 +1303,7 @@ v.onclick = function(e)
 
 info.onclick = function(e)
 {
-    alert("This visualization was created by Nate Phillips for CSE 8990 at Mississippi State University.\n\nThis visualization is based on CPI data from the United States, produced by http://research.stlouisfed.org/fred2/series/CPIAUCSL/downloaddata?cid=9 . This data contains the CPI value for a given date, within the past 66 years.");
+    alert("This visualization was created by Nate Phillips for CSE 8990 at Mississippi State University.\n\nThis visualization is based on CPI data from the United States, produced by https://research.stlouisfed.org/fred2/series/CPIAUCSL/downloaddata?cid=9 . This data contains the CPI value for a given date, within the past 66 years.");
 }
 </script>
 </html>						

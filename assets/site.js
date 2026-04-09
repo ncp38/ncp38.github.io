@@ -266,9 +266,9 @@ function render() {
 		}
 		else if(p.title == "Radial Data Visualization")
 		{
-			directLink = radialMatchLink;
-			linkBlock = radialMatchLinkBlock;
-			linkToCodeBlock = radialMatchCodeLink;
+			directLink = radialLink;
+			linkBlock = radialLinkBlock;
+			linkToCodeBlock = radialCodeLink;
 		}
 		const card = createCard(`
 		  <div class="card">

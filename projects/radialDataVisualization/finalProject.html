@@ -152,13 +152,13 @@ function initializeData()
 function draw()
 {
     //This assumes that the user has the window in full screen mode.
-    var w = Math.floor(screen.width *.6);//400
-    var h = Math.floor(screen.height * .8);//200
+    var w = Math.floor(document.documentElement.clientWidth *.6);//400
+    var h = Math.floor(document.documentElement.clientHeight * .8);//200
 
     d3.select("#viz").remove();
     d3.select("body").append("svg").attr("id", "viz")
     var svgName = d3.select("#viz")
-        .attr("width", width)
+        .attr("width", w)
         .attr("height", h);
 
     var formatTime = d3.time.format("%x");
@@ -241,7 +241,7 @@ function draw()
                     
                     //timeValue = d3.scale.linear().domain([d3.min(time), d3.max(time)]).range([0 + margin, w - margin])
                     
-            textMargin = width * .055;
+            textMargin = w * .055;
             
             var line = d3.svg.line()
             .x(function(d,i) { return (textMargin + x(i)); })
@@ -641,7 +641,7 @@ function draw()
                     x = d3.scale.linear().domain([0, dataTemp.length]).range([0 + margin, w - margin])
                     
                     
-            textMargin = width * .055;
+            textMargin = w * .055;
             
             var line = d3.svg.line()
             .x(function(d,i) 

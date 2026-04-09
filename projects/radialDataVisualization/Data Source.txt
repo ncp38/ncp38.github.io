@@ -1,0 +1,1 @@
+http://research.stlouisfed.org/fred2/series/CPIAUCSL/downloaddata?cid=9

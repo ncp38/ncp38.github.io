@@ -25,7 +25,7 @@ const PROJ3YEAR = 2013;
 const PROJ3DESCRIPTION = "Design and implementation of a web game (Gyrocopter Cage Match) that is based on surviving as long as possible. In it, players pilot a simple 2-D airship and dodge projectiles while also avoiding the spikes at the edges of the map. This game showcases some simple animations, the ability to change the texture of the airship by clicking on it, a pause and options menu, and a high score system.";
 
 const PROJ4TITLE = "Radial Data Visualization";
-const PROJ4KEYWORDS = ["Web Design", "Visualization"];
+const PROJ4KEYWORDS = ["Web Design", "Visualization", "Javascript", "D3", "SVG"];
 const PROJ4YEAR = 2013;
 const PROJ4DESCRIPTION = "Design and implementation of a website that supports a novel graph type: the radial line graph. This graph was intended to better illustrate periodic data than the standard line graph. In implementation it was found that it was difficult to observe small changes in a radial view and further difficult to observe changes with a large number of partitions.";
 
@@ -62,7 +62,7 @@ const projects = [
     description: PROJ4DESCRIPTION,
     keywords: PROJ4KEYWORDS,
     year: PROJ4YEAR,
-    link: "projects/project4" 
+    link: "projects/radialDataVisualization" 
   },
   {
     id: "project3",

@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSE 8413 Final Project</title>
+    <style>
+    nav
+    {
+        position: fixed;
+        top: 25px;
+        right: 10px;
+        z-index: 2;
+    }
+    footer
+    {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    svg
+    {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        margin-left: 10%;
+        width: 70%
+        height: 75%
+    }
+    path 
+    {
+	stroke: red;
+	stroke-width: 2;
+	fill: none;
+    }
+
+    line 
+    {
+	stroke: black;
+    }
+
+    text 
+    {
+        font-family: Arial;
+        font-size: 9pt;
+    }
+
+    div.tooltip 
+    {   
+        position: absolute;           
+        text-align: center;           
+        width: 60px;                  
+        height: 56px;                 
+        padding: 2px;             
+        font: 12px sans-serif;        
+        background: lightsteelblue;   
+        border: 0px;      
+        border-radius: 8px;           
+        pointer-events: none;         
+    }
+
+    circle 
+    {
+        opacity: .5;
+    }
+    </style>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+  </head>
+    <nav>
+    <ul>
+    <button id="detailButton">Partitions: 1</button>
+    <button id="dateButton">Select Dates:<br/>1/1/1947 to<br/>1/1/1957</button>
+    <button id="typeButton">Select Graph:<br/>Line Graph</button>
+    </ul>
+    </nav>
+
+    <footer>
+    <ul>
+    <button id="infoButton">More information</button>
+    </ul>
+    </footer>
+
+  <body>
+
+    <svg id="viz" onload="initializeData();"></svg>
+  </body>
+<script type="text/javascript">
+var p = document.getElementById("detailButton")
+var d = document.getElementById("dateButton")
+var v = document.getElementById("typeButton")
+var info = document.getElementById("infoButton")
+var body = document.getElementById("viz")
+
+var startDate = new Date(1947, 0, 1);
+var endDate = new Date(1957, 0, 1);
+var lineGraph = 1;
+var detail = 1;
+
+var width=1000;
+var height=2500;
+var circleSize = 3;
+var arrowRatio = 95;
+
+var path = "https:ncp38.github.io/projects/radialDataVisualization/USCPIData.csv";
+var lines;
+
+var totalX = [];
+
+function getTime(xLength, value)
+{
+    var numMonths = startDate.getMonth();
+    var numYears = startDate.getYear();
+
+    value = value + totalX[xLength];
+
+    while(value + numMonths >= 12)
+    {
+        numYears++;
+        value = value -12;
+    }
+    numMonths = numMonths + value;
+
+    var result = new Date(numYears, numMonths, 1);
+
+    return result;
+}
+
+function initializeData()
+{ 
+    //This code segment comes from: http://stackoverflow.com/questions/6861180/how-can-you-read-a-file-line-by-line-in-javascript .
+    var txtFile = new XMLHttpRequest();
+    txtFile.open("GET", path, true);
+    txtFile.onreadystatechange = function()
+    {
+      if (txtFile.readyState === 4) 
+      {  // document is ready to parse.
+        if (txtFile.status === 200) 
+        {  // file is found
+          allText = txtFile.responseText; //alert("File found");
+          lines = txtFile.responseText.split("\n"); //alert("Here is the first line: " + lines[0]); 
+          draw();
+        }
+        else
+        {
+          alert("File not found");
+        }
+      }
+    }
+    txtFile.send(null);
+    //draw();
+}
+
+function draw()
+{
+    //This assumes that the user has the window in full screen mode.
+    var w = Math.floor(screen.width *.6);//400
+    var h = Math.floor(screen.height * .8);//200
+
+    d3.select("#viz").remove();
+    d3.select("body").append("svg").attr("id", "viz")
+    var svgName = d3.select("#viz")
+        .attr("width", width)
+        .attr("height", h);
+
+    var formatTime = d3.time.format("%x");
+
+    var count = 0;
+    
+    var data = []
+    var time = []
+    
+    var div = d3.select("body").append("div")   
+    .attr("class", "tooltip")               
+    .style("opacity", 0);
+
+    //This iterates through each line in the data file.
+    for(i in lines)
+    {
+        if(i == 0)
+        {
+            i++;
+        }
+        var lineArray = lines[i].split(',');
+        
+        var dateLine = lineArray[0].split('/');
+
+        currentDate = new Date(dateLine[2], dateLine[0], 1);
+
+        if(currentDate >= startDate)
+        {
+            if(currentDate <= endDate)
+            {
+                 //This data should be graphed.
+                 data.push(lineArray[1]);
+                 time.push(currentDate); 
+            }
+        }
+    }
+
+    var maxValue = Math.max.apply(Math, data);
+
+    if(lineGraph == 1)
+    {
+        var vis = d3.select("#viz")
+        .attr("width", w * 1.05)
+        .attr("height", h * 1.05)
+        
+        var g = vis.append("svg:g")
+        .attr("transform", "translate(0, " + h + ")");
+
+        var circleGroup0 = g.append("g");   
+        var circleGroup1 = g.append("g");
+        var circleGroup2 = g.append("g");
+        var circleGroup3 = g.append("g");
+        var circleGroup4 = g.append("g");
+        var circleGroup5 = g.append("g");
+        var circleGroup6 = g.append("g");
+        var circleGroup7 = g.append("g");
+        var circleGroup8 = g.append("g");   
+        var circleGroup9 = g.append("g");  
+
+        var textMargin = 10;
+        var counter = 0;
+
+        totalX[0] = 0;
+
+        //This code segment is based off of: http://stackoverflow.com/questions/9181188/splice-an-array-in-half-no-matter-the-size .
+        var split_length = Math.ceil(data.length / detail); 
+ 
+        while(counter < detail)
+        {
+            var hTemp = Math.floor(h/detail) * (1 + counter);
+
+            //This code is based off of http://www.janwillemtulp.com/2011/04/01/tutorial-line-chart-in-d3/ .
+
+            var dataTemp = data.splice(0, split_length); 
+
+            var yMargin = 4;
+            margin = 20,
+                y = d3.scale.linear().domain([0, maxValue]).range([counter * Math.floor(h/detail) + yMargin, (1 + counter) * Math.floor(h/detail) - yMargin]),
+                    x = d3.scale.linear().domain([0, dataTemp.length]).range([0 + margin, w - margin])
+                    
+                    //timeValue = d3.scale.linear().domain([d3.min(time), d3.max(time)]).range([0 + margin, w - margin])
+                    
+            textMargin = width * .055;
+            
+            var line = d3.svg.line()
+            .x(function(d,i) { return (textMargin + x(i)); })
+            .y(function(d) { return -1 * y(d); })
+
+            g.append("svg:path").attr("d", line(dataTemp));
+
+            //The code for the tooltips is based on: http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html .
+            switch (counter)
+            {
+            case 0:
+                circleGroup0.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(0, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 1:
+              circleGroup1.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(1, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 2:
+              circleGroup2.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(2, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 3:
+              circleGroup3.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(3, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 4:
+              circleGroup4.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(4, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 5:
+              circleGroup5.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(5, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 6:
+              circleGroup6.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(6, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 7:
+              circleGroup7.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(7, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 8:
+              circleGroup8.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(8, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 9:
+              circleGroup9.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d, i){ return (textMargin + x(i)); })
+                .attr("cy", function(d) { return -1 * y(d); })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(9, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            }
+            
+            totalX.push((Math.max.apply(Math, totalX) + dataTemp.length));
+            
+            g.append("svg:line")
+            .attr("x1", textMargin + x(0))
+            .attr("y1", -1 * y(0))
+            .attr("x2", textMargin + x(dataTemp.length))
+            .attr("y2", -1 * y(0))
+            
+            g.append("svg:line")
+            .attr("x1", textMargin + x(0))
+            .attr("y1", -1 * y(0))
+            .attr("x2", textMargin + x(0))
+            .attr("y2", -1 * y(maxValue))
+            
+            g.selectAll(".yLabel")
+            .data(y.ticks(4))
+            .enter().append("svg:text")
+            .text(String)
+            .attr("x", textMargin )
+            .attr("y", function(d) { return -1 * y(d) - 6 })
+            .attr("text-anchor", "right")
+            .attr("dy", 4)
+            
+            g.selectAll(".yTicks")
+            .data(y.ticks(4))
+            .enter().append("svg:line")
+            .attr("y1", function(d) { return -1 * y(d); })
+            .attr("x1", textMargin + 2)
+            .attr("y2", function(d) { return -1 * y(d); })
+            .attr("x2", textMargin + x(0))
+
+
+            if(counter == 0)
+            {
+                g.selectAll(".xTicks")
+                .data(x.ticks(5))
+                .enter().append("svg:line")
+                .attr("class", "xTicks")
+                .attr("x1", function(d) { return (textMargin + x(d)); })
+                .attr("y1", -1 * y(0))
+                .attr("x2", function(d) { return (textMargin + x(d)); })
+                .attr("y2", -1 * 2)
+                
+                g.selectAll(".xLabel")
+                .data(x.ticks(5))
+                .enter().append("svg:text")
+                .attr("class", "xLabel")
+                .text(String)
+                .attr("x", function(d) { return (textMargin + x(d)) })
+                .attr("y", 10)
+                .attr("text-anchor", "middle")
+            }
+
+            if(data.length - split_length < 0)
+            {
+                split_length = data.length;
+            }
+
+            counter++;
+        }
+
+            vis.append("text")
+            .attr("x", w/2)
+            .attr("y", h + 40)
+            .attr("text-anchor", "middle")
+            .style("font-size","24px")
+            .text("Timesteps (in months)")
+            
+            g.selectAll(".yTicks")
+            .data(y.ticks(4))
+            .enter().append("svg:line")
+            .attr("class", "yTicks")
+            .attr("y1", function(d) { return -1 * y(d); })
+            .attr("x1", textMargin + 2)
+            .attr("y2", function(d) { return -1 * y(d); })
+            .attr("x2", textMargin + x(0))
+
+            vis.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 + textMargin/2)
+            .attr("x", -1 * h/2)
+            .attr("text-anchor", "middle")
+            .style("font-size","24px")
+            .text("Consumer Price Index")
+    }
+    else //Circle graph
+    {
+         var vis = d3.select("#viz")
+        .attr("width", w * 1.05)
+        .attr("height", h * 1.05)
+        
+        var g = vis.append("svg:g")
+        .attr("transform", "translate(0, " + h + ")");
+
+        var circleGroup0 = g.append("g");   
+        var circleGroup1 = g.append("g");
+        var circleGroup2 = g.append("g");
+        var circleGroup3 = g.append("g");
+        var circleGroup4 = g.append("g");
+        var circleGroup5 = g.append("g");
+        var circleGroup6 = g.append("g");
+        var circleGroup7 = g.append("g");
+        var circleGroup8 = g.append("g");   
+        var circleGroup9 = g.append("g");  
+
+        var textMargin = 10;
+        var counter = 0;
+
+        totalX[0] = 0;
+        var dataset = [1, 2, 3];
+        var circleRadius = 1;
+
+        var firstOffset = 10;
+
+        if(h > w)
+        {
+            circleRadius = (w * .9) / 2;
+        }
+        else
+        {
+            circleRadius = (h * .9) / 2;
+        }
+
+                g.selectAll("circle")
+                .data(dataset)
+                .enter().append("circle")
+                .style("stroke", "blue")
+                .style("fill", "blue")
+                .style("pointer-events", "none")
+                .attr("r", circleRadius)
+                .style("opacity", .3)
+                .attr("cx", function(d, i){ return (w/2); })
+                .attr("cy", function(d) { return -1 * h/2; });
+
+                /*var innerCircle = g.append("circle")
+                .style("stroke", "black")
+                .style("fill", "white")
+                .style("pointer-events", "none")
+                .attr("r", firstOffset)
+                .style("opacity", 1)
+                .attr("cx", function(d, i){ return (w/2); })
+                .attr("cy", function(d) { return -1 * h/2; });*/
+
+        //This code segment is based off of: http://stackoverflow.com/questions/9181188/splice-an-array-in-half-no-matter-the-size .
+        var split_length = Math.ceil(data.length / detail);  
+        
+        //cx: w/2
+        //cy: -1 * h/2
+        //inner ring radius: counter * Math.floor((circleRadius - firstOffset)/detail) + firstOffset
+        //outer ring radius: (1 + counter) * Math.floor((circleRadius - firstOffset)/detail) + firstOffset
+        
+        while(counter < detail)
+        {
+            var hTemp = Math.floor((circleRadius - firstOffset)/detail) * (1 + counter) + firstOffset;
+
+            //This code is based off of http://www.janwillemtulp.com/2011/04/01/tutorial-line-chart-in-d3/ .
+
+            var dataTemp = data.splice(0, split_length); 
+
+            var yMargin = 4;
+            var innerRadius = counter * Math.floor((circleRadius - firstOffset)/detail) + firstOffset;
+
+            margin = 20,
+                y = d3.scale.linear().domain([0, (maxValue + 10)]).range([counter * Math.floor((circleRadius - firstOffset)/detail) + firstOffset, (1 + counter) * Math.floor((circleRadius - firstOffset)/detail) + firstOffset]),
+                    x = d3.scale.linear().domain([0, dataTemp.length]).range([0 + margin, w - margin])
+                    
+                    
+            textMargin = width * .055;
+            
+            var line = d3.svg.line()
+            .x(function(d,i) 
+               { 
+                   var yPos = y(d);
+                   var xPos = i;
+                   
+                   //Calculate angle
+                   var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                   
+                   var distance = yPos;// + innerRadius;
+                   
+                   var xResult = w/2 + distance * Math.cos(angle);
+                   return xResult; 
+               })
+            .y(function(d,i) 
+               { 
+                   var yPos = y(d);
+                   var xPos = i;
+                   
+                   //Calculate angle
+                   var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                   
+                   var distance = yPos;// + innerRadius;
+                   
+                   var yResult = h/2 + distance * Math.sin(angle);
+                   return -1 * yResult; 
+               })
+
+                var lowerCircle = g.append("circle")
+                .style("stroke", "black")
+                .style("fill", "rgba(0, 0, 0, 0)")
+                .style("pointer-events", "none")
+                .attr("r", (counter * Math.floor((circleRadius - firstOffset)/detail) + firstOffset))
+                .style("opacity", 1)
+                .attr("cx", function(d, i){ return (w/2); })
+                .attr("cy", function(d) { return -1 * h/2; });
+
+                var radiusAxisLine = g.append("svg:line")
+                .attr("x1", w/2)
+                .attr("y1", -h/2 + 1 * (counter * Math.floor((circleRadius - firstOffset)/detail) + firstOffset))
+                .attr("x2", w/2)
+                .attr("y2", -h/2 + 1 * ((1 + counter) * Math.floor((circleRadius - firstOffset)/detail) + firstOffset))
+
+                var radiusTicks = g.selectAll(".yTicks")
+                .data(y.ticks(5))
+                .enter().append("svg:line")
+                .attr("y1", function(d) { return -h/2 +1 * y(d); })
+                .attr("x1", w/2 - 11)
+                .attr("y2", function(d) { return -h/2 +1 * y(d); })
+                .attr("x2", w/2 + 11)
+
+                g.selectAll(".yLabel")
+                .data(y.ticks(5))
+                .enter().append("svg:text")
+                .text(String)
+                .attr("x", w/2 + 2 )
+                .attr("y", function(d) { return -h/2 +1 * y(d); })
+                .attr("text-anchor", "right")
+                .attr("dy", 4)
+                .attr("dx", 10)
+
+
+            g.append("svg:path").attr("d", line(dataTemp));
+
+            totalX.push((Math.max.apply(Math, totalX) + dataTemp.length));
+            
+            //The code for the tooltips is based on: http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html .
+            switch (counter)
+            {
+            case 0:
+                circleGroup0.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(0, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 1:
+                circleGroup1.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(1, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 2:
+                circleGroup2.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(2, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 3:
+                circleGroup3.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(3, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 4:
+                circleGroup4.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(4, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 5:
+                circleGroup5.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(5, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 6:
+                circleGroup6.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(6, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 7:
+                circleGroup7.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(7, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 8:
+                circleGroup8.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(8, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+            case 9:
+                circleGroup9.selectAll("circle")
+                .data(dataTemp)
+                .enter().append("circle")
+                .style("stroke", "gray")
+                .style("fill", "black")
+                .attr("r", 2)
+                .attr("cx", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var xResult = w/2 + distance * Math.cos(angle);
+                       return xResult; 
+                   })
+                .attr("cy", function(d,i) 
+                   { 
+                       var yPos = y(d);
+                       var xPos = i;
+                       
+                       //Calculate angle
+                       var angle = xPos / (split_length - 1) * 2 * Math.PI;
+                       
+                       var distance = yPos;// + innerRadius;
+                       
+                       var yResult = h/2 + distance * Math.sin(angle);
+                       return -1 * yResult; 
+                   })
+                .on("mouseover", function(d, i) {  div.html("Time: " + formatTime(getTime(9, i)) + "\nValue: " + d);    
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                        })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(300)      
+                        .style("opacity", 0);   
+                });
+              break;
+             }
+
+            /*g.append("svg:line")
+            .attr("x1", textMargin + x(0))
+            .attr("y1", -1 * y(0))
+            .attr("x2", textMargin + x(dataTemp.length))
+            .attr("y2", -1 * y(0))
+            
+            g.append("svg:line")
+            .attr("x1", textMargin + x(0))
+            .attr("y1", -1 * y(0))
+            .attr("x2", textMargin + x(0))
+            .attr("y2", -1 * y(maxValue))
+            
+            g.selectAll(".yLabel")
+            .data(y.ticks(4))
+            .enter().append("svg:text")
+            .text(String)
+            .attr("x", textMargin )
+            .attr("y", function(d) { return -1 * y(d) - 6 })
+            .attr("text-anchor", "right")
+            .attr("dy", 4)
+            
+            g.selectAll(".yTicks")
+            .data(y.ticks(4))
+            .enter().append("svg:line")
+            .attr("y1", function(d) { return -1 * y(d); })
+            .attr("x1", textMargin + 2)
+            .attr("y2", function(d) { return -1 * y(d); })
+            .attr("x2", textMargin + x(0))*/
+
+
+            /*if(counter == 0)
+            {
+                g.selectAll(".xTicks")
+                .data(x.ticks(5))
+                .enter().append("svg:line")
+                .attr("class", "xTicks")
+                .attr("x1", function(d) { return (textMargin + x(d)); })
+                .attr("y1", -1 * y(0))
+                .attr("x2", function(d) { return (textMargin + x(d)); })
+                .attr("y2", -1 * 2)
+                
+                g.selectAll(".xLabel")
+                .data(x.ticks(5))
+                .enter().append("svg:text")
+                .attr("class", "xLabel")
+                .text(String)
+                .attr("x", function(d) { return (textMargin + x(d)) })
+                .attr("y", 10)
+                .attr("text-anchor", "middle")
+            }*/
+
+            if(data.length - split_length < 0)
+            {
+                split_length = data.length;
+            }
+
+            counter++;
+        }
+    }
+}    
+
+p.onclick = function(e)
+{
+    detail=prompt("Please enter the desired number of graph partitions, from 1 to 10.\n\nNote that, for the circle graph, there is a minimum of six data points per partition.","1");
+    totalX = [];
+    p.innerHTML="Partitions: " + detail;
+    initializeData();
+}
+
+d.onclick = function(e)
+{
+    var startString=prompt("Specify the starting month and year that you wish to view, from 0 to 11, and from 1947 to 2013, respectively.\nList the year first, followed by a space, and then the month.","1");
+    totalX = [];
+    if(startString.indexOf(" ") > -1)
+    {
+        var inputArray = startString.split(' ');
+        startYear = inputArray[0];
+        startMonth = inputArray[1];
+    }
+    else
+    {
+        startYear = startString;
+        startMonth = 1;
+    }
+    //var startMonth=prompt("Specify the starting month that you wish to view, 0 to 11","1");
+    startDate= new Date(startYear, startMonth, 1);
+
+    //var endYear=prompt("Specify the ending year that you wish to view, from " + startYear + " to 2013.","1");
+    var endString=prompt("Specify the ending month and year that you wish to view, from 0 to 11, and from " + startYear + " to 2013, respectively.\nList the year first, followed by a space, and then the month.","1");
+    if(endString.indexOf(" ") > -1)
+    {
+        var inputArray = endString.split(' ');
+        endYear = inputArray[0];
+        endMonth = inputArray[1];
+    }
+    else
+    {
+        endYear = endString;
+        endMonth = 1;
+    }
+    while(endYear < startYear)
+    {
+        var endYear=prompt("Invalid value.\nPlease specify the ending year that you wish to view, from " + startYear + " to 2013.","1");
+    }
+    //var endMonth=prompt("Specify the ending month that you wish to view, 0 to 11","1");
+    endDate= new Date(endYear, endMonth, 1);
+
+    var result = "Select Dates:<br/>1/" + startMonth + "/" + startYear + " to<br/>1/" + endMonth + "/" + endYear;
+    d.innerHTML = result;
+    initializeData();
+}
+
+v.onclick = function(e)
+{
+    lineGraph=prompt("Enter 1 to display a normal line graph or 2 to display the circle graph.","1");
+    totalX = [];
+    if(lineGraph == 1)
+    {
+        v.innerHTML="Select Graph:<br/>Line Graph"
+    }
+    else if(lineGraph == 2)
+    {
+        v.innerHTML="Select Graph:<br/>Circle Graph"
+    }
+    initializeData();
+}
+
+info.onclick = function(e)
+{
+    alert("This visualization was created by Nate Phillips for CSE 8990 at Mississippi State University.\n\nThis visualization is based on CPI data from the United States, produced by http://research.stlouisfed.org/fred2/series/CPIAUCSL/downloaddata?cid=9 . This data contains the CPI value for a given date, within the past 66 years.");
+}
+</script>
+</html>						

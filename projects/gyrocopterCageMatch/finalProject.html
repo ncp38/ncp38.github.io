@@ -69,6 +69,8 @@ var detailedRendering = true;
 var height = document.documentElement.clientHeight;
 var width = document.documentElement.clientWidth;
 
+var scalingFactor = Math.min(width / canvasName.width, height / canvasName.height);
+
 
 
 var highScoreNames = new Array();
@@ -153,6 +155,7 @@ function gameFunction()
             metalPattern.onload = function()
             {
                 context.clearRect(0, 0, p.width, p.height);
+				context.setTransform(scalingFactor);
                 var pattern1 = context.createPattern(metalPattern, 'repeat');
                 if(detailedRendering)
                 {

@@ -46,7 +46,7 @@ const projects = [
     description: PROJ6DESCRIPTION,
     keywords: PROJ6KEYWORDS,
     year: PROJ6YEAR,
-    link: "projects/project6" 
+    link: "projects/plagiarismDetection" 
   },
   {
     id: "project5",

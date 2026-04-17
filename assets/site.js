@@ -273,16 +273,12 @@ function render() {
 			linkBlock = radialLinkBlock;
 			linkToCodeBlock = radialCodeLink;
 		}
-		else if(p.title == "Radial Data Visualization")
-		{
-			directLink = radialLink;
-			linkBlock = radialLinkBlock;
-			linkToCodeBlock = radialCodeLink;
-		}
+
 		else if(p.title == "Plagiarism Detection Visualization")
 		{
 			directLink = plagiarismLink;
-			linkBlock = pl
+			linkBlock = plagiarismLinkBlock;
+			linkToCodeBlock = linkToCodeBlock;
 		}
 		const card = createCard(`
 		  <div class="card">

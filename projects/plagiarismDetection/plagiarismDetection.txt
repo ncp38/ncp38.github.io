@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul
+{
+list-style-type:none;
+margin:0;
+padding:0;
+float:right;
+}
+a
+{
+display:block;
+width:230px;
+background-color:#dddddd;
+}
+h1
+{
+text-align:center;
+}
+b
+{
+color: rgb(30, 30, 255);
+}
+b.threeOrMore
+{
+color: rgb(30, 180, 255);
+}
+b.fiveOrMore
+{
+color: rgb(250, 0, 0);
+}
+nav
+{
+position: fixed;
+top: 25px;
+right: 0px;
+z-index: 2;
+}
+header
+{
+position: fixed;
+height:25px;
+width: 110%;
+top: 0px;
+left: 0px;
+font-family: sans-serif;
+font-style: oblique;
+background: linear-gradient(to right, rgba(240, 0, 0, 1),  rgba(20, 100, 155, .8));
+background-position: 0px, left;
+background-repeat: no-repeat, no-repeat;
+z-index: 1;
+}
+footer
+{
+position: fixed;
+bottom: 0px;
+left: 0px;
+width: 100%;
+height: 25px;
+background-color: #dcdad2;
+z-index: 1;
+}
+span
+{
+padding: 50px;
+}
+#section1
+{
+background-color: #dddddd;
+position: absolute;
+left: 5px;
+top: 20%;
+width:48%;
+transition: color 5s, background-color 3s;
+}
+#section2
+{
+background-color: #dddddd;
+position: absolute;
+left: 49%;
+top: 20%;
+width: 48%;
+transition: color 10s, background-color 3s;
+}
+</style>
+<title>Multivariate Visualization Final Project: Plagiarism Analysis</title>
+<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<footer>
+This website is an experimental student project designed to highlight cheating.  The creators make no guarantee about its efficacy or reliability in plagiarism determinations.  All rights reserved.
+</footer>
+
+
+
+
+
+<body>
+
+<header>
+Multivariate Visualization Final Project: <b>Plagiarism Analysis</b>
+</header>
+
+<span></span>
+
+<section>
+<p>This project is designed to find and highlight differences between two text objects that may have been created through collaboration.</p>
+<p>This visualization accepts an input of two text strings and a list of significant words that the strings have in common.  This visualization will then display the two strings and highlight the shared words, so that users may 
+may make a determination as to whether plagiarism or cheating may have been involved in the creation of the text.</p>
+</section>
+
+<section id="section1">
+<p>Placeholder Text</p>
+</section>
+
+<section id="section2" onload="initializeSection2();">
+<p>Placeholder Text</p>
+</section>
+
+</body>
+<script type="text/javascript">
+var resultList = [];
+var resultNumber = 0;
+
+var resultText1 = "";
+var resultText2 = "";
+var plagText = "";
+var plag = [];
+var resultLines1 = [];
+var resultLines2 = [];
+
+var resultsFull = [];
+
+function initializeSections()
+{
+    //If we want to, we could also query the user to see if they want to test different files, here.
+    initializeData("section1.txt", "section2.txt", "outFile.txt");
+}
+
+function initializeData(section1Path, section2Path, plagPath)
+{ 
+    var temp = 0;
+    //This code segment comes from: http://stackoverflow.com/questions/6861180/how-can-you-read-a-file-line-by-line-in-javascript .
+    var txtFile = new XMLHttpRequest();
+    txtFile.open("GET", section1Path, true);
+    txtFile.onreadystatechange = function()
+    {
+      if (txtFile.readyState === 4) 
+      {  // document is ready to parse.
+        if (txtFile.status === 200) 
+        {  // file is found
+        resultText1 = txtFile.responseText; //alert("File found");
+        resultLines1 = txtFile.responseText.split("\n"); //alert("Here is the first line: " + lines[0]); 
+        var txtFile1 = new XMLHttpRequest();
+        txtFile1.open("GET", section2Path, true);
+        txtFile1.onreadystatechange = function()
+        {
+          if (txtFile1.readyState === 4) 
+          {  // document is ready to parse.
+            if (txtFile1.status === 200) 
+            {  // file is found
+              resultText2 = txtFile1.responseText; //alert("File found");
+              resultLines2 = txtFile1.responseText.split("\n"); //alert("Here is the first line: " + lines[0]); 
+              var txtFile3 = new XMLHttpRequest();
+                txtFile3.open("GET", plagPath, true);
+                txtFile3.onreadystatechange = function()
+                {
+                  if (txtFile3.readyState === 4) 
+                  {  // document is ready to parse.
+                    if (txtFile3.status === 200) 
+                    {  // file is found
+                      plagText = txtFile3.responseText; //alert("File found");
+                      plag = txtFile3.responseText.split("\n"); //alert("Here is the first line: " + lines[0]);
+                        
+                        for (t in resultLines1)
+                        {
+                            if(t == 0)
+                            {
+                                resultsFull[0] = resultLines1[t];
+                            }
+                            else
+                            {
+                                resultsFull[0] = resultsFull[0] + resultLines1[t];
+                            }
+                        }
+                        for (t in resultLines2)
+                        {
+                            if(t == 0)
+                            {
+                                resultsFull[1] = resultLines2[t];
+                            }
+                            else
+                            {
+                                resultsFull[1] = resultsFull[1] + resultLines2[t];
+                            }
+                        }
+                      initialize();
+                    }
+                    else
+                    {
+                      alert("File 3 not found");
+                    }
+                  }
+                }
+                txtFile3.send(null);
+            }
+            else
+            {
+              alert("File 2 not found");
+            }
+          }
+        }
+        txtFile1.send(null);
+        }
+        else
+        {
+          alert("File 1 not found");
+        }
+      }
+    }
+    txtFile.send(null);
+       
+}
+
+function initialize()
+{
+    var sectionList = [];
+    var section1 = document.getElementById("section1");
+    var section2 = document.getElementById("section2");
+    
+    sectionList[0] = section1;
+    sectionList[1] = section2;
+    
+    var j = 0;
+    
+    while(j <= 1)
+    {   //This clears out any html stuff still in the input.
+        var resultText =resultsFull[j].replace(/<\/?[^>]+(>|$)/g, "");
+    
+        plag.forEach(function(input) {
+        if(input != "" && input.substring(0, 1) != "<")
+        { 
+            //Information on how to find the number of spaces in a string comes from: http://stackoverflow.com/questions/881085/count-the-number-of-occurences-of-a-character-in-a-string-in-javascript
+            var a = (input.split(" ").length - 1);
+            a = a + 1; //This makes a equal to the number of words in the input.
+            if(a < 5)
+            {
+                //Note that, currently, this does not deal with things in quotes.
+                input = input.charAt(0).toUpperCase() + input.slice(1);
+                resultText = resultText.replace("" + input + " ", "<b>" + input + "</b> ");
+                resultText = resultText.replace("" + input + ". ", "<b>" + input + "</b>. ");
+                resultText = resultText.replace("" + input + ", ", "<b>" + input + "</b>, ");
+                resultText = resultText.replace("" + input + "? ", "<b>" + input + "</b>? ");
+                resultText = resultText.replace("" + input + "! ", "<b>" + input + "</b>! ");
+                resultText = resultText.replace("" + input + "; ", "<b>" + input + "</b>; ");
+                resultText = resultText.replace("" + input + "- ", "<b>" + input + "</b>- ");
+    
+                input = input.charAt(0).toLowerCase() + input.slice(1);
+                resultText = resultText.replace("" + input + " ", "<b>" + input + "</b> ");
+                resultText = resultText.replace("" + input + ". ", "<b>" + input + "</b>. ");
+                resultText = resultText.replace("" + input + ", ", "<b>" + input + "</b>, ");
+                resultText = resultText.replace("" + input + "? ", "<b>" + input + "</b>? ");
+                resultText = resultText.replace("" + input + "! ", "<b>" + input + "</b>! ");
+                resultText = resultText.replace("" + input + "; ", "<b>" + input + "</b>; ");
+                resultText = resultText.replace("" + input + "- ", "<b>" + input + "</b>- ");
+            }
+            else if(a < 7)
+            {
+                input = input.charAt(0).toUpperCase() + input.slice(1);
+                resultText = resultText.replace(" " + input + " ", '<b class="threeOrMore">' + input + "</b> ");
+                resultText = resultText.replace(" " + input + ". ", '<b class="threeOrMore">' + input + "</b>. ");
+                resultText = resultText.replace(" " + input + ", ", '<b class="threeOrMore">' + input + "</b>, ");
+                resultText = resultText.replace(" " + input + "? ", '<b class="threeOrMore">' + input + "</b>? ");
+                resultText = resultText.replace(" " + input + "! ", '<b class="threeOrMore">' + input + "</b>! ");
+                resultText = resultText.replace(" " + input + "; ", '<b class="threeOrMore">' + input + "</b>; ");
+                resultText = resultText.replace(" " + input + "- ", '<b class="threeOrMore">' + input + "</b>- ");
+    
+                input = input.charAt(0).toLowerCase() + input.slice(1);
+                resultText = resultText.replace("" + input + " ", '<b class="threeOrMore">' + input + "</b> ");
+                resultText = resultText.replace("" + input + ". ", '<b class="threeOrMore">' + input + "</b>. ");
+                resultText = resultText.replace("" + input + ", ", '<b class="threeOrMore">' + input + "</b>, ");
+                resultText = resultText.replace("" + input + "? ", '<b class="threeOrMore">' + input + "</b>? ");
+                resultText = resultText.replace("" + input + "! ", '<b class="threeOrMore">' + input + "</b>! ");
+                resultText = resultText.replace("" + input + "; ", '<b class="threeOrMore">' + input + "</b>; ");
+                resultText = resultText.replace("" + input + "- ", '<b class="threeOrMore">' + input + "</b>- ");
+            }
+            else
+            {
+                input = input.charAt(0).toUpperCase() + input.slice(1);
+                resultText = resultText.replace("" + input + " ", '<b class="fiveOrMore">' + input + "</b> ");
+                resultText = resultText.replace("" + input + ". ", '<b class="fiveOrMore">' + input + "</b>. ");
+                resultText = resultText.replace("" + input + ", ", '<b class="fiveOrMore">' + input + "</b>, ");
+                resultText = resultText.replace("" + input + "? ", '<b class="fiveOrMore">' + input + "</b>? ");
+                resultText = resultText.replace("" + input + "! ", '<b class="fiveOrMore">' + input + "</b>! ");
+                resultText = resultText.replace("" + input + "; ", '<b class="fiveOrMore">' + input + "</b>; ");
+                resultText = resultText.replace("" + input + "-", '<b class="fiveOrMore">' + input + "</b>- ");
+    
+                input = input.charAt(0).toLowerCase() + input.slice(1);
+                resultText = resultText.replace("" + input + " ", '<b class="fiveOrMore">' + input + "</b> ");
+                resultText = resultText.replace("" + input + ". ", '<b class="fiveOrMore">' + input + "</b>. ");
+                resultText = resultText.replace("" + input + ", ", '<b class="fiveOrMore">' + input + "</b>, ");
+                resultText = resultText.replace("" + input + "? ", '<b class="fiveOrMore">' + input + "</b>? ");
+                resultText = resultText.replace("" + input + "! ", '<b class="fiveOrMore">' + input + "</b>! ");
+                resultText = resultText.replace("" + input + "; ", '<b class="fiveOrMore">' + input + "</b>; ");
+                resultText = resultText.replace("" + input + "-", '<b class="fiveOrMore">' + input + "</b>- ");
+            }
+        }
+        
+        })
+        var tempText = "Plagiarized Work";
+        if(j == 1)
+        {
+            tempText = "Original Source";
+        }
+        sectionList[j].innerHTML = "<h1>" + tempText + "</h1>" + resultText + "<br></br><br></br>";
+        j++;
+    }
+    
+}
+
+window.onload = initializeSections;
+</script>
+</html>

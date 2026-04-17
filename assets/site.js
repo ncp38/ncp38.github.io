@@ -278,7 +278,7 @@ function render() {
 		{
 			directLink = plagiarismLink;
 			linkBlock = plagiarismLinkBlock;
-			linkToCodeBlock = linkToCodeBlock;
+			linkToCodeBlock = plagiarismCodeLink;
 		}
 		const card = createCard(`
 		  <div class="card">

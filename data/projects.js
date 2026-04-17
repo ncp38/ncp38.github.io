@@ -49,6 +49,14 @@ const projects = [
     link: "projects/plagiarismDetection" 
   },
   {
+    id: "project5",
+    title: PROJ5TITLE,
+    description: PROJ5DESCRIPTION,
+    keywords: PROJ5KEYWORDS,
+    year: PROJ5YEAR,
+    link: "projects/project5" 
+  },
+  {
     id: "project4",
     title: PROJ4TITLE,
     description: PROJ4DESCRIPTION,

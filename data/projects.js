@@ -30,12 +30,12 @@ const PROJ4YEAR = 2013;
 const PROJ4DESCRIPTION = "Design and implementation of a website that supports a novel graph type: the radial line graph. This graph was intended to better illustrate periodic data than the standard line graph. In implementation it was found that it was difficult to observe small changes in a radial view and further difficult to observe changes with a large number of partitions.";
 
 const PROJ5TITLE = "Multivariate Hydrological Data Visualization";
-const PROJ5KEYWORDS = ["Web Design", "Data Analysis", "Visualization", "Multivariate Data"];
+const PROJ5KEYWORDS = ["Web Design", "Data Analysis", "Visualization", "Multivariate Data", "SVG", "Javascript", "D3.js", "Python"];
 const PROJ5YEAR = 2013;
 const PROJ5DESCRIPTION = "Design and creation of a website that displays certain hydrological data from the Mobile Bay area: flow, salinity, temperature, position, and timestep. In this visualization, data points are located where they occur geographically. From each data point an arrow is displayed that points in the direction of the flow, with the length of the arrow representing the flow magnitude. Color is used to represent either salinity or temperature, based on a display toggle.";
 
 const PROJ6TITLE = "Plagiarism Detection Visualization";
-const PROJ6KEYWORDS = ["Web Design", "Data Analysis", "Visualization"];
+const PROJ6KEYWORDS = ["Web Design", "Data Analysis", "Visualization", "Javascript", "D3.js", "C++", "Python"];
 const PROJ6YEAR = 2014;
 const PROJ6DESCRIPTION = "My team created a website that would compare two input text files and determine any potential plagiarized phrases between them. Based on this analysis, both files are displayed side-by-side in a scrollable view with the potentially plagiarized phrases highlighted in both documents.";
 
@@ -54,7 +54,7 @@ const projects = [
     description: PROJ5DESCRIPTION,
     keywords: PROJ5KEYWORDS,
     year: PROJ5YEAR,
-    link: "projects/project5" 
+    link: "projects/multivariateHydrologicalDataVisualization" 
   },
   {
     id: "project4",

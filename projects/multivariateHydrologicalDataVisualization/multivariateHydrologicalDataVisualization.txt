@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSE 8413 Project 2</title>
+    <style>
+    nav
+    {
+        position: fixed;
+        top: 25px;
+        right: 10px;
+        z-index: 2;
+    }
+    footer
+    {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    svg
+    {
+        margin-left: 22%;
+    }
+    </style>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+  </head>
+    <nav>
+    <ul>
+    <button id="timestepButton">Timestep: 1</button>
+    <button id="depthButton">Surface Depth</button>
+    <button id="variableButton">Salinity</button>
+    </ul>
+    </nav>
+
+    <footer>
+    <ul>
+    <button id="infoButton">More information</button>
+    </ul>
+    </footer>
+
+  <body>
+
+    <svg id="viz" onload="initializeData();"></svg>
+  </body>
+<script type="text/javascript">
+var p = document.getElementById("timestepButton")
+var d = document.getElementById("depthButton")
+var v = document.getElementById("variableButton")
+var info = document.getElementById("infoButton")
+var body = document.getElementById("viz")
+//var s = document.getElementById("svgName")
+
+var depth = 1
+var variable = 1
+var timestep = 1
+
+var width=1000;
+var height=2500;
+var circleSize = 3;
+var arrowRatio = 95;
+
+var path = "https://ncp38.github.io/projects/multivariateHydrologicalDataVisualization/CSE8413data.csv";
+var lines;
+
+function initializeData()
+{
+    //This code segment comes from: http://stackoverflow.com/questions/6861180/how-can-you-read-a-file-line-by-line-in-javascript .
+    var txtFile = new XMLHttpRequest();
+    txtFile.open("GET", path, true);
+    txtFile.onreadystatechange = function()
+    {
+      if (txtFile.readyState === 4) 
+      {  // document is ready to parse.
+        if (txtFile.status === 200) 
+        {  // file is found
+          allText = txtFile.responseText; //alert("File found");
+          lines = txtFile.responseText.split("\n"); //alert("Here is the first line: " + lines[0]); 
+          draw();
+        }
+        else
+        {
+          alert("File not found");
+        }
+      }
+    }
+    txtFile.send(null);
+}
+function draw()
+{
+    d3.select("#viz").remove();
+    d3.select("body").append("svg").attr("id", "viz")
+    var svgName = d3.select("#viz")
+        .attr("width", width)
+        .attr("height", height*2/3);
+
+    var count = 0;
+
+    //This iterates through each line in the data file.
+    for(i in lines)
+    {
+        var lineArray = lines[i].split(', ');
+
+        if(Math.round(lineArray[4] * 6 - 60) == timestep)
+        { 
+            //Note that, since this data set (unlike our assigned data set) does not have a full 3 dimensions, the z-value is not included.
+            //However, to include a z-value, all I would need to do would be to treat the z-value like the timestep and allow the user to switch between z-values at will
+            //by displaying only the data with the appropriate z-values.
+
+            //Create the shapes for each variable
+
+            //Make a point at width*(lineArray[0] - 356820)/449650, height*(lineArray[1] - 3.3327e+006)/3.445e+006
+
+            var xPos = width*(lineArray[0] - 356820)/(449650 - 356820);
+            var yPos = height*(lineArray[1] - 3.3327e+006)/(200000);
+
+var tempCircle = svgName.append("circle");
+
+tempCircle.attr("cx", function(v, i) {
+            return xPos;
+        })
+tempCircle.attr("cy", function(v, i) {
+            return yPos
+        })
+tempCircle.attr("r", function(v, i) {          
+            return circleSize;
+        })
+tempCircle.attr("fill", function(v, i) {
+            //This perceptual color mapping comes from http://colorbrewer2.org/ .
+            var stringResult = ""
+            //salinity variable
+            if(variable == 1)
+            { 
+                temp = lineArray[5]/ 39.3362;
+            }
+            //temperature variable
+            else if(variable == 2)
+            { 
+                temp = (lineArray[8] + 1.26656) / (19.3444 + 1.26656); 
+            }
+            //temperature variable
+            else
+            {
+                stringResult = "rgb(0, 0, 0)";
+                return stringResult;
+            }
+            //This creates a linear mapping between each of the nine steps from the color brewer perceptual mapping.
+            if(temp <= 1/9)
+            {
+                stringResult = "rgb(247, 252, 245)";
+            }
+            else if(temp <= 2/9)
+            {
+                var a = Math.round(229 + (247-229)*(temp-1/9)*9);
+                var b = Math.round(245 + (252-245)*(temp-1/9)*9);
+                var c = Math.round(224 + (245-224)*(temp-1/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 3/9)
+            {
+                var a = Math.round(199 + (229-199)*(temp-2/9)*9);
+                var b = Math.round(233 + (245-233)*(temp-2/9)*9);
+                var c = Math.round(192 + (224-192)*(temp-2/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 4/9)
+            {
+                var a = Math.round(161 + (199-161)*(temp-3/9)*9);
+                var b = Math.round(217 + (233-217)*(temp-3/9)*9);
+                var c = Math.round(155 + (192-155)*(temp-3/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 5/9)
+            {
+                var a = Math.round(116 + (161-116)*(temp-4/9)*9);
+                var b = Math.round(196 + (217-196)*(temp-4/9)*9);
+                var c = Math.round(118 + (155-118)*(temp-4/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 6/9)
+            {
+                var a = Math.round(65 + (116-65)*(temp-5/9)*9);
+                var b = Math.round(171 + (196-171)*(temp-5/9)*9);
+                var c = Math.round(93 + (118-93)*(temp-5/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 7/9)
+            {
+                var a = Math.round(35 + (65-35)*(temp-6/9)*9);
+                var b = Math.round(139 + (171-139)*(temp-6/9)*9);
+                var c = Math.round(69 + (93-69)*(temp-6/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else if(temp <= 8/9)
+            {
+                var a = Math.round((35-0)*(temp-7/9)*9);
+                var b = Math.round(109 + (139-109)*(temp-7/9)*9);
+                var c = Math.round(44 + (69-44)*(temp-7/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            else
+            {
+                var a = 0;
+                var b = Math.round(68 + (109-68)*(temp-8/9)*9);
+                var c = Math.round(27 + (44-27)*(temp-8/9)*9);
+
+                stringResult = "rgb(" + a + ", " + b + ", " + c + ")";
+            }
+            return stringResult;
+        })
+
+            //Create and display a vector (with a relative size) out of [6] (east/west current) and [7] (north/south current) centered at the circle created in the previous step.
+            var quadrant = 0;
+
+            var tempU = lineArray[6]/85.8032;
+            var tempV = lineArray[7]/143.251;
+            
+            var tempSize = Math.sqrt(tempU * tempU + tempV * tempV)
+            var fullSize = arrowRatio * circleSize * tempSize/Math.sqrt(2)
+
+            if(tempU == 0) 
+            { 
+               tempU = .0001 
+            }
+
+            var tempAngle = Math.sin(tempV/tempU)
+
+            //Create a line from x, y to x+/-cos(tempAngle), y+/-sin(tempAngle)
+            if(lineArray[6] >= 0 && lineArray[7] >= 0)
+            {
+                //quadrant 1
+                svgName.append("line")
+                    .attr("x1", xPos) 
+                    .attr("x2", xPos + fullSize * Math.cos(tempAngle))
+                    .attr("y1", yPos)
+                    .attr("y2", yPos + fullSize * Math.sin(tempAngle))
+                    .style("stroke", "red")
+                    .attr("stroke-width", .2)
+                    .attr("marker-end", "url(\#arrow)")
+            }
+            else if(lineArray[6] >= 0 && lineArray[7] <= 0)
+            {
+                //quadrant 4
+                svgName.append("line")
+                    .attr("x1", xPos) 
+                    .attr("x2", xPos + fullSize * Math.cos(tempAngle))
+                    .attr("y1", yPos)
+                    .attr("y2", yPos - fullSize * Math.sin(tempAngle))
+                    .style("stroke", "red")
+                    .attr("stroke-width", .2)
+                    .attr("marker-end", "url(\#arrow)")
+            }
+            else if(lineArray[6] <= 0 && lineArray[7] >= 0)
+            {
+                //quadrant 2
+                svgName.append("line")
+                    .attr("x1", xPos) 
+                    .attr("x2", xPos - fullSize * Math.cos(tempAngle))
+                    .attr("y1", yPos)
+                    .attr("y2", yPos + fullSize * Math.sin(tempAngle))
+                    .style("stroke", "red")
+                    .attr("stroke-width", .2)
+                    .attr("marker-end", "url(\#arrow)")
+            }
+            else if(lineArray[6] <= 0 && lineArray[7] <= 0)
+            {
+                //quadrant 3
+                svgName.append("line")
+                    .attr("x1", xPos) 
+                    .attr("x2", xPos - fullSize * Math.cos(tempAngle))
+                    .attr("y1", yPos)
+                    .attr("y2", yPos - fullSize * Math.sin(tempAngle))
+                    .style("stroke", "red")
+                    .attr("stroke-width", .2)
+                    .attr("marker-end", "url(\#arrow)")
+            }
+        } 
+    }
+}    
+
+p.onclick = function(e)
+{
+    timestep=prompt("Please enter the timestep you would like to view, from 1 to 2.\n\nNormally, there would be more timesteps available, but constraints on maximum file size keep me from uploading larger data files.  The principle, however, would be the same.","1");
+    p.innerHTML="Timestep: " + timestep
+    initializeData();
+}
+
+d.onclick = function(e)
+{
+    //depth=prompt("This data only has two positions for depth, the surface (1) and the bottom of the bay (2).","1");
+    depth=prompt("This visualization contains only the data for the surface, at 1.","1");
+    if(depth == 1)
+    {
+        d.innerHTML="Surface depth"
+        depth = 1
+    }
+    //else
+    //{
+     //   d.innerHTML="Depth at the bottom of the bay"
+      //  depth = 2
+    //}
+    initializeData();
+}
+
+v.onclick = function(e)
+{
+    variable=prompt("Enter 1 to display the salinity, 2 to display the temperature, or 3 to display no additional variables.","1");
+    if(variable == 1)
+    {
+        v.innerHTML="Salinity"
+    }
+    else if(variable == 2)
+    {
+        v.innerHTML="Temperature"
+    }
+    else
+    {
+        v.innerHTML="None Selected"
+    }
+    initializeData();
+}
+
+info.onclick = function(e)
+{
+    alert("This visualization was created by Nate Phillips for CSE 8990 at Mississippi State University.\n\nThis visualization is based on hydrological data from Mobile Bay, modeled by the EFDC Model. This data contains the salinity, temperature, and water flow vector at a give point and timestep.");
+}
+</script>
+</html>					

@@ -247,7 +247,7 @@ function render() {
 		var plagiarismCodeLink = 'Code: <a href="' + p.link + '/plagiarismDetection.txt">index.html</a>&nbsp<a href="' + p.link + '/PlagiarismDetectionProjectReport.pdf">Paper</a>&nbsp<a href="' + p.link + '/PlagiarismDetectionVisualization.pdf">Presentation</a>';
 		
 		//Standard Card clickable link and code-specific link
-		let linkBlock = standardLinkBlock;
+		//let linkBlock = standardLinkBlock;
 		let linkToCodeBlock = standardCodeLink;
 		let directLink = standardLink;
 		
@@ -283,7 +283,7 @@ function render() {
 			linkToCodeBlock = plagiarismCodeLink;
 		}
 		
-		linkBlock = '<h3><a href="' + directLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
+		let linkBlock = '<h3><a href="' + directLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		
 		const card = createCard(`
 		  <div class="card">

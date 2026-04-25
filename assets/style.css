@@ -41,6 +41,7 @@ body {
 .card .card-links {
   margin-top: 8px;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   font-size: 0.9em;
 }

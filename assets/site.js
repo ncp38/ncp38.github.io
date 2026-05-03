@@ -206,11 +206,11 @@ function renderCompoundFilters() {
 }
 
 function render() {
-  const oldCards = Array.from(results.children);
+  const oldElements = Array.from(
+  results.querySelectorAll(".section")
+);
 
-  
-  // Animate out existing cards
-  oldCards.forEach(card => card.classList.add("exit"));
+oldElements.forEach(el => el.classList.add("exit"));
   
   //renderCompoundFilters();
 
@@ -218,7 +218,7 @@ function render() {
     results.innerHTML = "";
 
 	  if (toggleProjects.checked) {
-		  results.insertAdjacentHTML('beforeend', "<div class=\"section\"><div class=\"section-header\"><h2>Projects</h2><div class=\"divider\"></div></div>");
+		  results.insertAdjacentHTML('beforeend', "<div class=\"section enter\"><div class=\"section-header\"><h2>Projects</h2><div class=\"divider\"></div></div>");
 	  projects.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
 		
@@ -317,7 +317,7 @@ function render() {
 	  }
 	
     if (togglePublications.checked) {
-		results.insertAdjacentHTML('beforeend', "<div class=\"section\"><div class=\"section-header\"><h2>Publications</h2><div class=\"divider\"></div></div>");
+		results.insertAdjacentHTML('beforeend', "<div class=\"section enter\"><div class=\"section-header\"><h2>Publications</h2><div class=\"divider\"></div></div>");
       publications.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
         const card = createCard(`

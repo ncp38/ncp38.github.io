@@ -484,7 +484,7 @@ window.addEventListener("pageshow", () => {
 	  });
 	}
 	sessionStorage.removeItem("lastClickedCard");
-}
+});
 
 applyURLState();
 renderTags();

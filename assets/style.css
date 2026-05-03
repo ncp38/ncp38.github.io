@@ -30,6 +30,26 @@ body {
   margin-inline: auto;
 }
 
+.section {
+  margin: 3rem 0;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.divider {
+  height: 2px;
+  width: 40px;
+  background: #ccc;
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--border);

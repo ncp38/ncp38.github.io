@@ -216,6 +216,7 @@ function render() {
 
   setTimeout(() => {
     results.innerHTML = "";
+	results.append('<div class="section"><div class="section-header"><h2>Projects</h2><div class="divider"></div></div>');
 
 	  if (toggleProjects.checked) {
 	  projects.filter(matchesFilters).forEach(p => {
@@ -313,7 +314,7 @@ function render() {
 		results.appendChild(card);
 	  });
 	  }
-
+	results.append('</div><div class="section"><div class="section-header"><h2>Publications</h2><div class="divider"></div></div>');
     if (togglePublications.checked) {
       publications.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
@@ -331,7 +332,7 @@ function render() {
         results.appendChild(card);
       });
     }
-	
+	results.append('</div>');
   }, 180); // matches CSS transition duration
 }
 

@@ -332,23 +332,10 @@ function render() {
       });
     }
 	
-	const lastClicked = sessionStorage.getItem("lastClickedCard");
-
-	if (lastClicked) {
-	  const cards = document.querySelectorAll(".card");
-
-	  cards.forEach(card => {
-		if (card.dataset.id === lastClicked) {
-		  card.classList.add("highlighted");
-
-		  // Optional: scroll into view
-		  card.scrollIntoView({ behavior: "smooth", block: "center" });
-		}
-	  });
-	}
-
   }, 180); // matches CSS transition duration
 }
+
+
 
 
 tagContainer.addEventListener("keydown", (e) => {
@@ -476,6 +463,28 @@ window.addEventListener("popstate", () => {
   renderTags();
   render();
 });
+
+window.addEventListener("pageshow", () => {
+	document.querySelectorAll(".card.highlighted").forEach(el => {
+    el.classList.remove("highlighted");
+  });
+	
+	const lastClicked = sessionStorage.getItem("lastClickedCard");
+
+	if (lastClicked) {
+	  const cards = document.querySelectorAll(".card");
+
+	  cards.forEach(card => {
+		if (card.dataset.id === lastClicked) {
+		  card.classList.add("highlighted");
+
+		  // Optional: scroll into view
+		  //card.scrollIntoView({ behavior: "smooth", block: "center" });
+		}
+	  });
+	}
+	sessionStorage.removeItem("lastClickedCard");
+}
 
 applyURLState();
 renderTags();

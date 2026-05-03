@@ -1,6 +1,4 @@
-//import { PROJ1TITLE, PROJ1KEYWORDS, PROJ1YEAR, PROJ1DESCRIPTION } from '../projects/constants.js';
-
-//const module = await import('../projects/constants.js');
+// Important note: Each project and paper title must be unique.  (It is not permissible to have a paper and project with the same title.)
 
 // Constants for use in the project subfolder.
 

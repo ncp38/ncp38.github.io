@@ -301,8 +301,12 @@ function render() {
 			</div> 
 		  </div>
 		`);
+		
+		card.dataset.id = p.title; // or a better unique ID if available
+		
 		card.addEventListener("click", (e) => {
 		  if (e.target.tagName !== "A") {
+			sessionStorage.setItem("lastClickedCard", p.title);
 			window.location = directLink;
 		  }
 		});
@@ -327,6 +331,21 @@ function render() {
         results.appendChild(card);
       });
     }
+	
+	const lastClicked = sessionStorage.getItem("lastClickedCard");
+
+	if (lastClicked) {
+	  const cards = document.querySelectorAll(".card");
+
+	  cards.forEach(card => {
+		if (card.dataset.id === lastClicked) {
+		  card.classList.add("highlighted");
+
+		  // Optional: scroll into view
+		  card.scrollIntoView({ behavior: "smooth", block: "center" });
+		}
+	  });
+	}
 
   }, 180); // matches CSS transition duration
 }

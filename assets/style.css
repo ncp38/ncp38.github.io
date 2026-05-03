@@ -67,7 +67,7 @@ body {
 
 .section-header.exit {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-3px);
 }
 
 .divider {

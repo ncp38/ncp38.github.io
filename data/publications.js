@@ -157,6 +157,16 @@ const publications = [
     link: DISSLINK
   },
   {
+    id: "pub17",
+    title: PUB17TITLE,
+	authors: PUB17AUTHORS,
+    description: PUB17DESCRIPTION,
+	venue: PUB17VENUE,
+    keywords: PUB17KEYWORDS,
+    year: PUB17YEAR,
+    link: PUB17LINK
+  },
+  {
     id: "pub16",
     title: PUB16TITLE,
 	authors: PUB16AUTHORS,

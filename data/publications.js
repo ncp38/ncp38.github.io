@@ -104,45 +104,53 @@ const PUB12VENUE = "2021 IEEE International Symposium on Mixed and Augmented Rea
 const PUB12DESCRIPTION = "For optical see-through augmented reality (AR), a new method for measuring the perceived three-dimensional location of virtual objects is presented, where participants verbally report a virtual object’s location relative to both a vertical and horizontal grid. The method is tested with a small (1.95 × 1.95 × 1.95 cm) virtual object at distances of 50 to 80 cm, viewed through a Microsoft HoloLens 1st generation AR display. Two experiments examine two different virtual object designs, whether turning in a circle between reported object locations disrupts HoloLens tracking, and whether accuracy errors, including a rightward bias and underestimated depth, might be due to systematic errors that are restricted to a particular display. Turning in a circle did not disrupt HoloLens tracking, and testing with a second display did not suggest systematic errors restricted to a particular display. Instead, the experiments are consistent with the hypothesis that, when looking downwards at a horizontal plane, HoloLens 1st generation displays exhibit a systematic rightward perceptual bias. Precision analysis suggests that the method could measure the perceived location of a virtual object within an accuracy of less than 1 mm.";
 const PUB12LINK = "https://doi.org/10.1109/VRW52623.2021.00211";
 
-const PUB13TITLE = "A Replication Study to Measure the Perceived Three-Dimensional Location of Virtual Objects in Optical See Through Augmented Reality";
-const PUB13KEYWORDS = ["Augmented Reality", "Perception", "Replication", "HoloLens", "C#", "Unity"];
-const PUB13YEAR = 2022;
-const PUB13AUTHORS = "Farzana Alam Khan, Mohammed Safayet Arefin, Nate Phillips, and J. Edward Swan II";
-const PUB13VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
-const PUB13DESCRIPTION = "An important research question in optical see-through (OST) augmented reality (AR) is, how accurately and precisely can a virtual object's real world location be perceived? Previously, a method was developed to measure the perceived three-dimensional location of virtual objects in OST AR. In this research, a replication study is reported, which examined whether the perceived location of virtual objects are biased in the direction of the dominant eye. The successful replication analysis suggests that perceptual accuracy is not biased in the direction of the dominant eye. Compared to the previous study's findings, overall perceptual accuracy increased, and precision was similar.";
-const PUB13LINK = "https://doi.org/10.1109/VRW55335.2022.00249";
+const PUB13TITLE = "Effects of a Distracting Background and Focal Switching Distance in an Augmented Reality System";
+const PUB13KEYWORDS = ["Augmented Reality", "Haploscope", "Perception", "Depth Cues", "Context Switching", "Visual Fatigue", "Statistics", "R"];
+const PUB13YEAR = 2021;
+const PUB13AUTHORS = "Mohammed Safayet Arefin, Nate Phillips, Alexander Plopski, and J. Edward Swan II";
+const PUB13VENUE = "2021 IEEE International Symposium on Mixed and Augmented Reality Adjunct (ISMAR-Adjunct)";
+const PUB13DESCRIPTION = "Many augmented reality (AR) applications require observers to shift their gaze between AR and real-world content. To date, commercial optical see-through (OST) AR displays have presented content at either a single focal distance, or at a small number of fixed focal distances. Meanwhile, real-world stimuli can occur at a variety of focal distances. Therefore, when shifting gaze between AR and real-world content, in order to view new content in sharp focus, observers must often change their eye’s accommodative state. When performed repetitively, this can negatively affect task performance and eye fatigue. However, these effects may be under reported, because past research has not yet considered the potential additional effect of distracting real world backgrounds.An experimental method that analyzes background effects is presented, using a text-based visual search task that requires integrating information presented in both AR and the real world. An experiment is reported, which examined the effect of a distracting background versus a blank background, at focal switching distances of 0, 1.33, 2.0, and 3.33 meters. Qualitatively, a majority of the participants reported that the distracting background made the task more difficult and fatiguing. Quantitatively, increasing the focal switching distance resulted in reduced task performance and increased eye fatigue. However, changing the background, between blank and distracting, did not result in significant measured differences. Suggestions are given for further efforts to examine background effects.";
+const PUB13LINK = "https://doi.org/10.1109/ISMAR-Adjunct54149.2021.00029";
 
-const PUB14TITLE = "Measuring Virtual Object Location with X-Ray Vision at Action Space Distances";
-const PUB14KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception", "Replication", "C#", "Unity", "Python", "R"];
+const PUB14TITLE = "A Replication Study to Measure the Perceived Three-Dimensional Location of Virtual Objects in Optical See Through Augmented Reality";
+const PUB14KEYWORDS = ["Augmented Reality", "Perception", "Replication", "HoloLens", "C#", "Unity"];
 const PUB14YEAR = 2022;
-const PUB14AUTHORS = "Nate Phillips, Farzana Alam Khan, Mohammed Safayet Arefin, Cindy L. Bethel, and J. Edward Swan II";
+const PUB14AUTHORS = "Farzana Alam Khan, Mohammed Safayet Arefin, Nate Phillips, and J. Edward Swan II";
 const PUB14VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
 const PUB14DESCRIPTION = "An important research question in optical see-through (OST) augmented reality (AR) is, how accurately and precisely can a virtual object's real world location be perceived? Previously, a method was developed to measure the perceived three-dimensional location of virtual objects in OST AR. In this research, a replication study is reported, which examined whether the perceived location of virtual objects are biased in the direction of the dominant eye. The successful replication analysis suggests that perceptual accuracy is not biased in the direction of the dominant eye. Compared to the previous study's findings, overall perceptual accuracy increased, and precision was similar.";
-const PUB14LINK = "https://doi.org/10.1109/VRW55335.2022.00261";
+const PUB14LINK = "https://doi.org/10.1109/VRW55335.2022.00249";
 
-const PUB15TITLE = "The Effect of Context Switching, Focal Switching Distance, Binocular and Monocular Viewing, and Transient Focal Blur on Human Performance in Optical See-Through Augmented Reality";
-const PUB15KEYWORDS = ["Augmented Reality", "Perception", "Context Switching", "C++"];
+const PUB15TITLE = "Measuring Virtual Object Location with X-Ray Vision at Action Space Distances";
+const PUB15KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception", "Replication", "C#", "Unity", "Python", "R"];
 const PUB15YEAR = 2022;
-const PUB15AUTHORS = "Mohammed Safayet Arefin, Nate Phillips, Alexander Plopski, Joseph L. Gabbard, and J. Edward Swan II";
-const PUB15VENUE = "IEEE Transactions on Visualization and Computer Graphics";
-const PUB15DESCRIPTION = "In optical see-through augmented reality (AR), information is often distributed between real and virtual contexts, and often appears at different distances from the user.  To integrate information, users must repeatedly switch context and change focal distance.  If the user's task is conducted under time pressure, they may attempt to integrate information while their eye is still changing focal distance, a phenomenon we term <i>transient focal blur</i>.  Previously, Gabbard, Mehra, and Swan (2018) examined these issues, using a text-based visual search task on a one-eye optical see-through AR display. This paper reports an experiment that partially replicates and extends this task on a custom-built AR Haploscope.  The experiment examined the effects of context switching, focal switching distance, binocular and monocular viewing, and transient focal blur on task performance and eye fatigue.  Context switching increased eye fatigue but did not decrease performance.  Increasing focal switching distance increased eye fatigue and decreased performance.  Monocular viewing also increased eye fatigue and decreased performance.  The transient focal blur effect resulted in additional performance decrements, and is an addition to knowledge about AR user interface design issues.";
-const PUB15LINK = "https://doi.org/10.1109/TVCG.2022.3150503";
+const PUB15AUTHORS = "Nate Phillips, Farzana Alam Khan, Mohammed Safayet Arefin, Cindy L. Bethel, and J. Edward Swan II";
+const PUB15VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
+const PUB15DESCRIPTION = "An important research question in optical see-through (OST) augmented reality (AR) is, how accurately and precisely can a virtual object's real world location be perceived? Previously, a method was developed to measure the perceived three-dimensional location of virtual objects in OST AR. In this research, a replication study is reported, which examined whether the perceived location of virtual objects are biased in the direction of the dominant eye. The successful replication analysis suggests that perceptual accuracy is not biased in the direction of the dominant eye. Compared to the previous study's findings, overall perceptual accuracy increased, and precision was similar.";
+const PUB15LINK = "https://doi.org/10.1109/VRW55335.2022.00261";
 
-const PUB16TITLE = "A Conceptual Replication and Extension of Triangulation by Walking for Measuring Perceived Distance Through a Wall";
-const PUB16KEYWORDS = ["Augmented Reality", "Perception","Replication", "Python", "R"];
+const PUB16TITLE = "The Effect of Context Switching, Focal Switching Distance, Binocular and Monocular Viewing, and Transient Focal Blur on Human Performance in Optical See-Through Augmented Reality";
+const PUB16KEYWORDS = ["Augmented Reality", "Perception", "Context Switching", "C++"];
 const PUB16YEAR = 2022;
-const PUB16AUTHORS = "Nate Phillips, Farzana Alam Khan, Mohammed Safayet Arefin, Cindy L. Bethel, Jeanine Stefanucci, and J. Edward Swan II";
-const PUB16VENUE = "2022 IEEE International Symposium on Mixed and Augmented Reality Adjunct";
-const PUB16DESCRIPTION = "Triangulation by walking is a method that has been used to measure perceived distance, where observers walk a triangular path. This method has been used at action space distances of approximately 1.5 to 30 meters. In this work, a conceptual replication of these triangulation by walking methods are discussed and evaluated for use in measuring the perceived distance of an object seen through a window set into a wall. The motivation for this work is to use triangulation by walking to study how perceived distance operates when augmented reality (AR) is used to visualize objects located behind opaque surfaces, in an AR application termed “x-ray vision.” This paper reports on experiences replicating an implementation of triangulation by walking as reported by Fukusima, Da Silva, and Loomis (1997). Their method was conceptually replicated in both outdoor and indoor settings, and the method was further extended to measure perceived distances of objects seen through a wall. These extensions are discussed in some detail, focusing on the modifications to the triangulation by walking method as well as the ramifications of these changes. Problems arising from using triangular geometry in calculations of perceived target locations are also introduced, and an alternate method is proposed that works to diminish the problematic effects.";
-const PUB16LINK = "https://doi.org/10.1109/ISMAR-Adjunct57072.2022.00063";
+const PUB16AUTHORS = "Mohammed Safayet Arefin, Nate Phillips, Alexander Plopski, Joseph L. Gabbard, and J. Edward Swan II";
+const PUB16VENUE = "IEEE Transactions on Visualization and Computer Graphics";
+const PUB16DESCRIPTION = "In optical see-through augmented reality (AR), information is often distributed between real and virtual contexts, and often appears at different distances from the user.  To integrate information, users must repeatedly switch context and change focal distance.  If the user's task is conducted under time pressure, they may attempt to integrate information while their eye is still changing focal distance, a phenomenon we term <i>transient focal blur</i>.  Previously, Gabbard, Mehra, and Swan (2018) examined these issues, using a text-based visual search task on a one-eye optical see-through AR display. This paper reports an experiment that partially replicates and extends this task on a custom-built AR Haploscope.  The experiment examined the effects of context switching, focal switching distance, binocular and monocular viewing, and transient focal blur on task performance and eye fatigue.  Context switching increased eye fatigue but did not decrease performance.  Increasing focal switching distance increased eye fatigue and decreased performance.  Monocular viewing also increased eye fatigue and decreased performance.  The transient focal blur effect resulted in additional performance decrements, and is an addition to knowledge about AR user interface design issues.";
+const PUB16LINK = "https://doi.org/10.1109/TVCG.2022.3150503";
 
-const PUB17TITLE = "Evaluating Depth Perception in Augmented Reality X-Ray Vision";
-const PUB17KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception"];
-const PUB17YEAR = 2025;
-const PUB17AUTHORS = "Matthew Zhang and Nate Phillips";
-const PUB17VENUE = "2025 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
-const PUB17DESCRIPTION = "Depth perception in AR describes the ability to perceive depth from AR-generated objects. This functionality enables an emergent capability: x-ray vision, or visualizing objects past an occluding surface. To evaluate x-ray vision’s feasibility, we propose experiments that depict a virtual object beyond a solid wall. In one condition this display is mitigated with a semi-transparent virtual window, while in another condition no such effect is presented. Depth estimates will be measured using triangulation by walking. Our motivation is to understand discrepancies between perceived distances of virtual and real-world objects so that AR systems can accurately display objects in the real-world.";
-const PUB17LINK = "https://doi.org/10.1109/VRW66409.2025.00305";
+const PUB17TITLE = "A Conceptual Replication and Extension of Triangulation by Walking for Measuring Perceived Distance Through a Wall";
+const PUB17KEYWORDS = ["Augmented Reality", "Perception","Replication", "Python", "R"];
+const PUB17YEAR = 2022;
+const PUB17AUTHORS = "Nate Phillips, Farzana Alam Khan, Mohammed Safayet Arefin, Cindy L. Bethel, Jeanine Stefanucci, and J. Edward Swan II";
+const PUB17VENUE = "2022 IEEE International Symposium on Mixed and Augmented Reality Adjunct";
+const PUB17DESCRIPTION = "Triangulation by walking is a method that has been used to measure perceived distance, where observers walk a triangular path. This method has been used at action space distances of approximately 1.5 to 30 meters. In this work, a conceptual replication of these triangulation by walking methods are discussed and evaluated for use in measuring the perceived distance of an object seen through a window set into a wall. The motivation for this work is to use triangulation by walking to study how perceived distance operates when augmented reality (AR) is used to visualize objects located behind opaque surfaces, in an AR application termed “x-ray vision.” This paper reports on experiences replicating an implementation of triangulation by walking as reported by Fukusima, Da Silva, and Loomis (1997). Their method was conceptually replicated in both outdoor and indoor settings, and the method was further extended to measure perceived distances of objects seen through a wall. These extensions are discussed in some detail, focusing on the modifications to the triangulation by walking method as well as the ramifications of these changes. Problems arising from using triangular geometry in calculations of perceived target locations are also introduced, and an alternate method is proposed that works to diminish the problematic effects.";
+const PUB17LINK = "https://doi.org/10.1109/ISMAR-Adjunct57072.2022.00063";
+
+const PUB18TITLE = "Evaluating Depth Perception in Augmented Reality X-Ray Vision";
+const PUB18KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception"];
+const PUB18YEAR = 2025;
+const PUB18AUTHORS = "Matthew Zhang and Nate Phillips";
+const PUB18VENUE = "2025 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
+const PUB18DESCRIPTION = "Depth perception in AR describes the ability to perceive depth from AR-generated objects. This functionality enables an emergent capability: x-ray vision, or visualizing objects past an occluding surface. To evaluate x-ray vision’s feasibility, we propose experiments that depict a virtual object beyond a solid wall. In one condition this display is mitigated with a semi-transparent virtual window, while in another condition no such effect is presented. Depth estimates will be measured using triangulation by walking. Our motivation is to understand discrepancies between perceived distances of virtual and real-world objects so that AR systems can accurately display objects in the real-world.";
+const PUB18LINK = "https://doi.org/10.1109/VRW66409.2025.00305";
 
 
 const publications = [
@@ -155,6 +163,16 @@ const publications = [
     year: DISSYEAR,
     keywords: DISSKEYWORDS,
     link: DISSLINK
+  },
+  {
+    id: "pub18",
+    title: PUB18TITLE,
+	authors: PUB18AUTHORS,
+    description: PUB18DESCRIPTION,
+	venue: PUB18VENUE,
+    keywords: PUB18KEYWORDS,
+    year: PUB18YEAR,
+    link: PUB18LINK
   },
   {
     id: "pub17",

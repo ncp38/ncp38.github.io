@@ -136,6 +136,15 @@ const PUB16VENUE = "2022 IEEE International Symposium on Mixed and Augmented Rea
 const PUB16DESCRIPTION = "Triangulation by walking is a method that has been used to measure perceived distance, where observers walk a triangular path. This method has been used at action space distances of approximately 1.5 to 30 meters. In this work, a conceptual replication of these triangulation by walking methods are discussed and evaluated for use in measuring the perceived distance of an object seen through a window set into a wall. The motivation for this work is to use triangulation by walking to study how perceived distance operates when augmented reality (AR) is used to visualize objects located behind opaque surfaces, in an AR application termed “x-ray vision.” This paper reports on experiences replicating an implementation of triangulation by walking as reported by Fukusima, Da Silva, and Loomis (1997). Their method was conceptually replicated in both outdoor and indoor settings, and the method was further extended to measure perceived distances of objects seen through a wall. These extensions are discussed in some detail, focusing on the modifications to the triangulation by walking method as well as the ramifications of these changes. Problems arising from using triangular geometry in calculations of perceived target locations are also introduced, and an alternate method is proposed that works to diminish the problematic effects.";
 const PUB16LINK = "https://doi.org/10.1109/ISMAR-Adjunct57072.2022.00063";
 
+const PUB17TITLE = "Evaluating Depth Perception in Augmented Reality X-Ray Vision";
+const PUB17KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception"];
+const PUB17YEAR = 2025;
+const PUB17AUTHORS = "Matthew Zhang and Nate Phillips";
+const PUB17VENUE = "2025 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (VRW)";
+const PUB17DESCRIPTION = "Depth perception in AR describes the ability to perceive depth from AR-generated objects. This functionality enables an emergent capability: x-ray vision, or visualizing objects past an occluding surface. To evaluate x-ray vision’s feasibility, we propose experiments that depict a virtual object beyond a solid wall. In one condition this display is mitigated with a semi-transparent virtual window, while in another condition no such effect is presented. Depth estimates will be measured using triangulation by walking. Our motivation is to understand discrepancies between perceived distances of virtual and real-world objects so that AR systems can accurately display objects in the real-world.";
+const PUB17LINK = "https://doi.org/10.1109/VRW66409.2025.00305";
+
+
 const publications = [
   {
 	id: "dissertation",

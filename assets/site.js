@@ -5,6 +5,16 @@ const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
 const listOfProgrammingLanguages = ["c", "c++", "c#", "java", "python"];
 
+const portfolioAssets = [projects.map(p => ({
+	p,
+	type="project"
+})),
+publications.map(p => ({
+	p,
+	type="publication"
+}))
+];
+
 const compoundFilters = [
   {
     id: "languages",
@@ -287,7 +297,7 @@ oldElements.forEach(el => el.classList.add("exit"));
 		let linkBlock = '<h3><a href="' + directLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
 		
 		const card = createCard(`
-		  <div class="card">
+		  <div class="card" id="asset-${p.id}">
 			${linkBlock}
 			<div class="card-links">
 			  <!--<a href="#">PDF</a>-->
@@ -303,11 +313,11 @@ oldElements.forEach(el => el.classList.add("exit"));
 		  </div>
 		`);
 		
-		card.dataset.id = p.title; // or a better unique ID if available
+		card.dataset.id = p.id; // or a better unique ID if available
 		
 		card.addEventListener("click", (e) => {
 		  if (e.target.tagName !== "A") {
-			sessionStorage.setItem("lastClickedCard", p.title);
+			sessionStorage.setItem("lastClickedCard", p.id);
 			window.location = directLink;
 		  }
 		});
@@ -321,7 +331,7 @@ oldElements.forEach(el => el.classList.add("exit"));
       publications.filter(matchesFilters).forEach(p => {
 		const currentFilters = encodeURIComponent(window.location.search || "");
         const card = createCard(`
-          <div class="card" tabindex="0">
+          <div class="card" id="${p.id}" tabindex="0">
             <h3><a href="${p.link}">${p.title}</a></h3>
             <p>${p.authors}</p>
             <p><em>${p.venue}</em>, ${p.year}</p>
@@ -381,6 +391,30 @@ document.addEventListener("keydown", (e) => {
     searchBox.focus();
   }
 });
+
+function executeAction(action) {
+
+	//const parsedAction = JSON.parse(action);
+
+  switch(action.type) {
+
+    case "scroll":
+      document.getElementById(action.target[0]).scrollIntoView({
+     behavior: "smooth"
+	 });
+
+    /*case "highlight":
+      ...
+
+    case "filter":
+      ...
+
+    case "focus":
+      ...*/
+
+  }
+
+}
 
 /*document.addEventListener("click", (e) => {
   const openPanels = document.querySelectorAll(

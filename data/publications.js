@@ -156,6 +156,7 @@ const PUB18LINK = "https://doi.org/10.1109/VRW66409.2025.00305";
 const publications = [
   {
 	id: "dissertation",
+	category: "publication",
     title: DISSTITLE,
     authors: DISSAUTHORS,
 	description: DISSDESCRIPTION,
@@ -166,6 +167,7 @@ const publications = [
   },
   {
     id: "pub18",
+	category: "publication",
     title: PUB18TITLE,
 	authors: PUB18AUTHORS,
     description: PUB18DESCRIPTION,
@@ -176,6 +178,7 @@ const publications = [
   },
   {
     id: "pub17",
+	category: "publication",
     title: PUB17TITLE,
 	authors: PUB17AUTHORS,
     description: PUB17DESCRIPTION,
@@ -186,6 +189,7 @@ const publications = [
   },
   {
     id: "pub16",
+	category: "publication",
     title: PUB16TITLE,
 	authors: PUB16AUTHORS,
     description: PUB16DESCRIPTION,
@@ -196,6 +200,7 @@ const publications = [
   },
   {
     id: "pub15",
+	category: "publication",
     title: PUB15TITLE,
 	authors: PUB15AUTHORS,
     description: PUB15DESCRIPTION,
@@ -206,6 +211,7 @@ const publications = [
   },
   {
     id: "pub14",
+	category: "publication",
     title: PUB14TITLE,
 	authors: PUB14AUTHORS,
     description: PUB14DESCRIPTION,
@@ -216,6 +222,7 @@ const publications = [
   },
   {
     id: "pub13",
+	category: "publication",
     title: PUB13TITLE,
 	authors: PUB13AUTHORS,
     description: PUB13DESCRIPTION,
@@ -226,6 +233,7 @@ const publications = [
   },
   {
     id: "pub12",
+	category: "publication",
     title: PUB12TITLE,
 	authors: PUB12AUTHORS,
     description: PUB12DESCRIPTION,
@@ -236,6 +244,7 @@ const publications = [
   },
   {
     id: "pub11",
+	category: "publication",
     title: PUB11TITLE,
 	authors: PUB11AUTHORS,
     description: PUB11DESCRIPTION,
@@ -246,6 +255,7 @@ const publications = [
   },
   {
     id: "pub10",
+	category: "publication",
     title: PUB10TITLE,
 	authors: PUB10AUTHORS,
     description: PUB10DESCRIPTION,
@@ -256,6 +266,7 @@ const publications = [
   },
   {
     id: "pub9",
+	category: "publication",
     title: PUB9TITLE,
 	authors: PUB9AUTHORS,
     description: PUB9DESCRIPTION,
@@ -266,6 +277,7 @@ const publications = [
   },
   {//2020
     id: "pub8",
+	category: "publication",
     title: PUB8TITLE,
 	authors: PUB8AUTHORS,
     description: PUB8DESCRIPTION,
@@ -276,6 +288,7 @@ const publications = [
   },
   {//2019
     id: "pub7",
+	category: "publication",
     title: PUB7TITLE,
 	authors: PUB7AUTHORS,
     description: PUB7DESCRIPTION,
@@ -286,6 +299,7 @@ const publications = [
   },
   {//October 2018
     id: "pub6",
+	category: "publication",
     title: PUB6TITLE,
 	authors: PUB6AUTHORS,
     description: PUB6DESCRIPTION,
@@ -296,6 +310,7 @@ const publications = [
   },
   {//2018
     id: "pub5",
+	category: "publication",
     title: PUB5TITLE,
 	authors: PUB5AUTHORS,
     description: PUB5DESCRIPTION,
@@ -306,6 +321,7 @@ const publications = [
   },
   {//2015
     id: "pub4",
+	category: "publication",
     title: PUB4TITLE,
 	authors: PUB4AUTHORS,
     description: PUB4DESCRIPTION,
@@ -316,6 +332,7 @@ const publications = [
   },
   {//2014
     id: "pub3",
+	category: "publication",
     title: PUB3TITLE,
 	authors: PUB3AUTHORS,
     description: PUB3DESCRIPTION,
@@ -326,6 +343,7 @@ const publications = [
   },
   {//2014
     id: "pub2",
+	category: "publication",
     title: PUB2TITLE,
 	authors: PUB2AUTHORS,
     description: PUB2DESCRIPTION,
@@ -335,7 +353,8 @@ const publications = [
     link: PUB2LINK
   },
   {//2013
-    id: "paper1",
+    id: "pub1",
+	category: "publication",
     title: PUB1TITLE,
 	authors: PUB1AUTHORS,
     description: PUB1DESCRIPTION,

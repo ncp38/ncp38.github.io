@@ -40,6 +40,7 @@ const PROJ6DESCRIPTION = "My team created a website that would compare two input
 const projects = [
   {
     id: "project6",
+	category: "project",
     title: PROJ6TITLE,
     description: PROJ6DESCRIPTION,
     keywords: PROJ6KEYWORDS,
@@ -48,6 +49,7 @@ const projects = [
   },
   {
     id: "project5",
+	category: "project",
     title: PROJ5TITLE,
     description: PROJ5DESCRIPTION,
     keywords: PROJ5KEYWORDS,
@@ -56,6 +58,7 @@ const projects = [
   },
   {
     id: "project4",
+	category: "project",
     title: PROJ4TITLE,
     description: PROJ4DESCRIPTION,
     keywords: PROJ4KEYWORDS,
@@ -64,6 +67,7 @@ const projects = [
   },
   {
     id: "project3",
+	category: "project",
     title: PROJ3TITLE,
     description: PROJ3DESCRIPTION,
     keywords: PROJ3KEYWORDS,
@@ -72,6 +76,7 @@ const projects = [
   },
   {
     id: "project2",
+	category: "project",
     title: PROJ2TITLE,
     description: PROJ2DESCRIPTION,
     keywords: PROJ2KEYWORDS,
@@ -80,6 +85,7 @@ const projects = [
   },
   {
     id: "project1",
+	category: "project",
     title: PROJ1TITLE,
     description: PROJ1DESCRIPTION,
     keywords: PROJ1KEYWORDS,
@@ -88,6 +94,7 @@ const projects = [
   },
   {
     id: "project0",
+	category: "project",
     title: PROJ0TITLE,
     description: PROJ0DESCRIPTION,
     keywords: PROJ0KEYWORDS,

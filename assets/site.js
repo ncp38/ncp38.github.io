@@ -5,14 +5,15 @@ const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
 const listOfProgrammingLanguages = ["c", "c++", "c#", "java", "python"];
 
-const portfolioAssets = [projects.map(p => ({
-	p,
-	type="project"
-})),
-publications.map(p => ({
-	p,
-	type="publication"
-}))
+const portfolioAssets = [
+    ...projects.map(p => ({
+        ...p,
+        type: "project"
+    })),
+    ...publications.map(p => ({
+        ...p,
+        type: "publication"
+    }))
 ];
 
 const compoundFilters = [

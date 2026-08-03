@@ -120,22 +120,18 @@ function updateURL() {
 
 
 function renderTags() {
+  const availableTags = new Set(getAllTags());
+
+  // Remove filters that no longer apply to visible content.
+  activeTags = new Set(
+    [...activeTags].filter(tag => availableTags.has(tag))
+  );
+	
   tagContainer.innerHTML = "";
   getAllTags().forEach(tag => {
     const chip = document.createElement("span");
     chip.className = "tag";
     chip.textContent = tag;
-
-    chip.onclick = () => {
-      chip.classList.toggle("active");
-
-      if (activeTags.has(tag)) {
-        activeTags.delete(tag);
-      } else {
-        activeTags.add(tag);
-      }
-      render();
-    }; 
 	
 	function toggle() {
 	  chip.classList.toggle("active");
@@ -153,6 +149,8 @@ function renderTags() {
 	  updateURL();
 	  render();
 	}
+	
+	chip.onclick = toggle;
 	
 	chip.tabIndex = 0;
 	chip.setAttribute("role", "button");
@@ -172,6 +170,7 @@ function renderTags() {
 
     tagContainer.appendChild(chip);
   });
+  //updateFilterVisibility();
 }
 
 function createCard(html) {
@@ -514,11 +513,13 @@ searchBox.addEventListener("input", () => {
 });
 
 toggleProjects.addEventListener("change", () => {
+  renderTags();
   updateURL();
   render();
 });
 
 togglePublications.addEventListener("change", () => {
+  renderTags();
   updateURL();
   render();
 });

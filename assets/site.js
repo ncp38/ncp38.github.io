@@ -46,12 +46,39 @@ function setTheme(theme) {
 }
 setTheme(savedTheme);
 
+
+function getVisibleItems() {
+  const items = [];
+
+  if (toggleProjects.checked) {
+    items.push(...projects);
+  }
+
+  if (togglePublications.checked) {
+    items.push(...publications);
+  }
+
+  return items;
+}
+
+
 function getAllTags() {
+  const tags = new Set();
+
+  getVisibleItems().forEach(item => {
+    item.keywords.forEach(k => tags.add(k));
+  });
+
+  return Array.from(tags).sort();
+}
+
+//Old version of getAllTags - upgraded to only get tags for active cards
+/*function getAllTags() {
   const tags = new Set();
   projects.forEach(p => p.keywords.forEach(k => tags.add(k)));
   publications.forEach(p => p.keywords.forEach(k => tags.add(k)));
   return Array.from(tags).sort();
-}
+}*/
 
 function applyURLState() {
   const params = new URLSearchParams(window.location.search);

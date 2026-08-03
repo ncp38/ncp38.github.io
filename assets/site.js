@@ -80,6 +80,53 @@ function getAllTags() {
   return Array.from(tags).sort();
 }*/
 
+function createSection(id, title) {
+  const section = document.createElement("div");
+  section.className = "section";
+  section.id = id;
+
+  section.innerHTML = `
+    <div class="section-header">
+      <h2>${title}</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="section-content"></div>
+  `;
+
+  return section;
+}
+
+function ensureSections() {
+  let projectsSection =
+    document.getElementById("projectsSection");
+
+  let publicationsSection =
+    document.getElementById("publicationsSection");
+
+  if (!projectsSection) {
+    projectsSection = createSection(
+      "projectsSection",
+      "Projects"
+    );
+
+    results.appendChild(projectsSection);
+  }
+
+  if (!publicationsSection) {
+    publicationsSection = createSection(
+      "publicationsSection",
+      "Publications"
+    );
+
+    results.appendChild(publicationsSection);
+  }
+
+  return {
+    projectsSection,
+    publicationsSection
+  };
+}
+
 function applyURLState() {
   const params = new URLSearchParams(window.location.search);
 
@@ -176,14 +223,13 @@ function renderTags() {
 function createCard(html) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = html.trim();
-  const card = wrapper.firstChild;
 
-  card.classList.add("enter");
+  /*card.classList.add("enter");
   requestAnimationFrame(() => {
     card.classList.remove("enter");
-  });
+  });*/
 
-  return card;
+  return wrapper.firstElementChild;
 }
 
 function matchesFilters(item) {
@@ -242,7 +288,176 @@ function renderCompoundFilters() {
   });
 }
 
-function render() {
+function createProjectCard(p) {
+  var standardLink = p.link;
+
+  var southeastconLink =
+    p.link + '/ieeesoutheastcon2011presentation.pdf';
+
+  var visualInterrogationLink =
+    'https://www.projects.daybreakeducation.com/aToolForRapidVisualInterrogation/alerts.php';
+
+  var gyrocopterCageMatchLink =
+    p.link + '/finalProject.html';
+
+  var radialLink =
+    p.link + '/finalProject.html';
+
+  var multivariateHydrologicalLink =
+    p.link + '/multivariateHydrologicalDataVisualization.html';
+
+  var plagiarismLink =
+    p.link + '/plagiarismDetection.html';
+
+  var standardCodeLink =
+    '<a href="' + p.link + '.txt">Code</a>';
+
+  var southeastconCodeLink =
+    '<a href="' + p.link +
+    '/ieeesoutheastcon2011report.pdf">Report</a>';
+
+  var visualInterrogationCodeLink =
+    'Code: <a href="' + p.link +
+    '/alerts.txt">alerts.php</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/query_alerts.txt">query_alerts.php</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/alertlist.txt">alertlist.js</a>';
+
+  var gyrocopterCageMatchCodeLink =
+    'Code: <a href="' + p.link +
+    '/gyrocopterCageMatch.txt">index.html</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/gyrocopterCageMatch.pdf">Presentation</a>';
+
+  var radialCodeLink =
+    'Code: <a href="' + p.link +
+    '/radialDataVisualization.txt">index.html</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/projectPaper.pdf">Paper</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/projectPresentation.pdf">Presentation</a>';
+
+  var multivariateHydrologicalCodeLink =
+    '<a href="' + p.link +
+    '/multivariateHydrologicalDataVisualization.txt">Code</a>';
+
+  var plagiarismCodeLink =
+    'Code: <a href="' + p.link +
+    '/plagiarismDetection.txt">index.html</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/PlagiarismDetectionProjectReport.pdf">Paper</a>&nbsp;' +
+    '<a href="' + p.link +
+    '/PlagiarismDetectionVisualization.pdf">Presentation</a>';
+
+  let linkToCodeBlock = standardCodeLink;
+  let directLink = standardLink;
+
+  if (p.title === "IEEE SoutheastCon 2011 Hardware Competition") {
+    directLink = southeastconLink;
+    linkToCodeBlock = southeastconCodeLink;
+  }
+  else if (
+    p.title ===
+    "A Tool for Rapid Visual Interrogation & Triage of Alerts"
+  ) {
+    directLink = visualInterrogationLink;
+    linkToCodeBlock = visualInterrogationCodeLink;
+  }
+  else if (p.title === "Airship Web Game") {
+    directLink = gyrocopterCageMatchLink;
+    linkToCodeBlock = gyrocopterCageMatchCodeLink;
+  }
+  else if (p.title === "Radial Data Visualization") {
+    directLink = radialLink;
+    linkToCodeBlock = radialCodeLink;
+  }
+  else if (
+    p.title ===
+    "Multivariate Hydrological Data Visualization"
+  ) {
+    directLink = multivariateHydrologicalLink;
+    linkToCodeBlock = multivariateHydrologicalCodeLink;
+  }
+  else if (
+    p.title ===
+    "Plagiarism Detection Visualization"
+  ) {
+    directLink = plagiarismLink;
+    linkToCodeBlock = plagiarismCodeLink;
+  }
+
+  const linkBlock =
+    '<h3><a href="' + directLink + '">' +
+    p.title + '&nbsp(' + p.year + ') </a></h3>';
+
+  const card = createCard(`
+    <div class="card" id="asset-project-${p.id}">
+      ${linkBlock}
+
+      <div class="card-links">
+        ${linkToCodeBlock}
+      </div>
+
+      <p>${p.description}</p>
+
+      <div class="chip-row">
+        ${p.keywords
+          .map(k => `<span class="tag small">${k}</span>`)
+          .join("")}
+      </div>
+    </div>
+  `);
+
+  card.dataset.id = `project-${p.id}`;
+
+  card.addEventListener("click", (e) => {
+    if (e.target.tagName !== "A") {
+      sessionStorage.setItem(
+        "lastClickedCard",
+        p.id
+      );
+
+      window.location = directLink;
+    }
+  });
+
+  return card;
+}
+
+function createPublicationCard(p) {
+  const card = createCard(`
+    <div
+      class="card"
+      id="asset-publication-${p.id}"
+      tabindex="0"
+    >
+      <h3>
+        <a href="${p.link}">${p.title}</a>
+      </h3>
+
+      <p>${p.authors}</p>
+
+      <p>
+        <em>${p.venue}</em>, ${p.year}
+      </p>
+
+      <p>${p.description}</p>
+
+      <div class="chip-row">
+        ${p.keywords
+          .map(k => `<span class="tag small">${k}</span>`)
+          .join("")}
+      </div>
+    </div>
+  `);
+
+  card.dataset.id = `publication-${p.id}`;
+
+  return card;
+}
+
+/*function render() {
   const oldElements = Array.from(
   results.querySelectorAll(".section")
 );
@@ -267,14 +482,6 @@ oldElements.forEach(el => el.classList.add("exit"));
 		var radialLink = p.link + '/finalProject.html';
 		var multivariateHydrologicalLink = p.link + '/multivariateHydrologicalDataVisualization.html';
 		var plagiarismLink = p.link + '/plagiarismDetection.html';
-		
-		/*var standardLinkBlock = '<h3><a href="' + standardLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var southeastconLinkBlock = '<h3><a href="' + southeastconLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var visualInterrogationLinkBlock = '<h3><a href="' + visualInterrogationLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var gyrocopterCageMatchLinkBlock = '<h3><a href="' + gyrocopterCageMatchLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var radialLinkBlock = '<h3><a href="' + radialLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var multivariateHydrologicalLinkBlock = '<h3><a href="' + multivariateHydrologicalLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var plagiarismLinkBlock = '<h3><a href="' + plagiarismLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';*/
 
 		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
 		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
@@ -340,7 +547,7 @@ oldElements.forEach(el => el.classList.add("exit"));
 		  </div>
 		`);
 		
-		card.dataset.id = p.id; // or a better unique ID if available
+		card.dataset.id = `project-${p.id}`; // or a better unique ID if available
 		
 		card.addEventListener("click", (e) => {
 		  if (e.target.tagName !== "A") {
@@ -368,14 +575,141 @@ oldElements.forEach(el => el.classList.add("exit"));
             </div>
           </div>
         `);
+		card.dataset.id = `publication-${p.id}`; // or a better unique ID if available
         results.appendChild(card);
       });
 	  results.insertAdjacentHTML('beforeend', "</div>");
     }
   }, 180); // matches CSS transition duration
+}*/
+
+function updateSectionCards(
+  container,
+  items,
+  createCardFunction,
+  type
+) {
+  const existingCards =
+    new Map(
+      Array.from(container.querySelectorAll(".card"))
+        .map(card => [
+          card.dataset.id,
+          card
+        ])
+    );
+
+  const newIDs =
+    new Set(
+      items.map(item => `${type}-${item.id}`)
+    );
+
+
+  // Remove cards that no longer match.
+  existingCards.forEach((card, id) => {
+    if (!newIDs.has(id)) {
+      removeCard(card);
+    }
+  });
+
+
+  // Add/reorder cards.
+  items.forEach((item, index) => {
+    const id = `${type}-${item.id}`;
+
+    let card = existingCards.get(id);
+
+    if (!card) {
+      card = createCardFunction(item);
+
+      card.classList.add("card-enter");
+
+      container.appendChild(card);
+
+      requestAnimationFrame(() => {
+        card.classList.remove("card-enter");
+      });
+    }
+
+    const currentCard =
+      container.children[index];
+
+    if (currentCard !== card) {
+      container.insertBefore(
+        card,
+        currentCard || null
+      );
+    }
+  });
 }
 
+function removeCard(card) {
+  card.classList.add("card-exit");
 
+  card.addEventListener(
+    "transitionend",
+    () => {
+      card.remove();
+    },
+    { once: true }
+  );
+}
+
+function render() {
+  const {
+    projectsSection,
+    publicationsSection
+  } = ensureSections();
+
+  const projectsContent =
+    projectsSection.querySelector(".section-content");
+
+  const publicationsContent =
+    publicationsSection.querySelector(".section-content");
+
+
+  // -------------------------
+  // Projects
+  // -------------------------
+
+  if (toggleProjects.checked) {
+    projectsSection.classList.remove("section-hidden");
+
+    const visibleProjects =
+      projects.filter(matchesFilters);
+
+    updateSectionCards(
+      projectsContent,
+      visibleProjects,
+      createProjectCard,
+      "project"
+    );
+  }
+  else {
+    projectsSection.classList.add("section-hidden");
+  }
+
+
+  // -------------------------
+  // Publications
+  // -------------------------
+
+  if (togglePublications.checked) {
+    publicationsSection.classList.remove("section-hidden");
+
+    const visiblePublications =
+      publications.filter(matchesFilters);
+
+    updateSectionCards(
+      publicationsContent,
+      visiblePublications,
+      createPublicationCard,
+      "publication"
+    );
+  }
+  else {
+    publicationsSection.classList.add("section-hidden");
+  }
+}
 
 
 tagContainer.addEventListener("keydown", (e) => {

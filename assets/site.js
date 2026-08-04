@@ -799,7 +799,6 @@ function render() {
   // -------------------------
 
   if (toggleProjects.checked) {
-    projectsSection.classList.remove("section-hidden");
 
     const visibleProjects =
       projects.filter(matchesFilters);
@@ -810,6 +809,13 @@ function render() {
       createProjectCard,
       "project"
     );
+	
+	if (visibleProjects.length > 0) {
+    projectsSection.classList.remove("section-hidden");
+    }
+    else {
+      projectsSection.classList.add("section-hidden");
+    }
   }
   else {
     projectsSection.classList.add("section-hidden");
@@ -821,7 +827,6 @@ function render() {
   // -------------------------
 
   if (togglePublications.checked) {
-    publicationsSection.classList.remove("section-hidden");
 
     const visiblePublications =
       publications.filter(matchesFilters);
@@ -832,6 +837,13 @@ function render() {
       createPublicationCard,
       "publication"
     );
+	
+	if (visiblePublications.length > 0) {
+      publicationsSection.classList.remove("section-hidden");
+    }
+    else {
+      publicationsSection.classList.add("section-hidden");
+    }
   }
   else {
     publicationsSection.classList.add("section-hidden");

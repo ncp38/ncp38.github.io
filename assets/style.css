@@ -186,11 +186,14 @@ body {
   font-size: 0.9em;
   cursor: pointer;
   
+  opacity: 1;
+  
   transition:
     background-color 180ms ease,
     color 180ms ease,
     border-color 180ms ease,
     transform 180ms ease,
+	opacity 200ms ease,
 	box-shadow 180ms ease;
 }
 
@@ -224,6 +227,10 @@ body {
 
 .tag.active:active {
   transform: scale(0.96);
+}
+
+.tag:focus-visible {
+  box-shadow: 0 0 0 2px var(--tag-active);
 }
 
 body {

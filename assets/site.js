@@ -169,57 +169,150 @@ function updateURL() {
 function renderTags() {
   const availableTags = new Set(getAllTags());
 
-  // Remove filters that no longer apply to visible content.
-  activeTags = new Set(
-    [...activeTags].filter(tag => availableTags.has(tag))
-  );
-	
-  tagContainer.innerHTML = "";
-  getAllTags().forEach(tag => {
-    const chip = document.createElement("span");
-    chip.className = "tag";
-    chip.textContent = tag;
-	
-	function toggle() {
-	const becomingActive = !activeTags.has(tag);
-
-	if (becomingActive) {
-	  activeTags.add(tag);
-	  chip.classList.add("active");
-	} else {
-	  activeTags.delete(tag);
-	  chip.classList.remove("active");
-	}
-
-	updateURL();
-
-	// Let the chip animation start before changing results.
-	requestAnimationFrame(() => {
-	  render();
-	});
-	}
-	
-	chip.onclick = toggle;
-	
-	chip.tabIndex = 0;
-	chip.setAttribute("role", "button");
-	const isActive = activeTags.has(tag);
-	chip.classList.toggle("active", isActive);
-	chip.setAttribute("aria-pressed", isActive); 
-
-	//if (index === 0) currentTagIndex = 0;
-
-	chip.onclick = toggle;
-	chip.onkeydown = (e) => {
-	  if (e.key === "Enter" || e.key === " ") {
-		e.preventDefault();
-		toggle();
-	  }
-	};
-
-    tagContainer.appendChild(chip);
+  // Remove active filters that are no longer applicable.
+  activeTags.forEach(tagName => {
+    if (!availableTags.has(tagName)) {
+      activeTags.delete(tagName);
+    }
   });
-  //updateFilterVisibility();
+
+  /*
+   * FIRST:
+   * Record the current position of every existing tag.
+   */
+  const firstRects = new Map();
+
+  tagContainer.querySelectorAll(".tag").forEach(tag => {
+    firstRects.set(
+      tag.dataset.tag,
+      tag.getBoundingClientRect()
+    );
+  });
+
+  /*
+   * Get existing tags by name.
+   */
+  const existingTags = new Map(
+    Array.from(tagContainer.querySelectorAll(".tag"))
+      .map(tag => [tag.dataset.tag, tag])
+  );
+
+  /*
+   * Remove tags that are no longer applicable.
+   *
+   * We remove them immediately so the remaining tags can
+   * reflow into their final positions.
+   */
+  existingTags.forEach((tag, tagName) => {
+    if (!availableTags.has(tagName)) {
+      tag.remove();
+    }
+  });
+
+  /*
+   * Add/reorder tags in their desired order.
+   */
+  availableTags.forEach(tagName => {
+    let tag = existingTags.get(tagName);
+
+    if (!tag) {
+      tag = document.createElement("span");
+
+      tag.className = "tag tag-enter";
+      tag.dataset.tag = tagName;
+      tag.textContent = tagName;
+      tag.tabIndex = 0;
+      tag.setAttribute("role", "button");
+
+      tag.addEventListener("click", () => {
+        if (activeTags.has(tagName)) {
+          activeTags.delete(tagName);
+          tag.classList.remove("active");
+        } else {
+          activeTags.add(tagName);
+          tag.classList.add("active");
+        }
+
+        updateURL();
+
+        requestAnimationFrame(() => {
+          render();
+        });
+      });
+
+      tag.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          tag.click();
+        }
+      });
+
+      tagContainer.appendChild(tag);
+
+      /*
+       * Newly-created tags start small/invisible and then
+       * transition into their normal state.
+       */
+      requestAnimationFrame(() => {
+        tag.classList.remove("tag-enter");
+      });
+    }
+
+    tag.classList.toggle(
+      "active",
+      activeTags.has(tagName)
+    );
+
+    /*
+     * Re-appending an existing element moves it into the
+     * desired order without recreating it.
+     */
+    tagContainer.appendChild(tag);
+  });
+
+  /*
+   * LAST:
+   * Animate existing tags from their old positions to their
+   * new positions.
+   */
+  requestAnimationFrame(() => {
+    tagContainer.querySelectorAll(".tag").forEach(tag => {
+      const first = firstRects.get(tag.dataset.tag);
+
+      // Newly-created tags don't have an old position.
+      if (!first) {
+        return;
+      }
+
+      const last = tag.getBoundingClientRect();
+
+      const deltaX = first.left - last.left;
+      const deltaY = first.top - last.top;
+
+      if (
+        Math.abs(deltaX) < 1 &&
+        Math.abs(deltaY) < 1
+      ) {
+        return;
+      }
+
+      tag.animate(
+        [
+          {
+            transform:
+              `translate(${deltaX}px, ${deltaY}px)`
+          },
+          {
+            transform: "translate(0, 0)"
+          }
+        ],
+        {
+          duration: 300,
+          easing: "cubic-bezier(.22, 1, .36, 1)"
+        }
+      );
+    });
+  });
 }
 
 function createCard(html) {
@@ -325,6 +418,63 @@ function hideSection(section) {
 
 function showSection(section) {
   section.classList.remove("section-hidden");
+}
+
+function animateTagLayout(update) {
+  const tags = Array.from(
+    tagContainer.querySelectorAll(".tag")
+  );
+
+  const firstPositions = new Map(
+    tags.map(tag => [
+      tag,
+      tag.getBoundingClientRect()
+    ])
+  );
+
+  update();
+
+  requestAnimationFrame(() => {
+    tagContainer.querySelectorAll(".tag").forEach(tag => {
+      const first = firstPositions.get(tag);
+
+      if (!first) {
+        // New tag
+        tag.classList.add("tag-enter");
+
+        requestAnimationFrame(() => {
+          tag.classList.remove("tag-enter");
+        });
+
+        return;
+      }
+
+      const last = tag.getBoundingClientRect();
+
+      const deltaX = first.left - last.left;
+      const deltaY = first.top - last.top;
+
+      if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
+        return;
+      }
+
+      tag.animate(
+        [
+          {
+            transform:
+              `translate(${deltaX}px, ${deltaY}px)`
+          },
+          {
+            transform: "translate(0, 0)"
+          }
+        ],
+        {
+          duration: 300,
+          easing: "cubic-bezier(.22, 1, .36, 1)"
+        }
+      );
+    });
+  });
 }
 
 function animateLayoutChange(container, update) {

@@ -332,7 +332,7 @@ function matchesFilters(item) {
 
   const matchesText =
     item.title.toLowerCase().includes(query) ||
-    item.keywords.some(k => k.includes(query));
+    item.keywords.some(k => k.toLowerCase().includes(query));
 
   const matchesTags =
     activeTags.size === 0 ||

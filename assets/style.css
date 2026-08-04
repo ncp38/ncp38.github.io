@@ -185,11 +185,20 @@ body {
   border-radius: 20px;
   font-size: 0.9em;
   cursor: pointer;
+  
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease,
+	box-shadow 180ms ease;
 }
 
 .tag.active {
   background: var(--tag-active);
   color: white;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 .tag.small {
@@ -201,44 +210,20 @@ body {
   margin-top: 8px;
 }
 
-/*.card {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
-}
-
-.card.enter {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.card.exit {
-  opacity: 0;
-  transform: translateY(-8px);
-}*/
-
-/*.tag {
-  transition:
-    background-color 150ms ease,
-    transform 120ms ease;
-}*/
-
-.tag {
-  transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    border-color 180ms ease,
-    transform 180ms ease;
-}
-
 .tag:hover {
   transform: translateY(-1px);
 }
 
+.tag.active:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
 .tag:active {
   transform: scale(0.95);
+}
+
+.tag.active:active {
+  transform: scale(0.96);
 }
 
 body {

@@ -338,7 +338,7 @@ function matchesFilters(item) {
     activeTags.size === 0 ||
     item.keywords.some(k => activeTags.has(k));
 
-  return matchesText || matchesTags;
+  return matchesText && matchesTags;
 }
 
 function closeAllCompoundPanels() {
@@ -810,7 +810,6 @@ function render() {
       createProjectCard,
       "project"
     );
-
   }
   else {
     projectsSection.classList.add("section-hidden");

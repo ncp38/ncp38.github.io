@@ -784,7 +784,7 @@ window.addEventListener("popstate", () => {
 
 window.addEventListener("pageshow", () => {
     restoreHighlightedCard();
-	);
+});
 
 /*window.addEventListener("pageshow", () => {
 	document.querySelectorAll(".card.highlighted").forEach(el => {

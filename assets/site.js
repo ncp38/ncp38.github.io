@@ -3,6 +3,18 @@ const results = document.getElementById("results");
 
 const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
+
+const filterToggle =
+  document.getElementById("filterToggle");
+
+const filterPanel =
+  document.getElementById("filterPanel");
+
+const filterCount =
+  document.getElementById("filterCount");
+  
+let filtersOpen = false;
+  
 const listOfProgrammingLanguages = ["c", "c++", "c#", "java", "python"];
 
 const portfolioAssets = [
@@ -410,6 +422,40 @@ function restoreHighlightedCard() {
     card.classList.remove("highlighted");
     sessionStorage.removeItem("lastClickedCard");
   }, 1800);
+}
+
+function updateFilterCount() {
+  const count = activeTags.size;
+
+  if (count === 0) {
+    filterCount.textContent = "";
+    filterToggle.classList.remove("has-filters");
+  } else {
+    filterCount.textContent = count;
+    filterToggle.classList.add("has-filters");
+  }
+}
+
+function openFilterPanel() {
+  filtersOpen = true;
+
+  filterToggle.setAttribute("aria-expanded", "true");
+  filterPanel.classList.add("open");
+}
+
+function closeFilterPanel() {
+  filtersOpen = false;
+
+  filterToggle.setAttribute("aria-expanded", "false");
+  filterPanel.classList.remove("open");
+}
+
+function toggleFilterPanel() {
+  if (filtersOpen) {
+    closeFilterPanel();
+  } else {
+    openFilterPanel();
+  }
 }
 
 function hideSection(section) {
@@ -919,7 +965,10 @@ function executeAction(action) {
 
 
 
-
+filterToggle.addEventListener(
+  "click",
+  toggleFilterPanel
+);
 
 searchBox.addEventListener("input", () => {
   updateURL();

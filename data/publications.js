@@ -341,7 +341,7 @@ const publications = [
     year: PUB3YEAR,
     link: PUB3LINK
   },
-  {//2014
+  /*,{//2014 TODO
     id: "pub2",
 	category: "publication",
     title: PUB2TITLE,
@@ -351,7 +351,7 @@ const publications = [
     keywords: PUB2KEYWORDS,
     year: PUB2YEAR,
     link: PUB2LINK
-  },
+  },*/
   {//2013
     id: "pub1",
 	category: "publication",

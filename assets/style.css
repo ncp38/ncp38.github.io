@@ -40,10 +40,10 @@ body {
   max-height: 5000px;
 
   transition:
-    opacity 220ms ease,
-    transform 220ms ease,
-    max-height 300ms ease,
-    margin 300ms ease;
+    opacity 240ms ease,
+    transform 240ms ease,
+    max-height 380ms cubic-bezier(.22, 1, .36, 1);
+    /*margin 300ms ease;*/
 }
 
 .section.section-hidden {
@@ -57,6 +57,13 @@ body {
 
   overflow: hidden;
   pointer-events: none;
+}
+
+.js-ready .section {
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease,
+    max-height 380ms cubic-bezier(.22, 1, .36, 1);
 }
 
 /*.section {
@@ -121,8 +128,8 @@ body {
   transform: translateY(0);
 
   transition:
-    opacity 200ms ease,
-    transform 200ms ease,
+    opacity 240ms ease,
+    transform 240ms ease,
     box-shadow 150ms ease,
     border-color 150ms ease;
 }
@@ -213,10 +220,18 @@ body {
   transform: translateY(-8px);
 }*/
 
-.tag {
+/*.tag {
   transition:
     background-color 150ms ease,
     transform 120ms ease;
+}*/
+
+.tag {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
 }
 
 .tag:hover {

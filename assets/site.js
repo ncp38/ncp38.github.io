@@ -181,20 +181,22 @@ function renderTags() {
     chip.textContent = tag;
 	
 	function toggle() {
-	  chip.classList.toggle("active");
+	const becomingActive = !activeTags.has(tag);
 
-	  chip.setAttribute(
-		"aria-pressed",
-		chip.classList.contains("active")
-	  );
+	if (becomingActive) {
+	  activeTags.add(tag);
+	  chip.classList.add("active");
+	} else {
+	  activeTags.delete(tag);
+	  chip.classList.remove("active");
+	}
 
-	  if (activeTags.has(tag)) {
-		activeTags.delete(tag);
-	  } else {
-		activeTags.add(tag);
-	  }
-	  updateURL();
+	updateURL();
+
+	// Let the chip animation start before changing results.
+	requestAnimationFrame(() => {
 	  render();
+	});
 	}
 	
 	chip.onclick = toggle;
@@ -288,12 +290,106 @@ function renderCompoundFilters() {
   });
 }
 
+function restoreHighlightedCard() {
+  const lastClickedCard =
+    sessionStorage.getItem("lastClickedCard");
+
+  if (!lastClickedCard) {
+    return;
+  }
+
+  const card = document.querySelector(
+    `[data-id="${lastClickedCard}"]`
+  );
+
+  if (!card) {
+    return;
+  }
+
+  card.classList.add("highlight");
+
+  card.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  setTimeout(() => {
+    card.classList.remove("highlight");
+    sessionStorage.removeItem("lastClickedCard");
+  }, 1800);
+}
+
 function hideSection(section) {
   section.classList.add("section-hidden");
 }
 
 function showSection(section) {
   section.classList.remove("section-hidden");
+}
+
+function removeCard(card) {
+  card.classList.add("card-exit");
+
+  card.addEventListener(
+    "transitionend",
+    () => {
+      card.remove();
+    },
+    { once: true }
+  );
+}
+
+function animateLayoutChange(container, update) {
+  const cards = Array.from(
+    container.querySelectorAll(".card")
+  );
+
+  const firstPositions = new Map(
+    cards.map(card => [
+      card,
+      card.getBoundingClientRect()
+    ])
+  );
+
+  update();
+
+  requestAnimationFrame(() => {
+    cards.forEach(card => {
+      if (!card.isConnected) {
+        return;
+      }
+
+      const first =
+        firstPositions.get(card);
+
+      const last =
+        card.getBoundingClientRect();
+
+      const deltaY =
+        first.top - last.top;
+
+      if (Math.abs(deltaY) < 1) {
+        return;
+      }
+
+      card.animate(
+        [
+          {
+            transform:
+              `translateY(${deltaY}px)`
+          },
+          {
+            transform:
+              "translateY(0)"
+          }
+        ],
+        {
+          duration: 300,
+          easing: "cubic-bezier(.22, 1, .36, 1)"
+        }
+      );
+    });
+  });
 }
 
 function createProjectCard(p) {
@@ -423,7 +519,7 @@ function createProjectCard(p) {
     if (e.target.tagName !== "A") {
       sessionStorage.setItem(
         "lastClickedCard",
-        p.id
+        `project-${p.id}`
       );
 
       window.location = directLink;
@@ -461,135 +557,20 @@ function createPublicationCard(p) {
   `);
 
   card.dataset.id = `publication-${p.id}`;
+  
+  card.addEventListener("click", (e) => {
+    if (e.target.tagName !== "A") {
+      sessionStorage.setItem(
+        "lastClickedCard",
+        `publication-${p.id}`
+      );
+
+      window.location = directLink;
+    }
+  });
 
   return card;
 }
-
-/*function render() {
-  const oldElements = Array.from(
-  results.querySelectorAll(".section")
-);
-
-oldElements.forEach(el => el.classList.add("exit"));
-  
-  //renderCompoundFilters();
-
-  setTimeout(() => {
-    results.innerHTML = "";
-
-	  if (toggleProjects.checked) {
-		  results.insertAdjacentHTML('beforeend', "<div class=\"section enter\"><div class=\"section-header\"><h2>Projects</h2><div class=\"divider\"></div></div>");
-	  projects.filter(matchesFilters).forEach(p => {
-		const currentFilters = encodeURIComponent(window.location.search || "");
-		
-		//var standardLinkBlock = '<h3><a href="' + p.link + '.pdf?ref=' + currentFilters + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		var standardLink = p.link;
-		var southeastconLink =  p.link + '/ieeesoutheastcon2011presentation.pdf';
-		var visualInterrogationLink = 'https://www.projects.daybreakeducation.com/aToolForRapidVisualInterrogation/alerts.php';
-		var gyrocopterCageMatchLink = p.link + '/finalProject.html';
-		var radialLink = p.link + '/finalProject.html';
-		var multivariateHydrologicalLink = p.link + '/multivariateHydrologicalDataVisualization.html';
-		var plagiarismLink = p.link + '/plagiarismDetection.html';
-
-		var standardCodeLink = '<a href="' + p.link + '.txt">Code</a>';
-		var southeastconCodeLink = '<a href="' + p.link + '/ieeesoutheastcon2011report.pdf">Report</a>';
-		var visualInterrogationCodeLink = 'Code: <a href="' + p.link + '/alerts.txt">alerts.php</a>&nbsp<a href="' + p.link + '/query_alerts.txt">query_alerts.php</a>&nbsp<a href="' + p.link + '/alertlist.txt">alertlist.js</a>';
-		var gyrocopterCageMatchCodeLink = 'Code: <a href="' + p.link + '/gyrocopterCageMatch.txt">index.html</a>&nbsp<a href="' + p.link + '/gyrocopterCageMatch.pdf">Presentation</a>';
-		var radialCodeLink = 'Code: <a href="' + p.link + '/radialDataVisualization.txt">index.html</a>&nbsp<a href="' + p.link + '/projectPaper.pdf">Paper</a>&nbsp<a href="' + p.link + '/projectPresentation.pdf">Presentation</a>';
-		var multivariateHydrologicalCodeLink = '<a href="' + p.link + '/multivariateHydrologicalDataVisualization.txt">Code</a>';
-		var plagiarismCodeLink = 'Code: <a href="' + p.link + '/plagiarismDetection.txt">index.html</a>&nbsp<a href="' + p.link + '/PlagiarismDetectionProjectReport.pdf">Paper</a>&nbsp<a href="' + p.link + '/PlagiarismDetectionVisualization.pdf">Presentation</a>';
-		
-		//Standard Card clickable link and code-specific link
-		//let linkBlock = standardLinkBlock;
-		let linkToCodeBlock = standardCodeLink;
-		let directLink = standardLink;
-		
-		//Specific modified links for certain projects.
-		if(p.title == "IEEE SoutheastCon 2011 Hardware Competition")
-		{
-			directLink = southeastconLink;
-			linkToCodeBlock = southeastconCodeLink;
-		}
-		else if(p.title == "A Tool for Rapid Visual Interrogation & Triage of Alerts")
-		{
-			directLink = visualInterrogationLink;
-			linkToCodeBlock = visualInterrogationCodeLink;
-		}
-		else if(p.title == "Airship Web Game")
-		{
-			directLink = gyrocopterCageMatchLink;
-			linkToCodeBlock = gyrocopterCageMatchCodeLink;
-		}
-		else if(p.title == "Radial Data Visualization")
-		{
-			directLink = radialLink;
-			linkToCodeBlock = radialCodeLink;
-		}
-		else if(p.title == "Multivariate Hydrological Data Visualization")
-		{
-			directLink = multivariateHydrologicalLink;
-			linkToCodeBlock = multivariateHydrologicalCodeLink;
-		}
-		else if(p.title == "Plagiarism Detection Visualization")
-		{
-			directLink = plagiarismLink;
-			linkToCodeBlock = plagiarismCodeLink;
-		}
-		
-		let linkBlock = '<h3><a href="' + directLink + '">' + p.title + '&nbsp(' + p.year + ') </a></h3>';
-		
-		const card = createCard(`
-		  <div class="card" id="asset-${p.id}">
-			${linkBlock}
-			<div class="card-links">
-			  <!--<a href="#">PDF</a>-->
-			  ${linkToCodeBlock}
-			  <!--<a href="#">Demo</a>-->
-			</div>
-
-			
-			<p>${p.description}</p>
-			<div class="chip-row">
-			  ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-			</div> 
-		  </div>
-		`);
-		
-		card.dataset.id = `project-${p.id}`; // or a better unique ID if available
-		
-		card.addEventListener("click", (e) => {
-		  if (e.target.tagName !== "A") {
-			sessionStorage.setItem("lastClickedCard", p.id);
-			window.location = directLink;
-		  }
-		});
-		results.appendChild(card);
-	  });
-	  results.insertAdjacentHTML('beforeend', "</div>");
-	  }
-	
-    if (togglePublications.checked) {
-		results.insertAdjacentHTML('beforeend', "<div class=\"section enter\"><div class=\"section-header\"><h2>Publications</h2><div class=\"divider\"></div></div>");
-      publications.filter(matchesFilters).forEach(p => {
-		const currentFilters = encodeURIComponent(window.location.search || "");
-        const card = createCard(`
-          <div class="card" id="${p.id}" tabindex="0">
-            <h3><a href="${p.link}">${p.title}</a></h3>
-            <p>${p.authors}</p>
-            <p><em>${p.venue}</em>, ${p.year}</p>
-			<p>${p.description}</p>
-            <div class="chip-row">
-              ${p.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
-            </div>
-          </div>
-        `);
-		card.dataset.id = `publication-${p.id}`; // or a better unique ID if available
-        results.appendChild(card);
-      });
-	  results.insertAdjacentHTML('beforeend', "</div>");
-    }
-  }, 180); // matches CSS transition duration
-}*/
 
 function updateSectionCards(
   container,
@@ -717,6 +698,7 @@ function render() {
   else {
     publicationsSection.classList.add("section-hidden");
   }
+  restoreHighlightedCard();
 }
 
 
@@ -785,66 +767,6 @@ function executeAction(action) {
 
 }
 
-/*document.addEventListener("click", (e) => {
-  const openPanels = document.querySelectorAll(
-    ".compound-panel:not([hidden])"
-  );
-
-  openPanels.forEach(panel => {
-    const wrapper = panel.closest(".compound-filter");
-    if (!wrapper.contains(e.target)) {
-      panel.hidden = true;
-
-      const btn = wrapper.querySelector(".compound-btn");
-      btn.setAttribute("aria-expanded", "false");
-    }
-  });
-});
-
-
-compoundContainer.addEventListener("click", (e) => { 
-  const btn = e.target.closest(".compound-btn");
-  const option = e.target.closest(".compound-option");
-
-  if (btn) {
-	const panel = btn.nextElementSibling;
-	const expanded = btn.getAttribute("aria-expanded") === "true";
-	e.stopPropagation();
-	closeAllCompoundPanels();
-	panel.hidden = expanded;
-	btn.setAttribute("aria-expanded", String(!expanded));
-    return;
-  }
-
-  if (option) {
-	e.stopPropagation();
-	closeAllCompoundPanels();
-	btn.setAttribute("aria-expanded", String(!expanded));
-	
-    const tag = option.dataset.tag;
-    const active = activeTags.has(tag);
-
-    option.classList.toggle("active", !active);
-    option.setAttribute("aria-pressed", String(!active));
-
-    active ? activeTags.delete(tag) : activeTags.add(tag);
-
-    updateURL();
-    render();
-  }
-});
-
-compoundContainer.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    document
-      .querySelectorAll(".compound-panel:not([hidden])")
-      .forEach(panel => panel.hidden = true);
-	  panel
-          .previousElementSibling
-          .setAttribute("aria-expanded", "false");
-  }
-});*/
-
 
 
 
@@ -893,6 +815,8 @@ window.addEventListener("pageshow", () => {
 	}
 	sessionStorage.removeItem("lastClickedCard");
 });
+
+document.documentElement.classList.add("js-ready");
 
 applyURLState();
 renderTags();

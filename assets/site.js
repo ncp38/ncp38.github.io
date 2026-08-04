@@ -306,7 +306,7 @@ function restoreHighlightedCard() {
     return;
   }
 
-  card.classList.add("highlight");
+  card.classList.add("highlighted");
 
   card.scrollIntoView({
     behavior: "smooth",
@@ -314,7 +314,7 @@ function restoreHighlightedCard() {
   });
 
   setTimeout(() => {
-    card.classList.remove("highlight");
+    card.classList.remove("highlighted");
     sessionStorage.removeItem("lastClickedCard");
   }, 1800);
 }
@@ -325,18 +325,6 @@ function hideSection(section) {
 
 function showSection(section) {
   section.classList.remove("section-hidden");
-}
-
-function removeCard(card) {
-  card.classList.add("card-exit");
-
-  card.addEventListener(
-    "transitionend",
-    () => {
-      card.remove();
-    },
-    { once: true }
-  );
 }
 
 function animateLayoutChange(container, update) {
@@ -565,7 +553,7 @@ function createPublicationCard(p) {
         `publication-${p.id}`
       );
 
-      window.location = directLink;
+      window.location = p.link;
     }
   });
 
@@ -578,56 +566,56 @@ function updateSectionCards(
   createCardFunction,
   type
 ) {
-  const existingCards =
-    new Map(
-      Array.from(container.querySelectorAll(".card"))
-        .map(card => [
-          card.dataset.id,
-          card
-        ])
-    );
+  animateLayoutChange(container, () => {
 
-  const newIDs =
-    new Set(
-      items.map(item => `${type}-${item.id}`)
-    );
-
-
-  // Remove cards that no longer match.
-  existingCards.forEach((card, id) => {
-    if (!newIDs.has(id)) {
-      removeCard(card);
-    }
-  });
-
-
-  // Add/reorder cards.
-  items.forEach((item, index) => {
-    const id = `${type}-${item.id}`;
-
-    let card = existingCards.get(id);
-
-    if (!card) {
-      card = createCardFunction(item);
-
-      card.classList.add("card-enter");
-
-      container.appendChild(card);
-
-      requestAnimationFrame(() => {
-        card.classList.remove("card-enter");
-      });
-    }
-
-    const currentCard =
-      container.children[index];
-
-    if (currentCard !== card) {
-      container.insertBefore(
-        card,
-        currentCard || null
+    const existingCards =
+      new Map(
+        Array.from(container.querySelectorAll(".card"))
+          .map(card => [
+            card.dataset.id,
+            card
+          ])
       );
-    }
+
+    const newIDs =
+      new Set(
+        items.map(item => `${type}-${item.id}`)
+      );
+
+    // Remove cards that no longer match.
+    existingCards.forEach((card, id) => {
+      if (!newIDs.has(id)) {
+        removeCard(card);
+      }
+    });
+
+    // Add/reorder cards.
+    items.forEach((item, index) => {
+      const id = `${type}-${item.id}`;
+
+      let card = existingCards.get(id);
+
+      if (!card) {
+        card = createCardFunction(item);
+        card.classList.add("card-enter");
+
+        container.appendChild(card);
+
+        requestAnimationFrame(() => {
+          card.classList.remove("card-enter");
+        });
+      }
+
+      const currentCard =
+        container.children[index];
+
+      if (currentCard !== card) {
+        container.insertBefore(
+          card,
+          currentCard || null
+        );
+      }
+    });
   });
 }
 
@@ -754,7 +742,7 @@ function executeAction(action) {
      behavior: "smooth"
 	 });
 
-    /*case "highlight":
+    /*case "highlighted":
       ...
 
     case "filter":
@@ -795,6 +783,10 @@ window.addEventListener("popstate", () => {
 });
 
 window.addEventListener("pageshow", () => {
+    restoreHighlightedCard();
+	);
+
+/*window.addEventListener("pageshow", () => {
 	document.querySelectorAll(".card.highlighted").forEach(el => {
     el.classList.remove("highlighted");
   });
@@ -814,10 +806,9 @@ window.addEventListener("pageshow", () => {
 	  });
 	}
 	sessionStorage.removeItem("lastClickedCard");
-});
-
-document.documentElement.classList.add("js-ready");
+});*/
 
 applyURLState();
 renderTags();
 render();
+document.documentElement.classList.add("js-ready");

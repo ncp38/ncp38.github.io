@@ -42,8 +42,8 @@ body {
   transition:
     opacity 240ms ease,
     transform 240ms ease,
-    max-height 380ms cubic-bezier(.22, 1, .36, 1);
-    /*margin 300ms ease;*/
+    max-height 380ms cubic-bezier(.22, 1, .36, 1),
+    margin 420ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .section.section-hidden {
@@ -156,7 +156,6 @@ body {
 .card.highlighted {
   border-color: var(--tag-active);
   box-shadow: 0 0 0 2px var(--tag-active);
-  transform: translateY(-2px);
 }
 
 .card .card-links {

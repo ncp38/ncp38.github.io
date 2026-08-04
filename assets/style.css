@@ -33,6 +33,35 @@ body {
 .section {
   margin-top: 1.25rem;
   margin-bottom: 2.75rem;
+
+  opacity: 1;
+  transform: translateY(0);
+
+  max-height: 5000px;
+
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    max-height 300ms ease,
+    margin 300ms ease;
+}
+
+.section.section-hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+
+  max-height: 0;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/*.section {
+  margin-top: 1.25rem;
+  margin-bottom: 2.75rem;
   transition:
     opacity 180ms ease,
     transform 180ms ease;
@@ -41,7 +70,7 @@ body {
 .section.exit {
   opacity: 0;
   transform: translateY(-4px);
-}
+}*/
 
 .section-header.enter {
   opacity: 0;
@@ -87,7 +116,35 @@ body {
   padding: 12px;
   border-radius: 6px;
   margin-bottom: 15px;
+
+  opacity: 1;
+  transform: translateY(0);
+
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
 }
+
+.card.card-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.card.card-exit {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+/*.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}*/
 
 .card.highlighted {
   border-color: var(--tag-active);
@@ -138,7 +195,7 @@ body {
   margin-top: 8px;
 }
 
-.card {
+/*.card {
   opacity: 1;
   transform: translateY(0);
   transition:
@@ -154,7 +211,7 @@ body {
 .card.exit {
   opacity: 0;
   transform: translateY(-8px);
-}
+}*/
 
 .tag {
   transition:
@@ -351,16 +408,16 @@ input[type="text"]:focus {
   color: var(--tag-active);
 }
 
-.card {
+/*.card {
   transition:
     transform 150ms ease,
     box-shadow 150ms ease,
     border-color 150ms ease;
-}
+}*/
 
 .card:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .card .meta {

@@ -288,6 +288,14 @@ function renderCompoundFilters() {
   });
 }
 
+function hideSection(section) {
+  section.classList.add("section-hidden");
+}
+
+function showSection(section) {
+  section.classList.remove("section-hidden");
+}
+
 function createProjectCard(p) {
   var standardLink = p.link;
 

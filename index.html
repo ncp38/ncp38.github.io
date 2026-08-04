@@ -69,7 +69,33 @@
 </section>
 
 <!--<section id="compoundFilters" aria-label="Grouped filters"></section>-->
-<section id="tagContainer" role="group" aria-label="Filter by keyword"></section>
+
+<div class="filter-controls">
+
+  <button
+    id="filterToggle"
+    class="filter-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="filterPanel"
+  >
+    <span>Filters</span>
+    <span
+      id="filterCount"
+      class="filter-count"
+      aria-hidden="true"
+    ></span>
+  </button>
+
+  <div
+    id="filterPanel"
+    class="filter-panel"
+  >
+    <section id="tagContainer" role="group" aria-label="Filter by keyword"></section>
+  </div>
+
+</div>
+
 <section id="results" role="region" aria-live="polite" aria-label="Search results"></section>
 
 <script src="data/projects.js"></script>

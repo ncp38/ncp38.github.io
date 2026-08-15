@@ -39,11 +39,11 @@ body {
 
   max-height: 5000px;
 
-  transition:
+  /*transition:
     opacity 240ms ease,
     transform 240ms ease,
     max-height 380ms cubic-bezier(.22, 1, .36, 1),
-    margin 420ms cubic-bezier(.22, 1, .36, 1);
+    margin 420ms cubic-bezier(.22, 1, .36, 1);*/
 }
 
 .section.section-hidden {
@@ -63,7 +63,8 @@ body {
   transition:
     opacity 260ms ease,
     transform 260ms ease,
-    max-height 380ms cubic-bezier(.22, 1, .36, 1);
+    max-height 380ms cubic-bezier(.22, 1, .36, 1),
+	margin 420ms cubic-bezier(.22, 1, .36, 1);
 }
 
 /*.section {
@@ -98,7 +99,6 @@ body {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
-  #margin-bottom: 0.4rem;
 }
 
 .section-header.exit {
@@ -196,9 +196,6 @@ body {
 	opacity 200ms ease,
 	box-shadow 180ms ease;
 }
-
-<a href="' + p.link +
-    '/gyrocopterCageMatch.txt">index.html</a>
 
 .tag.active {
   background: var(--tag-active);

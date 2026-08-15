@@ -640,6 +640,11 @@ function createProjectCard(p) {
     '/PlagiarismDetectionProjectReport.pdf">Paper</a>&nbsp;' +
     '<a href="' + p.link +
     '/PlagiarismDetectionVisualization.pdf">Presentation</a>';
+	
+  var websiteCodeLink =
+    'Code: <a href="/index.txt">index.html</a>&nbsp;' +
+    '<a href="/assets/site.js">site.js</a>&nbsp;' +
+    '<a href="/assets/style.css">style.css</a>';
 
   let linkToCodeBlock = standardCodeLink;
   let directLink = standardLink;

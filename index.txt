@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For each of us comes a time when we must be more than what we are.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+  <link rel="shortcut icon" href="/favicons/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+</head>
+<body>
+
+<header>
+  <h1 id="siteTitle">Nate Phillips</h1>
+  <p>
+  
+</p>
+<div class="icon-links">
+  <p>Research & project portfolio
+<a href="https://www.linkedin.com/in/nphillip"
+       target="_blank" rel="noopener noreferrer" title="LinkedIn profile">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg"
+           alt="Nate Phillips' LinkedIn Link"
+           style="height:16px; vertical-align: middle;" />
+    </a>
+  |
+  <a href="https://orcid.org/0000-0001-9085-383X" target="_blank" rel="noopener noreferrer" title="ORCID profile">
+    <img src="https://orcid.org/assets/vectors/orcid.logo.icon.svg"
+         alt="Nate Phillips' ORCID Link"
+         style="height:16px; vertical-align: middle;" />
+  </a>
+  |
+  <a href="https://scholar.google.com/citations?user=XE2EZN0AAAAJ"
+     target="_blank" rel="noopener noreferrer" title="Google Scholar profile">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg"
+         alt="Nate Phillips' Google Scholar Link"
+         style="height:16px; vertical-align:middle; margin-right:4px;">
+  </a></p>
+  </div>
+
+</header>
+
+<section class="controls">
+  <input id="searchBox" type="text" placeholder="Search by keyword…">
+
+  <label>
+    <input type="checkbox" id="toggleProjects" checked>
+    Projects
+  </label>
+
+  <label>
+    <input type="checkbox" id="togglePublications" checked>
+    Publications
+  </label>
+
+  <button
+  id="darkModeToggle"
+  class="theme-toggle"
+  aria-label="Toggle dark mode"
+  aria-pressed="false"
+>
+  <span class="icon sun" aria-hidden="true">☀️</span>
+  <span class="icon moon" aria-hidden="true">🌙</span>
+</button>
+
+</section>
+
+<!--<section id="compoundFilters" aria-label="Grouped filters"></section>-->
+
+<div class="filter-controls">
+
+<button
+    id="filterToggle"
+    class="filter-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="filterPanel"
+  >
+    <span>Filters</span>
+    <span
+      id="filterCount"
+      class="filter-count"
+      aria-hidden="true"
+    ></span>
+  </button>
+
+  <div
+    id="filterPanel"
+    class="filter-panel"
+  >
+    <section id="tagContainer" role="group" aria-label="Filter by keyword"></section>
+  </div>
+
+</div>
+
+<section id="results" role="region" aria-live="polite" aria-label="Search results"></section>
+
+<script src="data/projects.js"></script>
+<script src="data/publications.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

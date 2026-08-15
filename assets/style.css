@@ -321,6 +321,10 @@ body {
   .filter-toggle.has-filters .filter-count {
     display: inline-flex;
   }
+  
+  .controls input[type="checkbox"] {
+  accent-color: var(--tag-active);
+}
 
   .filter-panel {
     position: absolute;

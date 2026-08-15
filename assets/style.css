@@ -30,10 +30,14 @@
 }
 
 #siteTitle.title-pop {
-  transform: scale(1.06);
+  transform: scale(1.02);
   color: var(--tag-active);
   text-shadow:
-    0 0 8px color-mix(in srgb, var(--tag-active) 35%, transparent);
+    0 0 10px color-mix(
+      in srgb,
+      var(--tag-active) 40%,
+      transparent
+    );
 }
 
 @media (prefers-reduced-motion: reduce) {

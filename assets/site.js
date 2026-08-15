@@ -1019,17 +1019,18 @@ tagContainer.addEventListener("keydown", (e) => {
 document.addEventListener("keydown", (e) => {
   // Esc clears filters
   if (e.key === "Escape") {
-    searchBox.value = "";
-    activeTags.clear();
-	toggleProjects.checked = true;
-	togglePublications.checked = true;
-	
 	if(filtersOpen)
 	{
 		closeFilterPanel();
 	}
-
-	history.replaceState(null, "", window.location.pathname);
+	else
+	{
+		searchBox.value = "";
+		activeTags.clear();
+		toggleProjects.checked = true;
+		togglePublications.checked = true;
+		history.replaceState(null, "", window.location.pathname);
+	}
 
 	renderTags();
 	render();

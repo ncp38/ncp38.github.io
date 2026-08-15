@@ -675,6 +675,13 @@ function createProjectCard(p) {
     "Plagiarism Detection Visualization"
   ) {
     directLink = plagiarismLink;
+    //linkToCodeBlock = plagiarismCodeLink;
+  }
+  else if (
+    p.title ===
+    "Portfolio Website"
+  ) {
+    directLink = p.link;
     linkToCodeBlock = plagiarismCodeLink;
   }
 

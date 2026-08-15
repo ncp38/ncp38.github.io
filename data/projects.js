@@ -35,9 +35,23 @@ const PROJ5DESCRIPTION = "Design and creation of a website that displays certain
 const PROJ6TITLE = "Plagiarism Detection Visualization";
 const PROJ6KEYWORDS = ["Web Design", "Data Analysis", "Visualization", "Javascript", "D3.js", "C++", "Python"];
 const PROJ6YEAR = 2014;
-const PROJ6DESCRIPTION = "My team created a website that would compare two input text files and determine any potential plagiarized phrases between them. Based on this analysis, both files are displayed side-by-side in a scrollable view with the potentially plagiarized phrases highlighted in both documents.";
+const PROJ6DESCRIPTION = "Design and implementation of a website that compares two input text files and determines any potential plagiarized phrases between them. Based on this analysis, both files are displayed side-by-side in a scrollable view with the potentially plagiarized phrases highlighted in both documents.";
+
+const PROJ7TITLE = "Plagiarism Detection Visualization";
+const PROJ7KEYWORDS = ["Web Design", "Javascript", "Responsive Design"];
+const PROJ7YEAR = 2026;
+const PROJ7DESCRIPTION = "Design and implementation of a portfolio website displaying projects and papers.  Website implements custom animations, day/night mode, filtering, search, and links to content.";
 
 const projects = [
+  {
+    id: "project7",
+	category: "project",
+    title: PROJ7TITLE,
+    description: PROJ7DESCRIPTION,
+    keywords: PROJ7KEYWORDS,
+    year: PROJ7YEAR,
+    link: "#siteTitle" 
+  },
   {
     id: "project6",
 	category: "project",

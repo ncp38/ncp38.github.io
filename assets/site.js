@@ -338,6 +338,43 @@ function createCard(html) {
   return wrapper.firstElementChild;
 }
 
+function scrollToPageTitle() {
+  const title = document.getElementById("siteTitle");
+
+  if (!title) {
+    return;
+  }
+
+  title.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  let lastY = window.scrollY;
+  let stableFrames = 0;
+
+  function checkScroll() {
+    const currentY = window.scrollY;
+
+    if (Math.abs(currentY - lastY) < 1) {
+      stableFrames++;
+    } else {
+      stableFrames = 0;
+    }
+
+    lastY = currentY;
+
+    if (stableFrames >= 4) {
+      highlightPageTitle();
+      return;
+    }
+
+    requestAnimationFrame(checkScroll);
+  }
+
+  requestAnimationFrame(checkScroll);
+}
+
 function matchesFilters(item) {
   const query = searchBox.value.toLowerCase();
 
@@ -421,6 +458,25 @@ function hideSection(section) {
 
 function showSection(section) {
   section.classList.remove("section-hidden");
+}
+
+function highlightPageTitle() {
+  const title = document.getElementById("siteTitle");
+
+  if (!title) {
+    return;
+  }
+
+  title.classList.remove("title-pop");
+
+  // Force the browser to recognize this as a new animation cycle.
+  void title.offsetWidth;
+
+  title.classList.add("title-pop");
+
+  setTimeout(() => {
+    title.classList.remove("title-pop");
+  }, 900);
 }
 
 function getVisualRows(tags) {
@@ -629,6 +685,22 @@ function createProjectCard(p) {
   const linkBlock =
     '<h3><a href="' + directLink + '">' +
     p.title + '&nbsp(' + p.year + ') </a></h3>';
+
+  if (
+    p.title ===
+    "Portfolio Website"
+  ) {
+	linkBlock = '<h3><a class="portfolioWebsiteProject" href="' + directLink + '">' +
+    p.title + '&nbsp(' + p.year + ') </a></h3>';
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+	const webElement = doc.querySelector('.portfolioWebsiteProject');
+	
+	webElement.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToPageTitle();
+});
+  }
 
   const card = createCard(`
     <div class="card" id="asset-project-${p.id}">

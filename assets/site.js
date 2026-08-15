@@ -28,17 +28,6 @@ const portfolioAssets = [
     }))
 ];
 
-const compoundFilters = [
-  {
-    id: "languages",
-    label: "Programming Languages",
-    tags: listOfProgrammingLanguages
-  }
-];
-
-const compoundContainer =
-  document.getElementById("compoundFilters");
-
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
@@ -180,13 +169,20 @@ function updateURL() {
 
 function renderTags() {
   const availableTags = new Set(getAllTags());
-
+  let tagsChanged = false;
+  
   // Remove active filters that are no longer applicable.
   activeTags.forEach(tagName => {
     if (!availableTags.has(tagName)) {
       activeTags.delete(tagName);
+	  tagsChanged = true;
     }
   });
+
+  if(tagsChanged)
+  {
+	  updateURL();
+  }
 
   /*
    * FIRST:
@@ -356,48 +352,6 @@ function matchesFilters(item) {
   return matchesText && matchesTags;
 }
 
-function closeAllCompoundPanels() {
-  document.querySelectorAll(".compound-panel").forEach(panel => {
-    panel.hidden = true;
-    panel.previousElementSibling
-      ?.setAttribute("aria-expanded", "false");
-  });
-}
-
-function renderCompoundFilters() {
-  compoundContainer.innerHTML = "";
-
-  compoundFilters.forEach(filter => {
-    const isActive = filter.tags.some(t => activeTags.has(t));
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "compound-filter";
-
-    wrapper.innerHTML = `
-      <button
-        class="compound-btn ${isActive ? "active" : ""}"
-        aria-expanded="false"
-        aria-haspopup="true"
-        aria-label="${filter.label}">
-        ${filter.label}
-      </button>
-
-      <div class="compound-panel" hidden>
-        ${filter.tags.map(tag => `
-          <button
-            class="compound-option ${activeTags.has(tag) ? "active" : ""}"
-            data-tag="${tag}"
-            aria-pressed="${activeTags.has(tag)}">
-            ${tag.toUpperCase()}
-          </button>
-        `).join("")}
-      </div>
-    `;
-
-    compoundContainer.appendChild(wrapper);
-  });
-}
-
 function restoreHighlightedCard() {
   const lastClickedCard =
     sessionStorage.getItem("lastClickedCard");
@@ -469,61 +423,43 @@ function showSection(section) {
   section.classList.remove("section-hidden");
 }
 
-function animateTagLayout(update) {
-  const tags = Array.from(
-    tagContainer.querySelectorAll(".tag")
-  );
+function getVisualRows(tags) {
+    const rows = [];
 
-  const firstPositions = new Map(
-    tags.map(tag => [
-      tag,
-      tag.getBoundingClientRect()
-    ])
-  );
+    tags.forEach(tag => {
+        const rect = tag.getBoundingClientRect();
 
-  update();
+        // Find an existing row whose top is approximately the same.
+        let row = rows.find(r =>
+            Math.abs(r.top - rect.top) < 5
+        );
 
-  requestAnimationFrame(() => {
-    tagContainer.querySelectorAll(".tag").forEach(tag => {
-      const first = firstPositions.get(tag);
+        if (!row) {
+            row = {
+                top: rect.top,
+                tags: []
+            };
 
-      if (!first) {
-        // New tag
-        tag.classList.add("tag-enter");
-
-        requestAnimationFrame(() => {
-          tag.classList.remove("tag-enter");
-        });
-
-        return;
-      }
-
-      const last = tag.getBoundingClientRect();
-
-      const deltaX = first.left - last.left;
-      const deltaY = first.top - last.top;
-
-      if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
-        return;
-      }
-
-      tag.animate(
-        [
-          {
-            transform:
-              `translate(${deltaX}px, ${deltaY}px)`
-          },
-          {
-            transform: "translate(0, 0)"
-          }
-        ],
-        {
-          duration: 300,
-          easing: "cubic-bezier(.22, 1, .36, 1)"
+            rows.push(row);
         }
-      );
+
+        row.tags.push({
+            element: tag,
+            rect
+        });
     });
-  });
+
+    // Make sure rows are ordered top-to-bottom.
+    rows.sort((a, b) => a.top - b.top);
+
+    // And tags within each row are ordered left-to-right.
+    rows.forEach(row => {
+        row.tags.sort((a, b) =>
+            a.rect.left - b.rect.left
+        );
+    });
+
+    return rows;
 }
 
 function animateLayoutChange(container, update) {
@@ -909,27 +845,109 @@ function render() {
   else {
     publicationsSection.classList.add("section-hidden");
   }
-  restoreHighlightedCard();
 }
 
 
 tagContainer.addEventListener("keydown", (e) => {
+  if (!tagContainer.offsetParent) {
+    return;
+}
+  const currentTag = document.activeElement;
   const tags = Array.from(tagContainer.querySelectorAll(".tag"));
-  const currentIndex = tags.indexOf(document.activeElement);
+  const currentIndex = tags.indexOf(currentTag);
 
   if (currentIndex === -1) return;
+  
+  if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        currentTag.click();
+        return;
+    }
 
   let nextIndex = currentIndex;
 
-  if (e.key === "ArrowRight") nextIndex++;
-  if (e.key === "ArrowLeft") nextIndex--;
-  if (e.key === "ArrowDown") nextIndex += 4; // grid-friendly
-  if (e.key === "ArrowUp") nextIndex -= 4;
-
-  if (tags[nextIndex]) {
-    tags[nextIndex].focus();
-    e.preventDefault();
+  // Left / Right navigation.
+  if (e.key === "ArrowRight") {
+    if (currentIndex < tags.length - 1) {
+      e.preventDefault();
+      tags[currentIndex + 1].focus();
+    }
+    return;
   }
+
+  if (e.key === "ArrowLeft") {
+    if (currentIndex > 0) {
+      e.preventDefault();
+      tags[currentIndex - 1].focus();
+    }
+    return;
+  }
+  
+  if (
+        e.key !== "ArrowDown" &&
+        e.key !== "ArrowUp"
+    ) {
+        return;
+    }
+
+    e.preventDefault();
+
+    const rows = getVisualRows(tags);
+
+    // Find the row containing the current tag.
+    const currentRowIndex = rows.findIndex(row =>
+        row.tags.some(item => item.element === currentTag)
+    );
+
+    if (currentRowIndex === -1) {
+        return;
+    }
+
+    const currentRect =
+        currentTag.getBoundingClientRect();
+
+    let targetRowIndex;
+
+    if (e.key === "ArrowDown") {
+        targetRowIndex = currentRowIndex + 1;
+    } else {
+        targetRowIndex = currentRowIndex - 1;
+    }
+
+    // No row in that direction.
+    if (
+        targetRowIndex < 0 ||
+        targetRowIndex >= rows.length
+    ) {
+        return;
+    }
+
+    const targetRow = rows[targetRowIndex];
+
+    // Find the tag in the target row whose horizontal
+    // position is closest to the current tag.
+    const target = targetRow.tags.reduce(
+        (closest, candidate) => {
+            const currentDistance =
+                Math.abs(
+                    candidate.rect.left -
+                    currentRect.left
+                );
+
+            const closestDistance =
+                Math.abs(
+                    closest.rect.left -
+                    currentRect.left
+                );
+
+            return currentDistance < closestDistance
+                ? candidate
+                : closest;
+        }
+    );
+	
+    e.preventDefault();
+    target.element.focus();
 });
 
 

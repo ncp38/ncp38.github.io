@@ -197,6 +197,9 @@ body {
 	box-shadow 180ms ease;
 }
 
+<a href="' + p.link +
+    '/gyrocopterCageMatch.txt">index.html</a>
+
 .tag.active {
   background: var(--tag-active);
   color: white;
@@ -321,10 +324,6 @@ body {
   .filter-toggle.has-filters .filter-count {
     display: inline-flex;
   }
-  
-  .controls input[type="checkbox"] {
-  accent-color: var(--tag-active);
-}
 
   .filter-panel {
     position: absolute;

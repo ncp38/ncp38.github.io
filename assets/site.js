@@ -686,22 +686,6 @@ function createProjectCard(p) {
     '<h3><a href="' + directLink + '">' +
     p.title + '&nbsp(' + p.year + ') </a></h3>';
 
-  if (
-    p.title ===
-    "Portfolio Website"
-  ) {
-	linkBlock = '<h3><a class="portfolioWebsiteProject" href="' + directLink + '">' +
-    p.title + '&nbsp(' + p.year + ') </a></h3>';
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, 'text/html');
-	const webElement = doc.querySelector('.portfolioWebsiteProject');
-	
-	webElement.addEventListener('click', (e) => {
-    e.preventDefault();
-    scrollToPageTitle();
-});
-  }
-
   const card = createCard(`
     <div class="card" id="asset-project-${p.id}">
       ${linkBlock}
@@ -719,6 +703,17 @@ function createProjectCard(p) {
       </div>
     </div>
   `);
+
+if (p.title === "Portfolio Website") {
+  const titleLink = card.querySelector("h3 a");
+
+  if (titleLink) {
+    titleLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      scrollToPageTitle();
+    });
+  }
+}
 
   card.dataset.id = `project-${p.id}`;
 
@@ -935,8 +930,6 @@ tagContainer.addEventListener("keydown", (e) => {
         currentTag.click();
         return;
     }
-
-  let nextIndex = currentIndex;
 
   // Left / Right navigation.
   if (e.key === "ArrowRight") {

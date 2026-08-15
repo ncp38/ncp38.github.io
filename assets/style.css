@@ -403,6 +403,10 @@ input[type="text"]:focus {
   opacity: 0.8;
 }
 
+.controls input[type="checkbox"] {
+  accent-color: var(--tag-active);
+}
+
 :focus-visible {
   outline: 2px solid var(--tag-active);
   outline-offset: 2px;

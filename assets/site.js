@@ -220,6 +220,8 @@ function renderTags() {
       tag.remove();
     }
   });
+  
+  updateFilterCount();
 
   /*
    * Add/reorder tags in their desired order.
@@ -245,6 +247,7 @@ function renderTags() {
           tag.classList.add("active");
         }
 
+		updateFilterCount();
         updateURL();
 
         requestAnimationFrame(() => {
@@ -925,6 +928,11 @@ document.addEventListener("keydown", (e) => {
     activeTags.clear();
 	toggleProjects.checked = true;
 	togglePublications.checked = true;
+	
+	if(filtersOpen)
+	{
+		closeFilterPanel();
+	}
 
 	history.replaceState(null, "", window.location.pathname);
 
@@ -969,6 +977,19 @@ filterToggle.addEventListener(
   "click",
   toggleFilterPanel
 );
+
+document.addEventListener("click", e => {
+  if (!filtersOpen) {
+    return;
+  }
+
+  if (
+    !filterPanel.contains(e.target) &&
+    !filterToggle.contains(e.target)
+  ) {
+    closeFilterPanel();
+  }
+});
 
 searchBox.addEventListener("input", () => {
   updateURL();

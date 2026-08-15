@@ -233,6 +233,145 @@ body {
   box-shadow: 0 0 0 2px var(--tag-active);
 }
 
+.filter-controls {
+  position: relative;
+}
+
+.filter-toggle {
+  display: none;
+}
+
+.filter-panel {
+  width: 100%;
+}
+
+#tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 600px) {
+
+  .filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background: var(--card);
+    color: var(--text);
+
+    font: inherit;
+    cursor: pointer;
+
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .filter-toggle:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .filter-toggle:focus-visible {
+    outline: 2px solid var(--tag-active);
+    outline-offset: 2px;
+  }
+
+  .filter-toggle::after {
+    content: "⌄";
+    font-size: 1rem;
+
+    transition:
+      transform 200ms ease;
+  }
+
+  .filter-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .filter-count {
+    display: none;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding: 0 5px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--tag-active);
+    color: white;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  .filter-toggle.has-filters .filter-count {
+    display: inline-flex;
+  }
+
+  .filter-panel {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    z-index: 100;
+
+    padding: 10px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.12);
+
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+
+    pointer-events: none;
+
+    visibility: hidden;
+
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease,
+      visibility 180ms ease;
+  }
+
+  .filter-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  #tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 4px;
+
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
 body {
   transition:
     background-color 200ms ease,

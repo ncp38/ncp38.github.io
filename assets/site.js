@@ -682,7 +682,7 @@ function createProjectCard(p) {
     "Portfolio Website"
   ) {
     directLink = p.link;
-    linkToCodeBlock = plagiarismCodeLink;
+    linkToCodeBlock = "";
   }
 
   const linkBlock =

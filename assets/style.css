@@ -41,7 +41,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #pageTitle.title-pop {
+  #siteTitle.title-pop {
     transform: none;
     text-shadow: none;
   }
@@ -439,10 +439,6 @@ input[type="text"]:focus {
   outline-offset: 2px;
 }
 
-.tag:focus-visible {
-  box-shadow: 0 0 0 2px var(--tag-active);
-}
-
 .theme-toggle {
   position: relative;
   width: 40px;
@@ -492,82 +488,6 @@ input[type="text"]:focus {
   outline: 2px solid var(--tag-active);
   outline-offset: 3px;
 }
-
-/*#compoundFilters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.compound-filter {
-  position: relative;
-}*/
-
-.compound-btn {
-  padding: 8px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  cursor: pointer;
-}
-
-.compound-btn.active {
-  background: var(--tag-active);
-  color: white;
-}
-
-.compound-panel {
-  position: absolute;
-  top: 110%;
-  left: 0;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  z-index: 10;
-}
-
-.compound-option {
-  padding: 6px 10px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--tag-bg);
-  cursor: pointer;
-}
-
-.compound-option.active {
-  background: var(--tag-active);
-  color: white;
-}
-
-.compound-panel {
-  animation: fadeSlide 150ms ease;
-}
-
-@keyframes fadeSlide {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.groupedResults {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-/*#compoundFilters {
-  display: flex;
-}*/
 
 .card h3 a {
   color: inherit;

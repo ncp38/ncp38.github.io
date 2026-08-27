@@ -14,19 +14,6 @@ const filterCount =
   document.getElementById("filterCount");
   
 let filtersOpen = false;
-  
-const listOfProgrammingLanguages = ["c", "c++", "c#", "java", "python"];
-
-const portfolioAssets = [
-    ...projects.map(p => ({
-        ...p,
-        type: "project"
-    })),
-    ...publications.map(p => ({
-        ...p,
-        type: "publication"
-    }))
-];
 
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
@@ -72,14 +59,6 @@ function getAllTags() {
 
   return Array.from(tags).sort();
 }
-
-//Old version of getAllTags - upgraded to only get tags for active cards
-/*function getAllTags() {
-  const tags = new Set();
-  projects.forEach(p => p.keywords.forEach(k => tags.add(k)));
-  publications.forEach(p => p.keywords.forEach(k => tags.add(k)));
-  return Array.from(tags).sort();
-}*/
 
 function createSection(id, title) {
   const section = document.createElement("div");
@@ -329,11 +308,6 @@ function renderTags() {
 function createCard(html) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = html.trim();
-
-  /*card.classList.add("enter");
-  requestAnimationFrame(() => {
-    card.classList.remove("enter");
-  });*/
 
   return wrapper.firstElementChild;
 }
@@ -687,7 +661,7 @@ function createProjectCard(p) {
     p.title + '&nbsp(' + p.year + ') </a></h3>';
 
   const card = createCard(`
-    <div class="card" id="asset-project-${p.id}">
+    <div class="card" id="asset-project-${p.id}" tabindex="0" role="link">
       ${linkBlock}
 
       <div class="card-links">
@@ -725,6 +699,13 @@ if (p.title === "Portfolio Website") {
       );
 
       window.location = directLink;
+    }
+  });
+
+  card.addEventListener("keydown", (e) => {
+    if (e.target === card && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      card.click();
     }
   });
 
@@ -768,6 +749,13 @@ function createPublicationCard(p) {
       );
 
       window.location = p.link;
+    }
+  });
+
+  card.addEventListener("keydown", (e) => {
+    if (e.target === card && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      card.click();
     }
   });
 
@@ -1043,32 +1031,6 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-function executeAction(action) {
-
-	//const parsedAction = JSON.parse(action);
-
-  switch(action.type) {
-
-    case "scroll":
-      document.getElementById(action.target[0]).scrollIntoView({
-     behavior: "smooth"
-	 });
-
-    /*case "highlighted":
-      ...
-
-    case "filter":
-      ...
-
-    case "focus":
-      ...*/
-
-  }
-
-}
-
-
-
 filterToggle.addEventListener(
   "click",
   toggleFilterPanel
@@ -1113,28 +1075,6 @@ window.addEventListener("popstate", () => {
 window.addEventListener("pageshow", () => {
     restoreHighlightedCard();
 });
-
-/*window.addEventListener("pageshow", () => {
-	document.querySelectorAll(".card.highlighted").forEach(el => {
-    el.classList.remove("highlighted");
-  });
-	
-	const lastClicked = sessionStorage.getItem("lastClickedCard");
-
-	if (lastClicked) {
-	  const cards = document.querySelectorAll(".card");
-
-	  cards.forEach(card => {
-		if (card.dataset.id === lastClicked) {
-		  card.classList.add("highlighted");
-
-		  // Optional: scroll into view
-		  //card.scrollIntoView({ behavior: "smooth", block: "center" });
-		}
-	  });
-	}
-	sessionStorage.removeItem("lastClickedCard");
-});*/
 
 applyURLState();
 renderTags();

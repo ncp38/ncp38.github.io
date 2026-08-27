@@ -10,32 +10,39 @@
   <link rel="shortcut icon" href="/favicons/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
+  <link rel="canonical" href="https://ncp38.github.io/">
+  <meta name="description" content="Nate Phillips — research and project portfolio: augmented reality, perception, and data visualization.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ncp38.github.io/">
+  <meta property="og:title" content="Nate Phillips — Research & Project Portfolio">
+  <meta property="og:description" content="AR/VR perception research, visualization projects, and publications.">
+  <meta name="twitter:card" content="summary">
 </head>
 <body>
 
 <header>
-  <h1 id="siteTitle">Nate Phillips</h1>
+  <h1>Nate Phillips</h1>
   <p>
   
 </p>
-<div class="icon-links">
+<div class="icon-links"  id="siteTitle">
   <p>Research & project portfolio
 <a href="https://www.linkedin.com/in/nphillip"
        target="_blank" rel="noopener noreferrer" title="LinkedIn profile">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg"
+      <img src="assets/icons/linkedin.svg"
            alt="Nate Phillips' LinkedIn Link"
            style="height:16px; vertical-align: middle;" />
     </a>
   |
   <a href="https://orcid.org/0000-0001-9085-383X" target="_blank" rel="noopener noreferrer" title="ORCID profile">
-    <img src="https://orcid.org/assets/vectors/orcid.logo.icon.svg"
+    <img src="assets/icons/orcid.svg"
          alt="Nate Phillips' ORCID Link"
          style="height:16px; vertical-align: middle;" />
   </a>
   |
   <a href="https://scholar.google.com/citations?user=XE2EZN0AAAAJ"
      target="_blank" rel="noopener noreferrer" title="Google Scholar profile">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg"
+    <img src="assets/icons/google-scholar.svg"
          alt="Nate Phillips' Google Scholar Link"
          style="height:16px; vertical-align:middle; margin-right:4px;">
   </a></p>
@@ -67,8 +74,6 @@
 </button>
 
 </section>
-
-<!--<section id="compoundFilters" aria-label="Grouped filters"></section>-->
 
 <div class="filter-controls">
 

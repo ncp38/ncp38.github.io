@@ -1,0 +1,31 @@
+name: Sync index.txt
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy index.html to index.txt
+        run: cp index.html index.txt
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet index.txt; then
+            echo "index.txt already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.txt
+          git commit -m "chore: sync index.txt with index.html [skip ci]"
+          git push

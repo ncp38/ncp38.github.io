@@ -4,7 +4,8 @@
   --card: #f9f9f9;
   --border: #ddd;
   --tag-bg: #e6e6e6;
-  --tag-active: #4a6cf7;
+  --tag-active: #3a58d6;
+  --on-accent: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -14,6 +15,7 @@
   --border: #333;
   --tag-bg: #2a2a2a;
   --tag-active: #8aa4ff;
+  --on-accent: #0b1020;
 }
 
 .icon-links a {
@@ -57,6 +59,11 @@ body {
   margin-inline: auto;
 }
 
+/*
+ * Sections collapse by animating grid-template-rows between 1fr and 0fr,
+ * which tracks the content's real height (a max-height cap would clip or
+ * distort the animation once content grows past the cap).
+ */
 .section {
   margin-top: 1.25rem;
   margin-bottom: 2.75rem;
@@ -64,34 +71,58 @@ body {
   opacity: 1;
   transform: translateY(0);
 
-  max-height: 5000px;
+  display: grid;
+  grid-template-rows: 1fr;
+}
 
-  /*transition:
-    opacity 240ms ease,
-    transform 240ms ease,
-    max-height 380ms cubic-bezier(.22, 1, .36, 1),
-    margin 420ms cubic-bezier(.22, 1, .36, 1);*/
+.section-inner {
+  min-height: 0;
+}
+
+/* The grid wrapper stops the last card's margin collapsing into the
+   section's own bottom margin, so drop it to keep the original spacing. */
+.section-content > .card:last-child {
+  margin-bottom: 0;
 }
 
 .section.section-hidden {
   opacity: 0;
   transform: translateY(-8px);
 
-  max-height: 0;
+  grid-template-rows: 0fr;
 
   margin-top: 0;
   margin-bottom: 0;
 
-  overflow: hidden;
   pointer-events: none;
+}
+
+.section.section-hidden > .section-inner {
+  overflow: hidden;
 }
 
 .js-ready .section {
   transition:
     opacity 260ms ease,
     transform 260ms ease,
-    max-height 380ms cubic-bezier(.22, 1, .36, 1),
-	margin 420ms cubic-bezier(.22, 1, .36, 1);
+    grid-template-rows 380ms cubic-bezier(.22, 1, .36, 1),
+    margin 420ms cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear 0s;
+}
+
+/*
+ * Once collapsed, take the section out of the tab order and the
+ * accessibility tree (after the collapse finishes) so hidden cards
+ * can't be focused.
+ */
+.js-ready .section.section-hidden {
+  visibility: hidden;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease,
+    grid-template-rows 380ms cubic-bezier(.22, 1, .36, 1),
+    margin 420ms cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear 420ms;
 }
 
 /*.section {
@@ -226,7 +257,7 @@ body {
 
 .tag.active {
   background: var(--tag-active);
-  color: white;
+  color: var(--on-accent);
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
@@ -338,7 +369,7 @@ body {
     border-radius: 10px;
 
     background: var(--tag-active);
-    color: white;
+    color: var(--on-accent);
 
     font-size: 0.75rem;
     font-weight: 600;
@@ -412,7 +443,26 @@ body {
   }
 }
 
+/* Keep each checkbox with its label and let the row wrap as a unit. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+/* 16px text stops iOS Safari from zooming the page when the field is tapped. */
 input[type="text"] {
+  flex: 1 1 14rem;
+  min-width: 0;
+  max-width: 20rem;
+  padding: 0.5rem 0.65rem;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
   transition: box-shadow 150ms ease;
 }
 
@@ -421,7 +471,18 @@ input[type="text"]:focus {
   outline: none;
 }
 
+@media (max-width: 600px) {
+  input[type="text"] {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
+
 .controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
   cursor: pointer;
   transition: opacity 120ms ease;
 }
@@ -455,7 +516,7 @@ input[type="text"]:focus {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  transform: translateY(7px);
+  transform: translateY(0);
 
   transition:
     transform 300ms ease,
@@ -465,23 +526,23 @@ input[type="text"]:focus {
 /* Light mode: show moon */
 :root .moon {
   opacity: 1;
-  transform: translateY(7px) rotate(0deg) scale(1);
+  transform: translateY(0) rotate(0deg) scale(1);
 }
 
 :root .sun {
   opacity: 0;
-  transform: translateY(7px) rotate(-90deg) scale(0.5);
+  transform: translateY(0) rotate(-90deg) scale(0.5);
 }
 
 /* Dark mode: show sun */
 [data-theme="dark"] .moon {
   opacity: 0;
-  transform: translateY(7px) rotate(90deg) scale(0.5);
+  transform: translateY(0) rotate(90deg) scale(0.5);
 }
 
 [data-theme="dark"] .sun {
   opacity: 1;
-  transform: translateY(7px) rotate(0deg) scale(1);
+  transform: translateY(0) rotate(0deg) scale(1);
 }
 
 .theme-toggle:focus-visible {

@@ -18,21 +18,61 @@ let filtersOpen = false;
 const tagContainer = document.getElementById("tagContainer");
 let activeTags = new Set();
 
+// Browsers can throw when storage is blocked (e.g. Safari's "Block All
+// Cookies"), so every storage access goes through these helpers. "kind" is
+// "localStorage" or "sessionStorage"; the lookup happens inside the try block
+// because even reading window.localStorage can throw.
+function storageGet(kind, key) {
+  try {
+    return window[kind].getItem(key);
+  } catch (e) {
+    return null;
+  }
+}
+
+function storageSet(kind, key, value) {
+  try {
+    window[kind].setItem(key, value);
+  } catch (e) {
+    // Storage unavailable; the setting just won't be remembered.
+  }
+}
+
+function storageRemove(kind, key) {
+  try {
+    window[kind].removeItem(key);
+  } catch (e) {
+    // Nothing to clean up if storage is unavailable.
+  }
+}
+
 const darkModeToggle = document.getElementById("darkModeToggle");
-const savedTheme = localStorage.getItem("theme") || "light";
-darkModeToggle.setAttribute("aria-pressed", savedTheme === "dark");
 
-darkModeToggle.onclick = () => {
-  const current = document.documentElement.getAttribute("data-theme") || "light";
-  setTheme(current === "light" ? "dark" : "light");
-};
+// Saved choice first, otherwise follow the visitor's system setting.
+// (A script in index.html's <head> normally applies this before first paint.)
+function getInitialTheme() {
+  return storageGet("localStorage", "theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+}
 
-function setTheme(theme) {
+function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("theme", theme);
   darkModeToggle.setAttribute("aria-pressed", theme === "dark");
 }
-setTheme(savedTheme);
+
+// Only an explicit click is saved, so visitors who never touch the toggle
+// keep following their system setting.
+darkModeToggle.onclick = () => {
+  const current = document.documentElement.getAttribute("data-theme") || "light";
+  const next = current === "light" ? "dark" : "light";
+
+  applyTheme(next);
+  storageSet("localStorage", "theme", next);
+};
+
+applyTheme(
+  document.documentElement.getAttribute("data-theme") || getInitialTheme()
+);
 
 
 function getVisibleItems() {
@@ -66,11 +106,13 @@ function createSection(id, title) {
   section.id = id;
 
   section.innerHTML = `
-    <div class="section-header">
-      <h2>${title}</h2>
-      <div class="divider"></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>${title}</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="section-content"></div>
     </div>
-    <div class="section-content"></div>
   `;
 
   return section;
@@ -146,6 +188,13 @@ function updateURL() {
 }
 
 
+// Keeps a tag's look (the "active" class) and what screen readers announce
+// (aria-pressed) in sync, so "Perception, toggle button, pressed" is spoken.
+function setTagActive(tag, isActive) {
+  tag.classList.toggle("active", isActive);
+  tag.setAttribute("aria-pressed", String(isActive));
+}
+
 function renderTags() {
   const availableTags = new Set(getAllTags());
   let tagsChanged = false;
@@ -216,11 +265,11 @@ function renderTags() {
       tag.addEventListener("click", () => {
         if (activeTags.has(tagName)) {
           activeTags.delete(tagName);
-          tag.classList.remove("active");
         } else {
           activeTags.add(tagName);
-          tag.classList.add("active");
         }
+
+        setTagActive(tag, activeTags.has(tagName));
 
 		updateFilterCount();
         updateURL();
@@ -248,10 +297,7 @@ function renderTags() {
       });
     }
 
-    tag.classList.toggle(
-      "active",
-      activeTags.has(tagName)
-    );
+    setTagActive(tag, activeTags.has(tagName));
 
     /*
      * Re-appending an existing element moves it into the
@@ -350,10 +396,15 @@ function scrollToPageTitle() {
 }
 
 function matchesFilters(item) {
-  const query = searchBox.value.toLowerCase();
+  // Trimmed so a trailing space (phone keyboards add one after autocomplete)
+  // doesn't stop a name at the end of an author list from matching.
+  const query = searchBox.value.trim().toLowerCase();
 
+  // Projects have no authors or venue, so those fields may be missing.
   const matchesText =
     item.title.toLowerCase().includes(query) ||
+    (item.authors || "").toLowerCase().includes(query) ||
+    (item.venue || "").toLowerCase().includes(query) ||
     item.keywords.some(k => k.toLowerCase().includes(query));
 
   const matchesTags =
@@ -365,7 +416,7 @@ function matchesFilters(item) {
 
 function restoreHighlightedCard() {
   const lastClickedCard =
-    sessionStorage.getItem("lastClickedCard");
+    storageGet("sessionStorage", "lastClickedCard");
 
   if (!lastClickedCard) {
     return;
@@ -388,7 +439,7 @@ function restoreHighlightedCard() {
 
   setTimeout(() => {
     card.classList.remove("highlighted");
-    sessionStorage.removeItem("lastClickedCard");
+    storageRemove("sessionStorage", "lastClickedCard");
   }, 1800);
 }
 
@@ -579,7 +630,7 @@ function createProjectCard(p) {
     '<a href="' + p.link +
     '/query_alerts.txt">query_alerts.php</a>&nbsp;' +
     '<a href="' + p.link +
-    '/alertlist.txt">alertlist.js</a>';
+    '/alertslist.txt">alertlist.js</a>';
 
   var gyrocopterCageMatchCodeLink =
     'Code: <a href="' + p.link +
@@ -693,7 +744,8 @@ if (p.title === "Portfolio Website") {
 
   card.addEventListener("click", (e) => {
     if (e.target.tagName !== "A") {
-      sessionStorage.setItem(
+      storageSet(
+        "sessionStorage",
         "lastClickedCard",
         `project-${p.id}`
       );
@@ -743,7 +795,8 @@ function createPublicationCard(p) {
   
   card.addEventListener("click", (e) => {
     if (e.target.tagName !== "A") {
-      sessionStorage.setItem(
+      storageSet(
+        "sessionStorage",
         "lastClickedCard",
         `publication-${p.id}`
       );
@@ -807,6 +860,10 @@ function updateSectionCards(
           card.classList.remove("card-enter");
         });
       }
+      else {
+        // The card may still be mid-exit from a previous filter.
+        reviveCard(card);
+      }
 
       const currentCard =
         container.children[index];
@@ -821,16 +878,31 @@ function updateSectionCards(
   });
 }
 
+// Slightly longer than the 240ms CSS exit transition.
+const CARD_EXIT_MS = 260;
+
 function removeCard(card) {
+  if (card.exitTimer) {
+    return;
+  }
+
   card.classList.add("card-exit");
 
-  card.addEventListener(
-    "transitionend",
-    () => {
-      card.remove();
-    },
-    { once: true }
-  );
+  // A timer is used instead of "transitionend" because that event
+  // never fires when transitions are disabled (e.g. Reduce Motion).
+  card.exitTimer = setTimeout(() => {
+    card.remove();
+  }, CARD_EXIT_MS);
+}
+
+function reviveCard(card) {
+  if (!card.exitTimer) {
+    return;
+  }
+
+  clearTimeout(card.exitTimer);
+  card.exitTimer = null;
+  card.classList.remove("card-exit");
 }
 
 function render() {
@@ -912,12 +984,9 @@ tagContainer.addEventListener("keydown", (e) => {
   const currentIndex = tags.indexOf(currentTag);
 
   if (currentIndex === -1) return;
-  
-  if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        currentTag.click();
-        return;
-    }
+
+  // Enter and Space are handled by each tag's own keydown listener; handling
+  // them here too clicked the tag twice, which cancelled out.
 
   // Left / Right navigation.
   if (e.key === "ArrowRight") {

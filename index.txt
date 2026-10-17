@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <title>For each of us comes a time when we must be more than what we are.</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // Apply the saved theme (or the system setting) before the first paint
+    // so dark-mode visitors don't see a white flash.
+    try {
+      var theme = localStorage.getItem("theme") ||
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
@@ -51,7 +60,7 @@
 </header>
 
 <section class="controls">
-  <input id="searchBox" type="text" placeholder="Search by keyword…">
+  <input id="searchBox" type="text" placeholder="Search keywords, authors, venues…">
 
   <label>
     <input type="checkbox" id="toggleProjects" checked>

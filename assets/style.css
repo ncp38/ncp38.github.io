@@ -6,6 +6,11 @@
   --tag-bg: #e6e6e6;
   --tag-active: #3a58d6;
   --on-accent: #ffffff;
+  --muted: #5b6370;
+  --good: #1c7a52;
+  --good-soft: #e4f4ec;
+  --warn: #a05807;
+  --warn-soft: #faf0dd;
 }
 
 [data-theme="dark"] {
@@ -16,6 +21,11 @@
   --tag-bg: #2a2a2a;
   --tag-active: #8aa4ff;
   --on-accent: #0b1020;
+  --muted: #a3abb8;
+  --good: #5fce9d;
+  --good-soft: #122a20;
+  --warn: #e3a856;
+  --warn-soft: #2e2410;
 }
 
 .icon-links a {
@@ -536,4 +546,231 @@ input[type="text"]:focus {
 .card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
+}
+
+
+/* ---------- Certifications ---------- */
+
+.cert-wrap {
+  container-type: inline-size;
+}
+
+.cert-grid {
+  --gap: 16px;
+  --flair: 150px; /* fallback where container query units aren't supported */
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--flair));
+  gap: var(--gap);
+  justify-content: start;
+
+  position: relative;
+
+  /* The script keeps the selected flair in place itself. */
+  overflow-anchor: none;
+}
+
+@supports (width: 1cqw) {
+  /* Two per row on phones, at most 180px, never below 120px. */
+  .cert-grid {
+    --flair: clamp(120px, calc((100cqw - var(--gap)) / 2), 180px);
+  }
+
+  /* Columns come in whole flair widths, so the panel uses the full width. */
+  .cert-panel {
+    justify-self: start;
+    width: 100cqw;
+  }
+}
+
+.cert-item {
+  position: relative;
+  z-index: 1;
+  width: var(--flair);
+}
+
+/* The selected flair starts its own row; its panel follows it. */
+.cert-item.breakout {
+  grid-column-start: 1;
+}
+
+.flair-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* A light backing keeps the badges looking the same in both themes. */
+.flair-disc {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.flair-disc img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.flair-btn:hover .flair-disc {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.flair-btn[aria-expanded="true"] .flair-disc {
+  outline: 3px solid var(--tag-active);
+  outline-offset: 3px;
+}
+
+.flair-btn:focus-visible {
+  outline: none;
+}
+
+.flair-btn:focus-visible .flair-disc {
+  outline: 2px solid var(--tag-active);
+  outline-offset: 3px;
+}
+
+.flair-cap {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.flair-sub {
+  margin-top: -4px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+/* An expired credential is greyed out so it never looks current. */
+.flair-btn.expired .flair-disc img {
+  filter: grayscale(1);
+  opacity: 0.65;
+}
+
+.cert-panel {
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  padding-top: 12px; /* room for the pointer */
+}
+
+.cert-panel::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  left: calc(var(--caret-x, 80px) - 7px);
+  width: 14px;
+  height: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-right: 0;
+  border-bottom: 0;
+  transform: rotate(45deg);
+}
+
+.cert-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.cert-card h3 {
+  margin: 0;
+  padding-right: 34px;
+}
+
+.cert-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cert-close:hover {
+  background: var(--tag-bg);
+  color: var(--text);
+}
+
+.cert-meta {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cert-chip {
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--tag-bg);
+  font-size: 0.78rem;
+}
+
+.cert-status-active {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.cert-status-expired {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.cert-line {
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+.cert-links {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.9em;
+}
+
+.cert-links a {
+  color: var(--tag-active);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.cert-links a:hover,
+.cert-links a:focus-visible {
+  border-bottom-color: currentColor;
 }

@@ -3,6 +3,7 @@ const results = document.getElementById("results");
 
 const toggleProjects = document.getElementById("toggleProjects");
 const togglePublications = document.getElementById("togglePublications");
+const toggleCertifications = document.getElementById("toggleCertifications");
 
 const filterToggle =
   document.getElementById("filterToggle");
@@ -46,6 +47,17 @@ function storageRemove(kind, key) {
   }
 }
 
+// The CSS rule that switches off transitions for "Reduce Motion" cannot stop
+// animations started from JavaScript, so those check the setting themselves.
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+// Smooth scrolling is motion too.
+function scrollBehavior() {
+  return prefersReducedMotion() ? "auto" : "smooth";
+}
+
 const darkModeToggle = document.getElementById("darkModeToggle");
 
 // Saved choice first, otherwise follow the visitor's system setting.
@@ -84,6 +96,10 @@ function getVisibleItems() {
 
   if (togglePublications.checked) {
     items.push(...publications);
+  }
+
+  if (toggleCertifications.checked) {
+    items.push(...certifications);
   }
 
   return items;
@@ -125,6 +141,9 @@ function ensureSections() {
   let publicationsSection =
     document.getElementById("publicationsSection");
 
+  let certificationsSection =
+    document.getElementById("certificationsSection");
+
   if (!projectsSection) {
     projectsSection = createSection(
       "projectsSection",
@@ -143,9 +162,19 @@ function ensureSections() {
     results.appendChild(publicationsSection);
   }
 
+  if (!certificationsSection) {
+    certificationsSection = createSection(
+      "certificationsSection",
+      "Certifications"
+    );
+
+    results.appendChild(certificationsSection);
+  }
+
   return {
     projectsSection,
-    publicationsSection
+    publicationsSection,
+    certificationsSection
   };
 }
 
@@ -160,6 +189,10 @@ function applyURLState() {
   // Toggles
   toggleProjects.checked = params.get("projects") !== "0";
   togglePublications.checked = params.get("papers") !== "0";
+  toggleCertifications.checked = params.get("certs") !== "0";
+
+  // A certification whose details panel should be open (applied after render).
+  certPendingId = params.get("cert");
 
   // Tags
   if (params.has("tags")) {
@@ -182,6 +215,11 @@ function updateURL() {
 
   params.set("projects", toggleProjects.checked ? "1" : "0");
   params.set("papers", togglePublications.checked ? "1" : "0");
+  params.set("certs", toggleCertifications.checked ? "1" : "0");
+
+  if (openCertId) {
+    params.set("cert", openCertId);
+  }
 
   const newURL = `${window.location.pathname}?${params.toString()}`;
   history.replaceState(null, "", newURL);
@@ -256,7 +294,7 @@ function renderTags() {
     if (!tag) {
       tag = document.createElement("span");
 
-      tag.className = "tag tag-enter";
+      tag.className = "tag";
       tag.dataset.tag = tagName;
       tag.textContent = tagName;
       tag.tabIndex = 0;
@@ -287,14 +325,6 @@ function renderTags() {
       });
 
       tagContainer.appendChild(tag);
-
-      /*
-       * Newly-created tags start small/invisible and then
-       * transition into their normal state.
-       */
-      requestAnimationFrame(() => {
-        tag.classList.remove("tag-enter");
-      });
     }
 
     setTagActive(tag, activeTags.has(tagName));
@@ -312,6 +342,10 @@ function renderTags() {
    * new positions.
    */
   requestAnimationFrame(() => {
+    if (prefersReducedMotion()) {
+      return;
+    }
+
     tagContainer.querySelectorAll(".tag").forEach(tag => {
       const first = firstRects.get(tag.dataset.tag);
 
@@ -366,7 +400,7 @@ function scrollToPageTitle() {
   }
 
   title.scrollIntoView({
-    behavior: "smooth",
+    behavior: scrollBehavior(),
     block: "start"
   });
 
@@ -400,11 +434,13 @@ function matchesFilters(item) {
   // doesn't stop a name at the end of an author list from matching.
   const query = searchBox.value.trim().toLowerCase();
 
-  // Projects have no authors or venue, so those fields may be missing.
+  // Projects have no venue and certifications have no authors, so those
+  // fields may be missing.
   const matchesText =
     item.title.toLowerCase().includes(query) ||
     (item.authors || "").toLowerCase().includes(query) ||
     (item.venue || "").toLowerCase().includes(query) ||
+    (item.issuer || "").toLowerCase().includes(query) ||
     item.keywords.some(k => k.toLowerCase().includes(query));
 
   const matchesTags =
@@ -433,7 +469,7 @@ function restoreHighlightedCard() {
   card.classList.add("highlighted");
 
   card.scrollIntoView({
-    behavior: "smooth",
+    behavior: scrollBehavior(),
     block: "center"
   });
 
@@ -550,6 +586,10 @@ function animateLayoutChange(container, update) {
   update();
 
   requestAnimationFrame(() => {
+    if (prefersReducedMotion()) {
+      return;
+    }
+
     cards.forEach(card => {
       if (!card.isConnected) {
         return;
@@ -899,10 +939,477 @@ function reviveCard(card) {
   card.classList.remove("card-exit");
 }
 
+// -------------------------------------------------------------------------
+// Certifications: a row of flair badges. Clicking one opens its details panel
+// directly beneath it ("break-out"): the selected flair moves to the left edge
+// of its own row, the panel opens under it, and the rest of the row continues
+// after the panel. The page scrolls by the amount the flair was pushed down,
+// so the selected flair stays where the eye already is while earlier flairs
+// slide up out of the way.
+// -------------------------------------------------------------------------
+const CERT_EASE = "cubic-bezier(.22, 1, .36, 1)";
+
+let openCertId = null;     // id of the certification whose panel is open
+let certPanel = null;      // the open panel element
+let certPendingId = null;  // ?cert= from the address, applied after rendering
+
+function getCertGrid() {
+  return document.getElementById("certGrid");
+}
+
+function getCertFlairs() {
+  const grid = getCertGrid();
+
+  return grid ? Array.from(grid.querySelectorAll(".cert-item")) : [];
+}
+
+function findCertFlair(id) {
+  return getCertFlairs().find(flair => flair.dataset.id === id) || null;
+}
+
+function todayISO() {
+  const now = new Date();
+
+  return now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+}
+
+function formatCertDate(iso) {
+  return new Date(iso + "T00:00:00").toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
+
+// Worked out from the dates, so a lapsed credential never shows as current.
+function getCertStatus(cert, today = todayISO()) {
+  if (!cert.expires) {
+    return { state: "none", text: "No expiry" };
+  }
+
+  if (today > cert.expires) {
+    return { state: "expired", text: "Expired " + formatCertDate(cert.expires) };
+  }
+
+  return { state: "active", text: "Active · expires " + formatCertDate(cert.expires) };
+}
+
+function createCertFlair(cert) {
+  const status = getCertStatus(cert);
+  const expired = status.state === "expired";
+
+  const flair = document.createElement("div");
+  flair.className = "cert-item";
+  flair.dataset.id = cert.id;
+
+  // The caption is the button's accessible name, so the image is decorative.
+  flair.innerHTML = `
+    <button class="flair-btn${expired ? " expired" : ""}" type="button" aria-expanded="false">
+      <span class="flair-disc">
+        <img src="${cert.flair}" alt="" width="480" height="480" loading="lazy" decoding="async">
+      </span>
+      <span class="flair-cap">${cert.caption}</span>
+      <span class="flair-sub">${cert.issuer}${expired ? " &middot; Expired" : ""}</span>
+    </button>
+  `;
+
+  flair.querySelector(".flair-btn").addEventListener("click", () => {
+    toggleCertPanel(cert.id);
+  });
+
+  return flair;
+}
+
+function createCertPanel(cert) {
+  const status = getCertStatus(cert);
+
+  const panel = document.createElement("div");
+  panel.className = "cert-panel";
+  panel.id = `cert-panel-${cert.id}`;
+  panel.setAttribute("role", "region");
+  panel.setAttribute("aria-labelledby", `cert-title-${cert.id}`);
+
+  const links = cert.links.map(link =>
+    `<a href="${link.url}" target="_blank" rel="noopener noreferrer">${link.label} &#8599;</a>`
+  ).join("");
+
+  panel.innerHTML = `
+    <div class="cert-card">
+      <button class="cert-close" type="button" aria-label="Close details">&times;</button>
+
+      <h3 id="cert-title-${cert.id}">${cert.title}</h3>
+
+      <div class="cert-meta">
+        <span class="cert-chip">${cert.kind}</span>
+        <span class="cert-chip cert-status-${status.state}">${status.text}</span>
+      </div>
+
+      <p class="cert-line">${cert.issuer} &middot; Earned ${formatCertDate(cert.earned)}</p>
+
+      <p>${cert.description}</p>
+
+      ${links ? `<div class="cert-links">${links}</div>` : ""}
+
+      <div class="chip-row">
+        ${cert.keywords.map(k => `<span class="tag small">${k}</span>`).join("")}
+      </div>
+    </div>
+  `;
+
+  panel.querySelector(".cert-close").addEventListener("click", () => {
+    const id = openCertId;
+
+    closeCertPanel();
+    focusCertFlair(id);
+  });
+
+  return panel;
+}
+
+// Where every flair is now (including any animation in flight), after which
+// running animations are cancelled so the new layout can be measured cleanly.
+function snapshotCertFlairs() {
+  const flairs = getCertFlairs();
+  const rects = new Map();
+
+  flairs.forEach(flair => rects.set(flair, flair.getBoundingClientRect()));
+  flairs.forEach(flair => flair.getAnimations().forEach(a => a.cancel()));
+
+  return rects;
+}
+
+// Slide each flair from where it was to where it is now.
+function playCertFlip(first, duration) {
+  if (prefersReducedMotion()) {
+    return;
+  }
+
+  getCertFlairs().forEach(flair => {
+    const before = first.get(flair);
+
+    // Newly-created flairs have no previous position.
+    if (!before) {
+      return;
+    }
+
+    const after = flair.getBoundingClientRect();
+    const deltaX = before.left - after.left;
+    const deltaY = before.top - after.top;
+
+    if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
+      return;
+    }
+
+    flair.animate(
+      [
+        { transform: `translate(${deltaX}px, ${deltaY}px)` },
+        { transform: "none" }
+      ],
+      { duration, easing: CERT_EASE }
+    );
+  });
+}
+
+// A panel that has already left the layout fades out where it was.
+function fadeOutCertPanelCopy(panel) {
+  if (prefersReducedMotion()) {
+    return;
+  }
+
+  const grid = getCertGrid();
+  const gridRect = grid.getBoundingClientRect();
+  const rect = panel.getBoundingClientRect();
+  const copy = panel.cloneNode(true);
+
+  copy.removeAttribute("id");
+  copy.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+  copy.setAttribute("aria-hidden", "true");
+  copy.inert = true;
+
+  Object.assign(copy.style, {
+    position: "absolute",
+    left: `${rect.left - gridRect.left}px`,
+    top: `${rect.top - gridRect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    margin: "0",
+    zIndex: "3",
+    pointerEvents: "none"
+  });
+
+  grid.appendChild(copy);
+
+  const fade = copy.animate(
+    [{ opacity: 1 }, { opacity: 0 }],
+    { duration: 260, easing: "ease-out", fill: "forwards" }
+  );
+
+  fade.onfinish = () => copy.remove();
+}
+
+// The little pointer on the panel's top edge sits under the selected flair.
+function setCertCaret() {
+  if (!certPanel || !openCertId) {
+    return;
+  }
+
+  const flair = findCertFlair(openCertId);
+
+  if (!flair) {
+    return;
+  }
+
+  // offsetLeft/offsetWidth describe where the flair sits in the layout and
+  // ignore transforms, so this stays correct even while the flair is still
+  // sliding into place (getBoundingClientRect would report its position
+  // mid-animation).
+  const disc = flair.querySelector(".flair-disc");
+  const centre = flair.offsetLeft + disc.offsetLeft + disc.offsetWidth / 2;
+
+  certPanel.style.setProperty("--caret-x", `${centre}px`);
+}
+
+function syncCertAria() {
+  getCertFlairs().forEach(flair => {
+    const button = flair.querySelector(".flair-btn");
+    const isOpen = flair.dataset.id === openCertId;
+
+    button.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen && certPanel) {
+      button.setAttribute("aria-controls", certPanel.id);
+    } else {
+      button.removeAttribute("aria-controls");
+    }
+  });
+}
+
+function focusCertFlair(id) {
+  const flair = findCertFlair(id);
+
+  if (flair) {
+    flair.querySelector(".flair-btn").focus();
+  }
+}
+
+// userInitiated: false is used when the page opens or closes a panel by
+// itself (a shared link, a filter hiding it), which skips the motion.
+function openCertPanel(id, { userInitiated = true } = {}) {
+  const cert = certifications.find(c => c.id === id);
+  const flair = findCertFlair(id);
+
+  if (!cert || !flair || openCertId === id) {
+    return;
+  }
+
+  const first = userInitiated ? snapshotCertFlairs() : null;
+  const previousFlair = openCertId ? findCertFlair(openCertId) : null;
+
+  if (certPanel) {
+    if (first) {
+      fadeOutCertPanelCopy(certPanel);
+    }
+
+    certPanel.remove();
+  }
+
+  if (previousFlair) {
+    previousFlair.classList.remove("breakout");
+  }
+
+  flair.classList.add("breakout");
+
+  const panel = createCertPanel(cert);
+  flair.after(panel);
+
+  certPanel = panel;
+  openCertId = id;
+
+  syncCertAria();
+  setCertCaret();
+
+  if (first) {
+    // The layout pushed the selected flair down a row; scroll by the same
+    // amount so it stays where it was on screen.
+    const shift = flair.getBoundingClientRect().top - first.get(flair).top;
+
+    if (Math.abs(shift) > 0.5) {
+      window.scrollBy(0, shift);
+    }
+
+    setCertCaret();
+    playCertFlip(first, 460);
+
+    if (!prefersReducedMotion()) {
+      panel.animate(
+        [
+          { clipPath: "inset(0 0 100% 0)", opacity: 0 },
+          { clipPath: "inset(0 0 0 0)", opacity: 1 }
+        ],
+        { duration: 420, easing: CERT_EASE }
+      );
+    }
+  }
+
+  updateURL();
+}
+
+function closeCertPanel({ userInitiated = true } = {}) {
+  if (!openCertId || !certPanel) {
+    return;
+  }
+
+  const flair = findCertFlair(openCertId);
+  const first = userInitiated ? snapshotCertFlairs() : null;
+
+  if (first) {
+    fadeOutCertPanelCopy(certPanel);
+  }
+
+  certPanel.remove();
+  certPanel = null;
+  openCertId = null;
+
+  if (flair) {
+    flair.classList.remove("breakout");
+  }
+
+  syncCertAria();
+
+  if (first && flair) {
+    const shift = flair.getBoundingClientRect().top - first.get(flair).top;
+
+    if (Math.abs(shift) > 0.5) {
+      window.scrollBy(0, shift);
+    }
+
+    playCertFlip(first, 420);
+  }
+
+  updateURL();
+}
+
+function toggleCertPanel(id) {
+  if (openCertId === id) {
+    closeCertPanel();
+  } else {
+    openCertPanel(id);
+  }
+}
+
+// Brings the flair row in line with the current filters.
+function updateCertifications(items) {
+  const content = document
+    .getElementById("certificationsSection")
+    .querySelector(".section-content");
+
+  let grid = getCertGrid();
+
+  if (!grid) {
+    content.innerHTML =
+      '<div class="cert-wrap"><div class="cert-grid" id="certGrid"></div></div>';
+
+    grid = getCertGrid();
+
+    // The flair size (and so the caret position) changes with the width.
+    new ResizeObserver(setCertCaret).observe(grid);
+  }
+
+  const wanted = new Set(items.map(cert => cert.id));
+
+  // A filter that hides the open certification closes its panel.
+  if (openCertId && !wanted.has(openCertId)) {
+    closeCertPanel({ userInitiated: false });
+  }
+
+  const hadFlairs = getCertFlairs().length > 0;
+  const first = hadFlairs ? snapshotCertFlairs() : null;
+
+  const existing = new Map(
+    getCertFlairs().map(flair => [flair.dataset.id, flair])
+  );
+
+  existing.forEach((flair, id) => {
+    if (!wanted.has(id)) {
+      flair.remove();
+    }
+  });
+
+  const added = [];
+  const ordered = [];
+
+  items.forEach(cert => {
+    let flair = existing.get(cert.id);
+
+    if (!flair) {
+      flair = createCertFlair(cert);
+      added.push(flair);
+    }
+
+    ordered.push(flair);
+
+    // The open panel always stays right after its flair.
+    if (certPanel && openCertId === cert.id) {
+      ordered.push(certPanel);
+    }
+  });
+
+  ordered.forEach((node, index) => {
+    if (grid.children[index] !== node) {
+      grid.insertBefore(node, grid.children[index] || null);
+    }
+  });
+
+  syncCertAria();
+  setCertCaret();
+
+  if (first && !prefersReducedMotion()) {
+    playCertFlip(first, 300);
+
+    added.forEach(flair => {
+      flair.animate(
+        [
+          { opacity: 0, transform: "scale(.9)" },
+          { opacity: 1, transform: "none" }
+        ],
+        { duration: 300, easing: CERT_EASE }
+      );
+    });
+  }
+}
+
+// Opens (or closes) the panel named by ?cert= in the address.
+function applyPendingCert() {
+  const id = certPendingId;
+  certPendingId = null;
+
+  if (!id) {
+    if (openCertId) {
+      closeCertPanel({ userInitiated: false });
+    }
+
+    return;
+  }
+
+  if (id === openCertId || !findCertFlair(id)) {
+    return;
+  }
+
+  openCertPanel(id, { userInitiated: false });
+
+  findCertFlair(id).scrollIntoView({
+    behavior: scrollBehavior(),
+    block: "center"
+  });
+}
+
 function render() {
   const {
     projectsSection,
-    publicationsSection
+    publicationsSection,
+    certificationsSection
   } = ensureSections();
 
   const projectsContent =
@@ -965,6 +1472,33 @@ function render() {
   }
   else {
     publicationsSection.classList.add("section-hidden");
+  }
+
+
+  // -------------------------
+  // Certifications
+  // -------------------------
+
+  if (toggleCertifications.checked) {
+
+    const visibleCertifications =
+      certifications.filter(matchesFilters);
+
+    updateCertifications(visibleCertifications);
+
+    if (visibleCertifications.length > 0) {
+      certificationsSection.classList.remove("section-hidden");
+    }
+    else {
+      certificationsSection.classList.add("section-hidden");
+    }
+  }
+  else {
+    if (openCertId) {
+      closeCertPanel({ userInitiated: false });
+    }
+
+    certificationsSection.classList.add("section-hidden");
   }
 }
 
@@ -1068,11 +1602,21 @@ tagContainer.addEventListener("keydown", (e) => {
 
 
 document.addEventListener("keydown", (e) => {
-  // Esc clears filters
+  // Esc closes the topmost thing that is open (the filter list, then a
+  // certification panel) and clears the filters only when nothing is open.
   if (e.key === "Escape") {
     if(filtersOpen)
     {
         closeFilterPanel();
+    }
+    else if (openCertId)
+    {
+        const id = openCertId;
+
+        closeCertPanel();
+        focusCertFlair(id);
+
+        return;
     }
     else
     {
@@ -1080,6 +1624,7 @@ document.addEventListener("keydown", (e) => {
         activeTags.clear();
         toggleProjects.checked = true;
         togglePublications.checked = true;
+        toggleCertifications.checked = true;
         history.replaceState(null, "", window.location.pathname);
     }
 
@@ -1129,10 +1674,17 @@ togglePublications.addEventListener("change", () => {
   render();
 });
 
+toggleCertifications.addEventListener("change", () => {
+  renderTags();
+  updateURL();
+  render();
+});
+
 window.addEventListener("popstate", () => {
   applyURLState();
   renderTags();
   render();
+  applyPendingCert();
 });
 
 window.addEventListener("pageshow", () => {
@@ -1142,4 +1694,5 @@ window.addEventListener("pageshow", () => {
 applyURLState();
 renderTags();
 render();
+applyPendingCert();
 document.documentElement.classList.add("js-ready");

@@ -68,7 +68,7 @@ const PUB8TITLE = "Impact of AR Display Context Switching and Focal Distance Swi
 const PUB8KEYWORDS = ["Augmented Reality", "Haploscope", "Perception", "Depth Cues", "Context Switching", "Replication", "Visual Fatigue", "C++", "Perl"];
 const PUB8YEAR = 2020;
 const PUB8AUTHORS = "Mohammed Safayet Arefin, Nate Phillips, Alexander Plopski, Joseph L. Gabbard, J. Edward Swan II";
-const PUB8VENUE = "2020 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB8VENUE = "2020 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB8DESCRIPTION = "In augmented reality (AR) environments, information is often distributed between real and virtual contexts, and often appears at different distances from the user. Therefore, to integrate the information, users must repeatedly switch context and refocus the eyes. Previously, Gabbard, Mehra, and Swan (2018) examined these issues, using a text-based visual search task and a monocular optical see-through AR display. In this work, the authors report a replication of this earlier experiment, using a custom-built AR haploscope. The successful replication, on a very different display, is consistent with the hypothesis that the findings are a general property of AR.";
 const PUB8LINK = "https://doi.org/10.1109/VRW50115.2020.00137";
 
@@ -84,7 +84,7 @@ const PUB10TITLE = "A Method for Measuring the Perceived Location of Virtual Con
 const PUB10KEYWORDS = ["Augmented Reality", "Perception", "HoloLens", "C#", "Unity"];
 const PUB10YEAR = 2021;
 const PUB10AUTHORS = "Farzana Alam Khan, Krishna Rao Muvva, Dennis Wu, Mohammed Safayet Arefin, Nate Phillips, J. Edward Swan II";
-const PUB10VENUE = "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB10VENUE = "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB10DESCRIPTION = "For optical, see-through augmented reality (AR), a new method for measuring the perceived three-dimensional location of a small virtual object is presented, where participants verbally report the virtual object’s location relative to both a horizontal and vertical grid. The method is tested with a Microsoft HoloLens AR display, and examines two different virtual object designs, whether turning in a circle between reported object locations disrupts HoloLens tracking, and whether accuracy errors found with a HoloLens display might be due to systematic errors that are restricted to that particular display. Turning in a circle did not disrupt HoloLens tracking, and a second HoloLens did not suggest systematic errors restricted to a specific display. The proposed method could measure the perceived location of a virtual object to a precision of ~1 mm.";
 const PUB10LINK = "https://doi.org/10.1109/VRW52623.2021.00211";
 
@@ -92,7 +92,7 @@ const PUB11TITLE = "An X-Ray Vision System for Situation Awareness in Action Spa
 const PUB11KEYWORDS = ["Augmented Reality", "Situation Awareness", "X-Ray Vision", "Robotics", "Emergency Response", "Vision Systems", "C#", "Unity"];
 const PUB11YEAR = 2021;
 const PUB11AUTHORS = "Nate Phillips, Farzana Alam Khan, Brady Kruse, Cindy L. Bethel and J. Edward Swan II";
-const PUB11VENUE = "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB11VENUE = "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB11DESCRIPTION = "Usable x-ray vision has long been a goal in augmented reality research and development. X-ray vision, or the ability to view and understand information presented through an opaque barrier, would be imminently useful across a variety of domains. Unfortunately, however, the effect of x-ray vision on situation awareness, an operator’s understanding of a task or environment, has not been significantly studied. This is an important question; if x-ray vision does not increase situation awareness, of what use is it? Thus, we have developed an x-ray vision system, in order to investigate situation awareness in the context of action space distances.";
 const PUB11LINK = "https://doi.org/10.1109/VRW52623.2021.00179";
 
@@ -116,7 +116,7 @@ const PUB14TITLE = "A Replication Study to Measure the Perceived Three-Dimension
 const PUB14KEYWORDS = ["Augmented Reality", "Perception", "Replication", "HoloLens", "C#", "Unity"];
 const PUB14YEAR = 2022;
 const PUB14AUTHORS = "Farzana Alam Khan, Mohammed Safayet Arefin, Nate Phillips, and J. Edward Swan II";
-const PUB14VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB14VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB14DESCRIPTION = "An important research question in optical see-through (OST) augmented reality (AR) is, how accurately and precisely can a virtual object's real world location be perceived? Previously, a method was developed to measure the perceived three-dimensional location of virtual objects in OST AR. In this research, a replication study is reported, which examined whether the perceived location of virtual objects are biased in the direction of the dominant eye. The successful replication analysis suggests that perceptual accuracy is not biased in the direction of the dominant eye. Compared to the previous study's findings, overall perceptual accuracy increased, and precision was similar.";
 const PUB14LINK = "https://doi.org/10.1109/VRW55335.2022.00249";
 
@@ -124,7 +124,7 @@ const PUB15TITLE = "Measuring Virtual Object Location with X-Ray Vision at Actio
 const PUB15KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception", "Replication", "C#", "Unity", "Python", "R"];
 const PUB15YEAR = 2022;
 const PUB15AUTHORS = "Nate Phillips, Farzana Alam Khan, Mohammed Safayet Arefin, Cindy L. Bethel, and J. Edward Swan II";
-const PUB15VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB15VENUE = "2022 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB15DESCRIPTION = "Accurate and usable x-ray vision is a significant goal in augmented reality (AR) development. X-ray vision, or the ability to comprehend location and object information when it is presented through an opaque barrier, needs to successfully convey scene information to be a viable use case for AR. Further, this investigation should be performed in an ecologically valid context in order to best test x-ray vision. This research seeks to experimentally evaluate the perceived object location of stimuli presented with x-ray vision, as compared to real-world perceived object location through a window, at action space distances of 1.5 to 15 meters.";
 const PUB15LINK = "https://doi.org/10.1109/VRW55335.2022.00261";
 
@@ -148,7 +148,7 @@ const PUB18TITLE = "Evaluating Depth Perception in Augmented Reality X-Ray Visio
 const PUB18KEYWORDS = ["Augmented Reality", "X-Ray Vision", "Perception"];
 const PUB18YEAR = 2025;
 const PUB18AUTHORS = "Matthew Zhang and Nate Phillips";
-const PUB18VENUE = "2025 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VR)";
+const PUB18VENUE = "2025 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops (IEEE VRW)";
 const PUB18DESCRIPTION = "Depth perception in AR describes the ability to perceive depth from AR-generated objects. This functionality enables an emergent capability: x-ray vision, or visualizing objects past an occluding surface. To evaluate x-ray vision’s feasibility, we propose experiments that depict a virtual object beyond a solid wall. In one condition this display is mitigated with a semi-transparent virtual window, while in another condition no such effect is presented. Depth estimates will be measured using triangulation by walking. Our motivation is to understand discrepancies between perceived distances of virtual and real-world objects so that AR systems can accurately display objects in the real-world.";
 const PUB18LINK = "https://doi.org/10.1109/VRW66409.2025.00305";
 

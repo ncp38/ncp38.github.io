@@ -707,6 +707,8 @@ function createProjectCard(p) {
     <div class="card" id="asset-project-${p.id}" tabindex="0" role="link">
       ${linkBlock}
 
+      ${p.authors ? `<p>${p.authors}</p>` : ""}
+
       <div class="card-links">
         ${linkToCodeBlock}
       </div>

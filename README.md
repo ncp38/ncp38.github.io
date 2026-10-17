@@ -27,7 +27,7 @@ A plain static site (no build step) served by GitHub Pages from the `main` branc
 
 ## Adding a project
 
-Add an entry to `data/projects.js`. By default its "Code" link is the project's `link` plus `.txt`. A project with its own pages or custom links needs a branch for its title in `createProjectCard()` in `assets/site.js`.
+In `data/projects.js`, add the `PROJnTITLE`, `...AUTHORS`, `...YEAR`, `...DESCRIPTION` and `...KEYWORDS` constants, then an entry in the `projects` array (authors are shown on the card and are searchable). By default its "Code" link is the project's `link` plus `.txt`. A project with its own pages or custom links needs a branch for its title in `createProjectCard()` in `assets/site.js`.
 
 ## index.txt stays in sync automatically
 

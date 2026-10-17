@@ -203,13 +203,13 @@ function renderTags() {
   activeTags.forEach(tagName => {
     if (!availableTags.has(tagName)) {
       activeTags.delete(tagName);
-	  tagsChanged = true;
+      tagsChanged = true;
     }
   });
 
   if(tagsChanged)
   {
-	  updateURL();
+      updateURL();
   }
 
   /*
@@ -271,7 +271,7 @@ function renderTags() {
 
         setTagActive(tag, activeTags.has(tagName));
 
-		updateFilterCount();
+        updateFilterCount();
         updateURL();
 
         requestAnimationFrame(() => {
@@ -477,14 +477,6 @@ function toggleFilterPanel() {
   }
 }
 
-function hideSection(section) {
-  section.classList.add("section-hidden");
-}
-
-function showSection(section) {
-  section.classList.remove("section-hidden");
-}
-
 function highlightPageTitle() {
   const title = document.getElementById("siteTitle");
 
@@ -657,7 +649,7 @@ function createProjectCard(p) {
     '/PlagiarismDetectionProjectReport.pdf">Paper</a>&nbsp;' +
     '<a href="' + p.link +
     '/PlagiarismDetectionVisualization.pdf">Presentation</a>';
-	
+
   var websiteCodeLink =
     'Code: <a href="/index.txt">index.html</a>&nbsp;' +
     '<a href="/assets/site.js">site.js</a>&nbsp;' +
@@ -709,7 +701,7 @@ function createProjectCard(p) {
 
   const linkBlock =
     '<h3><a href="' + directLink + '">' +
-    p.title + '&nbsp(' + p.year + ') </a></h3>';
+    p.title + '&nbsp;(' + p.year + ') </a></h3>';
 
   const card = createCard(`
     <div class="card" id="asset-project-${p.id}" tabindex="0" role="link">
@@ -933,9 +925,9 @@ function render() {
       createProjectCard,
       "project"
     );
-	
-	if (visibleProjects.length > 0) {
-    projectsSection.classList.remove("section-hidden");
+
+    if (visibleProjects.length > 0) {
+      projectsSection.classList.remove("section-hidden");
     }
     else {
       projectsSection.classList.add("section-hidden");
@@ -961,8 +953,8 @@ function render() {
       createPublicationCard,
       "publication"
     );
-	
-	if (visiblePublications.length > 0) {
+
+    if (visiblePublications.length > 0) {
       publicationsSection.classList.remove("section-hidden");
     }
     else {
@@ -1067,7 +1059,7 @@ tagContainer.addEventListener("keydown", (e) => {
                 : closest;
         }
     );
-	
+
     e.preventDefault();
     target.element.focus();
 });
@@ -1076,21 +1068,21 @@ tagContainer.addEventListener("keydown", (e) => {
 document.addEventListener("keydown", (e) => {
   // Esc clears filters
   if (e.key === "Escape") {
-	if(filtersOpen)
-	{
-		closeFilterPanel();
-	}
-	else
-	{
-		searchBox.value = "";
-		activeTags.clear();
-		toggleProjects.checked = true;
-		togglePublications.checked = true;
-		history.replaceState(null, "", window.location.pathname);
-	}
+    if(filtersOpen)
+    {
+        closeFilterPanel();
+    }
+    else
+    {
+        searchBox.value = "";
+        activeTags.clear();
+        toggleProjects.checked = true;
+        togglePublications.checked = true;
+        history.replaceState(null, "", window.location.pathname);
+    }
 
-	renderTags();
-	render();
+    renderTags();
+    render();
   }
 
   // "/" focuses search (like GitHub)

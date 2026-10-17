@@ -1,7 +1,14 @@
 {
   "name": "Portfolio - Nate Phillips",
   "short_name": "Portfolio",
+  "start_url": "/",
   "icons": [
+    {
+      "src": "/favicons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/favicons/web-app-manifest-192x192.png",
       "sizes": "192x192",
@@ -12,10 +19,16 @@
       "src": "/favicons/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#3d1060",
+  "theme_color": "#3a58d6",
   "background_color": "#ffffff",
   "display": "standalone"
 }
